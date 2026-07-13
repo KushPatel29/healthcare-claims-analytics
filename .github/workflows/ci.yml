@@ -20,3 +20,13 @@ jobs:
 
       - name: Regenerate claims data, rebuild metrics, verify invariants
         run: pytest tests/ -v
+
+  docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image and run pipeline + tests inside the container
+        run: |
+          docker build -t rcm-analytics .
+          docker run --rm rcm-analytics
