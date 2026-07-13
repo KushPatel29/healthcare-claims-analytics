@@ -1,0 +1,25 @@
+table dim_service_line
+	lineageTag: 7db36b21-35ce-4295-8bdb-986843e1dca7
+
+	column service_line_id
+		dataType: int64
+		formatString: 0
+		lineageTag: e16bdfb8-aec1-4a60-ad86-58f5529270d9
+		summarizeBy: none
+		sourceColumn: service_line_id
+
+	column service_line
+		dataType: string
+		lineageTag: 9a61ff51-ef83-40cb-bd89-ce2b434f4c10
+		summarizeBy: none
+		sourceColumn: service_line
+
+	partition dim_service_line = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataPath & "\data\dim_service_line.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"service_line_id", Int64.Type}, {"service_line", type text}})
+				in
+				    Typed

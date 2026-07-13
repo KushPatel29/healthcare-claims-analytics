@@ -1,0 +1,4 @@
+expression DataPath = "C:\Users\kush2\Claude\portfolio-projects\healthcare-claims-analytics" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: d501cfda-c9a0-4923-b8a0-da760573a4c3
+
+	annotation PBI_ResultType = Text

@@ -1,0 +1,30 @@
+table dim_month
+	lineageTag: b2337673-31eb-403b-bb4c-6d01dc1f0f99
+
+	column month
+		dataType: string
+		sortByColumn: month_start
+		lineageTag: 5ddc83a6-fefc-4988-92a8-a419c1a89048
+		summarizeBy: none
+		sourceColumn: month
+
+	column month_start
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 18a71f0b-02c2-4be0-b3f1-d50da842dd2a
+		summarizeBy: none
+		sourceColumn: month_start
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition dim_month = m
+		mode: import
+		source =
+				let
+				    Months = List.Transform({0..12}, each Date.AddMonths(#date(2025, 7, 1), _)),
+				    ToTable = Table.FromList(Months, Splitter.SplitByNothing(), {"month_start"}),
+				    Typed = Table.TransformColumnTypes(ToTable, {{"month_start", type date}}),
+				    AddedLabel = Table.AddColumn(Typed, "month", each Date.ToText([month_start], "yyyy-MM"), type text),
+				    Reordered = Table.ReorderColumns(AddedLabel, {"month", "month_start"})
+				in
+				    Reordered

@@ -1,0 +1,21 @@
+provider_id,provider_name,specialty,facility
+1,Dr. Sarah Chen,Emergency Department,Main Campus
+2,Dr. James Patel,Cardiology,Main Campus
+3,Dr. Maria Nguyen,Orthopedics,South Clinic
+4,Dr. David Garcia,Oncology,North Clinic
+5,Dr. Jennifer Smith,Imaging,North Clinic
+6,Dr. Michael Johnson,Laboratory,North Clinic
+7,Dr. Priya Kim,Surgery,Main Campus
+8,Dr. Robert Brown,Primary Care,Main Campus
+9,Dr. Aisha Singh,OB/GYN,Telehealth
+10,Dr. Daniel Martinez,Behavioral Health,Main Campus
+11,Dr. Emily Lee,Emergency Department,Main Campus
+12,Dr. Ahmed Wilson,Cardiology,Main Campus
+13,Dr. Laura Ali,Orthopedics,North Clinic
+14,Dr. Kevin Taylor,Oncology,North Clinic
+15,Dr. Sofia Lopez,Imaging,Main Campus
+16,Dr. Brian Davis,Laboratory,North Clinic
+17,Dr. Grace Okafor,Surgery,Telehealth
+18,Dr. Omar Clark,Primary Care,North Clinic
+19,Dr. Rachel Ivanov,OB/GYN,Telehealth
+20,Dr. Thomas Murphy,Behavioral Health,South Clinic

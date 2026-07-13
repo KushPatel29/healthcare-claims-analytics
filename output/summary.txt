@@ -1,0 +1,10 @@
+REVENUE CYCLE KPI SUMMARY
+========================================
+Total claims:                12,000
+Adjudicated:                 10,413
+Denial rate:                   8.8%
+Clean claim rate:             91.2%
+Net collection rate:          95.0%
+Avg days to adjudicate:        22.1
+Open AR:                  4,089,581
+AR > 90 days:             1,374,211 (33.6% of AR)

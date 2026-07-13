@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "RevenueCycleAnalytics"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "7b8aed4d-590d-4b8f-bf16-dcd1f822b7de"
+  }
+}

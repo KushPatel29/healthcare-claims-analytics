@@ -1,0 +1,31 @@
+table dim_payer
+	lineageTag: db009534-ca69-4d18-ab10-ff2474fe4a87
+
+	column payer_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 42ff7759-5a54-4113-91d4-6d3924fac410
+		summarizeBy: none
+		sourceColumn: payer_id
+
+	column payer_name
+		dataType: string
+		lineageTag: 10af3a91-a98a-42a4-aa16-0d2e4985ad77
+		summarizeBy: none
+		sourceColumn: payer_name
+
+	column payer_type
+		dataType: string
+		lineageTag: 728596ae-6175-4546-8062-49aed7b28be7
+		summarizeBy: none
+		sourceColumn: payer_type
+
+	partition dim_payer = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataPath & "\data\dim_payer.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"payer_id", Int64.Type}, {"payer_name", type text}, {"payer_type", type text}})
+				in
+				    Typed

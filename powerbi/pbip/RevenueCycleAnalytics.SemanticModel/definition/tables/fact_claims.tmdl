@@ -1,0 +1,138 @@
+table fact_claims
+	lineageTag: cba1977d-b330-4407-acce-d5378bd9c21d
+
+	column claim_id
+		dataType: string
+		lineageTag: aa8b2771-9223-4ade-8481-364f147144cc
+		summarizeBy: none
+		sourceColumn: claim_id
+
+	column service_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: ffd6680d-0c05-4826-9f1a-7a334b3db910
+		summarizeBy: none
+		sourceColumn: service_date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column submitted_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 8c51b7d3-6461-48ed-8708-35d4e7ebccca
+		summarizeBy: none
+		sourceColumn: submitted_date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column adjudicated_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: e7f681c6-33f0-4b1f-9a12-8445c46ea55b
+		summarizeBy: none
+		sourceColumn: adjudicated_date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column payer_id
+		dataType: int64
+		formatString: 0
+		lineageTag: fccddf38-bcd8-4b89-8f7e-ab20e6048f31
+		summarizeBy: none
+		sourceColumn: payer_id
+
+	column provider_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 6792619a-2fd3-4dc4-9ab5-3909ee9a3b77
+		summarizeBy: none
+		sourceColumn: provider_id
+
+	column service_line_id
+		dataType: int64
+		formatString: 0
+		lineageTag: cff2acce-03e1-4c51-8a9f-76e0c80608ce
+		summarizeBy: none
+		sourceColumn: service_line_id
+
+	column status
+		dataType: string
+		lineageTag: ae105d86-5738-41cc-94aa-677713300e54
+		summarizeBy: none
+		sourceColumn: status
+
+	column submitted_amount
+		dataType: double
+		lineageTag: c15ee666-86e9-4121-9164-55051b464da5
+		summarizeBy: sum
+		sourceColumn: submitted_amount
+
+	column allowed_amount
+		dataType: double
+		lineageTag: e549379b-47bf-431f-8c3e-ca85392d6abd
+		summarizeBy: sum
+		sourceColumn: allowed_amount
+
+	column paid_amount
+		dataType: double
+		lineageTag: 061c07a0-614a-462b-b4f8-4238155cd97f
+		summarizeBy: sum
+		sourceColumn: paid_amount
+
+	column denial_reason
+		dataType: string
+		lineageTag: 47ccaf8a-b496-49b5-99ce-02c798af50e9
+		summarizeBy: none
+		sourceColumn: denial_reason
+
+	column resubmitted
+		dataType: int64
+		formatString: 0
+		lineageTag: d1d97a83-b5d6-40c8-8f4f-1efb416d16c9
+		summarizeBy: none
+		sourceColumn: resubmitted
+
+	column days_to_adjudicate
+		dataType: int64
+		formatString: 0
+		lineageTag: 4be60829-2dfa-473d-99d6-82272d5bd1ea
+		summarizeBy: none
+		sourceColumn: days_to_adjudicate
+
+	column ar_age_days
+		dataType: int64
+		formatString: 0
+		lineageTag: 337e380b-6617-4e27-845e-a10aa5742698
+		summarizeBy: none
+		sourceColumn: ar_age_days
+
+	column ar_bucket
+		dataType: string
+		sortByColumn: ar_bucket_sort
+		lineageTag: f74a2d5e-07f7-4bc1-975b-906b2927f7d9
+		summarizeBy: none
+		sourceColumn: ar_bucket
+
+	column ar_bucket_sort
+		dataType: int64
+		formatString: 0
+		lineageTag: b76587ac-5e93-42dc-962d-1c1a53a4fed9
+		summarizeBy: none
+		sourceColumn: ar_bucket_sort
+
+	column claim_month
+		dataType: string
+		lineageTag: 9686063b-d16b-462d-a9c3-5308f5ebef55
+		summarizeBy: none
+		sourceColumn: claim_month
+
+	partition fact_claims = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataPath & "\data\fact_claims.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"claim_id", type text}, {"service_date", type date}, {"submitted_date", type date}, {"adjudicated_date", type date}, {"payer_id", Int64.Type}, {"provider_id", Int64.Type}, {"service_line_id", Int64.Type}, {"status", type text}, {"submitted_amount", type number}, {"allowed_amount", type number}, {"paid_amount", type number}, {"denial_reason", type text}, {"resubmitted", Int64.Type}, {"days_to_adjudicate", Int64.Type}, {"ar_age_days", Int64.Type}, {"ar_bucket", type text}, {"ar_bucket_sort", Int64.Type}}),
+				    AddedMonth = Table.AddColumn(Typed, "claim_month", each Date.ToText([submitted_date], "yyyy-MM"), type text)
+				in
+				    AddedMonth

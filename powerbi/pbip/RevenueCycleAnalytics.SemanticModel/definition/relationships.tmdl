@@ -1,0 +1,15 @@
+relationship d1000001-0000-4000-8000-000000000001
+	fromColumn: fact_claims.payer_id
+	toColumn: dim_payer.payer_id
+
+relationship d1000001-0000-4000-8000-000000000002
+	fromColumn: fact_claims.provider_id
+	toColumn: dim_provider.provider_id
+
+relationship d1000001-0000-4000-8000-000000000003
+	fromColumn: fact_claims.service_line_id
+	toColumn: dim_service_line.service_line_id
+
+relationship d1000001-0000-4000-8000-000000000004
+	fromColumn: fact_claims.claim_month
+	toColumn: dim_month.month

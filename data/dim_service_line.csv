@@ -1,0 +1,11 @@
+service_line_id,service_line
+1,Emergency Department
+2,Cardiology
+3,Orthopedics
+4,Oncology
+5,Imaging
+6,Laboratory
+7,Surgery
+8,Primary Care
+9,OB/GYN
+10,Behavioral Health

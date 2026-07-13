@@ -1,0 +1,86 @@
+table _Measures
+	lineageTag: 81947feb-6749-471c-a024-9077db0e2178
+
+	measure 'Total Claims' = COUNTROWS(fact_claims)
+		formatString: #,0
+		lineageTag: 01e80abe-376e-444b-912c-e7263f9e1c0a
+
+	measure 'Adjudicated Claims' = CALCULATE(COUNTROWS(fact_claims), fact_claims[status] IN {"Paid", "Denied"})
+		formatString: #,0
+		lineageTag: 6cfaba6d-4266-4ea4-be96-4a6c1f89b1a6
+
+	measure 'Denied Claims' = CALCULATE(COUNTROWS(fact_claims), fact_claims[status] = "Denied")
+		formatString: #,0
+		lineageTag: 134de257-19bc-4b9e-a10c-4dab69b92351
+
+	measure 'Denial Rate' = DIVIDE([Denied Claims], [Adjudicated Claims])
+		formatString: 0.0%
+		lineageTag: 5f153d31-42b6-4fc8-95c6-cd4506be5adf
+
+	measure 'Denial Rate Target' = 0.05
+		formatString: 0.0%
+		lineageTag: 96b97d2e-f58c-48e6-96d5-b3204be88f5f
+
+	measure 'Denied $' = CALCULATE(SUM(fact_claims[submitted_amount]), fact_claims[status] = "Denied")
+		formatString: #,0
+		lineageTag: ef1374a7-ce14-498f-a7a7-40121490e198
+
+	measure 'Submitted $' = SUM(fact_claims[submitted_amount])
+		formatString: #,0
+		lineageTag: 121bbe6e-f741-4c4d-bf3a-6ac6de87cf8c
+
+	measure 'Allowed $' = SUM(fact_claims[allowed_amount])
+		formatString: #,0
+		lineageTag: b84d00c4-598d-489f-b963-32568064e1e3
+
+	measure 'Paid $' = SUM(fact_claims[paid_amount])
+		formatString: #,0
+		lineageTag: f78ff2ab-df6e-463a-94b5-370cb6dbb81f
+
+	measure 'Net Collection Rate' = DIVIDE([Paid $], [Allowed $])
+		formatString: 0.0%
+		lineageTag: 29ea5eb7-edf9-4453-a29f-93ba8b90e989
+
+	measure 'Clean Claim Rate' = DIVIDE(CALCULATE(COUNTROWS(fact_claims), fact_claims[status] = "Paid", fact_claims[resubmitted] = 0), [Adjudicated Claims])
+		formatString: 0.0%
+		lineageTag: 8dd811be-1a45-4916-92be-2713368bbd6c
+
+	measure 'Avg Days to Adjudicate' = AVERAGE(fact_claims[days_to_adjudicate])
+		formatString: #,0.0
+		lineageTag: af218569-8866-47d7-9bc6-54c5a895c78f
+
+	measure 'Pending Claims' = CALCULATE(COUNTROWS(fact_claims), fact_claims[status] = "Pending")
+		formatString: #,0
+		lineageTag: 8c7b6bb7-8726-4e95-9883-5775d52ecb62
+
+	measure 'Open AR $' = CALCULATE(SUM(fact_claims[submitted_amount]), fact_claims[status] = "Pending")
+		formatString: #,0
+		lineageTag: b0431cf7-5629-4831-8dc8-bfebb721a7ee
+
+	measure 'AR Over 90 $' = CALCULATE(SUM(fact_claims[submitted_amount]), fact_claims[status] = "Pending", fact_claims[ar_bucket] IN {"91-120", "120+"})
+		formatString: #,0
+		lineageTag: fd2e6944-9132-42b5-8342-461853620ab4
+
+	measure '% AR Over 90' = DIVIDE([AR Over 90 $], [Open AR $])
+		formatString: 0.0%
+		lineageTag: 21c3dc7d-64f6-48c8-a200-a0c1399f58af
+
+	measure 'Contractual Adjustment $' = CALCULATE(SUM(fact_claims[submitted_amount]) - SUM(fact_claims[allowed_amount]), fact_claims[status] = "Paid")
+		formatString: #,0
+		lineageTag: 939a4c6a-bb93-49e8-b392-7320a88628df
+
+	column Value
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: fd4e8534-e18a-4551-948c-a38f325e234d
+		summarizeBy: none
+		sourceColumn: Value
+
+	partition _Measures = m
+		mode: import
+		source =
+				let
+				    Source = #table(type table [Value = Int64.Type], {})
+				in
+				    Source

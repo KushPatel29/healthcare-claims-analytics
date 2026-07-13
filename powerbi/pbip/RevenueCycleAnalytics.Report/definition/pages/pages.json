@@ -1,0 +1,9 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.0.0/schema.json",
+  "pageOrder": [
+    "section_rcm_scorecard",
+    "section_denials",
+    "section_ar_aging"
+  ],
+  "activePageName": "section_rcm_scorecard"
+}

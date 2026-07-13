@@ -1,0 +1,37 @@
+table dim_provider
+	lineageTag: d5752c7d-da90-4d14-831a-4bdac3b19f15
+
+	column provider_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 4f9a3b5b-06c0-461c-b1c1-70a923b43022
+		summarizeBy: none
+		sourceColumn: provider_id
+
+	column provider_name
+		dataType: string
+		lineageTag: 1a9f22cc-ea4b-4b87-a589-c3023d37e2aa
+		summarizeBy: none
+		sourceColumn: provider_name
+
+	column specialty
+		dataType: string
+		lineageTag: b27d1a44-04ae-4f23-917b-f17b581b209e
+		summarizeBy: none
+		sourceColumn: specialty
+
+	column facility
+		dataType: string
+		lineageTag: f6f261b0-a043-4fd8-891e-c5e3964c744f
+		summarizeBy: none
+		sourceColumn: facility
+
+	partition dim_provider = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataPath & "\data\dim_provider.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"provider_id", Int64.Type}, {"provider_name", type text}, {"specialty", type text}, {"facility", type text}})
+				in
+				    Typed

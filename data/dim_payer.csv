@@ -1,0 +1,9 @@
+payer_id,payer_name,payer_type
+1,Medicare,Medicare
+2,Medicaid,Medicaid
+3,Blue Cross Blue Shield,Commercial
+4,UnitedHealthcare,Commercial
+5,Aetna,Commercial
+6,Cigna,Commercial
+7,Humana Medicare Advantage,Medicare Advantage
+8,Self-Pay,Self-Pay

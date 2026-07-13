@@ -1,0 +1,20 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["dim_payer", "dim_provider", "dim_service_line", "dim_month", "fact_claims", "_Measures", "DataPath"]
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table dim_payer
+ref table dim_provider
+ref table dim_service_line
+ref table dim_month
+ref table fact_claims
+ref table _Measures
