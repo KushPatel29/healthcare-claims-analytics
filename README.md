@@ -48,9 +48,10 @@ works from:
 ![AR Aging](powerbi/screenshots/03-ar-aging.png)
 
 **Predictive Yield (NRV)** — the CFO reserve view: gross AR vs. Net Realizable
-Value, where the collectable cash actually sits by payer type and aging bucket,
-and the expected-yield worklist. *(New page — refresh the `.pbip` in Desktop to
-capture `04-predictive-yield.png`.)*
+Value by payer type, where the collectable cash actually sits by aging bucket,
+and the expected-yield worklist sorted by priority score:
+
+![Predictive Yield (NRV)](powerbi/screenshots/04-predictive-yield.png)
 
 ## Why NRV changes the conversation
 
