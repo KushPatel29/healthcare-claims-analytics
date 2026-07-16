@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "visual026",
+  "position": {
+    "x": 20,
+    "y": 20,
+    "z": 26000,
+    "height": 110,
+    "width": 300,
+    "tabOrder": 26000
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Gross AR (Worklist) $"
+                }
+              },
+              "queryRef": "_Measures.Gross AR (Worklist) $",
+              "nativeQueryRef": "Gross AR (Worklist) $"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
-  "name": "visual024",
+  "name": "visual032",
   "position": {
     "x": 20,
     "y": 450,
-    "z": 24000,
+    "z": 32000,
     "height": 250,
     "width": 940,
-    "tabOrder": 24000
+    "tabOrder": 32000
   },
   "visual": {
     "visualType": "tableEx",
@@ -199,7 +199,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Intelligent Worklist (sorted by expected cash yield)'"
+                  "Value": "'Intelligent Worklist \u2014 highest expected cash yield first'"
                 }
               }
             },

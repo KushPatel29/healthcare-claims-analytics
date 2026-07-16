@@ -69,6 +69,26 @@ table _Measures
 		formatString: #,0
 		lineageTag: 939a4c6a-bb93-49e8-b392-7320a88628df
 
+	measure 'Gross AR (Worklist) $' = SUM(ar_yield_predictions[billed_amount])
+		formatString: #,0
+		lineageTag: a7c10001-0000-4000-8000-000000000001
+
+	measure 'Expected NRV $' = SUM(ar_yield_predictions[expected_nrv])
+		formatString: #,0
+		lineageTag: a7c10001-0000-4000-8000-000000000002
+
+	measure 'Bad Debt Reserve $' = [Gross AR (Worklist) $] - [Expected NRV $]
+		formatString: #,0
+		lineageTag: a7c10001-0000-4000-8000-000000000003
+
+	measure 'NRV Realization Rate' = DIVIDE([Expected NRV $], [Gross AR (Worklist) $])
+		formatString: 0.0%
+		lineageTag: a7c10001-0000-4000-8000-000000000004
+
+	measure 'Worklist Claims' = COUNTROWS(ar_yield_predictions)
+		formatString: #,0
+		lineageTag: a7c10001-0000-4000-8000-000000000005
+
 	column Value
 		dataType: int64
 		isHidden

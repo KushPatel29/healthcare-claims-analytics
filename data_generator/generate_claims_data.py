@@ -27,16 +27,23 @@ AS_OF = date(2026, 7, 1)  # AR aging is measured as of this date
 N_CLAIMS = 12000
 
 # payer_id, name, type, contractual factor (allowed/submitted),
-# denial rate, adjudication lag mean days
+# denial rate, adjudication lag mean days, net collection rate (paid/allowed).
+#
+# Net collection rate is where payer economics diverge most. Government and
+# commercial payers pay ~93-97% of the allowed (contracted) amount on paid
+# claims. Self-Pay is billed full charges (contractual factor 1.0) but collects
+# only ~20% of it — the rest ages into patient bad debt. This is exactly why a
+# dollar of Self-Pay AR is worth a fraction of a dollar of Medicare AR, and the
+# yield engine has to see it in the data to model it.
 PAYERS = [
-    (1, "Medicare", "Medicare", 0.52, 0.055, 14),
-    (2, "Medicaid", "Medicaid", 0.45, 0.120, 32),
-    (3, "Blue Cross Blue Shield", "Commercial", 0.68, 0.085, 21),
-    (4, "UnitedHealthcare", "Commercial", 0.65, 0.095, 24),
-    (5, "Aetna", "Commercial", 0.66, 0.080, 20),
-    (6, "Cigna", "Commercial", 0.64, 0.090, 22),
-    (7, "Humana Medicare Advantage", "Medicare Advantage", 0.55, 0.100, 26),
-    (8, "Self-Pay", "Self-Pay", 1.00, 0.040, 45),
+    (1, "Medicare", "Medicare", 0.52, 0.055, 14, 0.97),
+    (2, "Medicaid", "Medicaid", 0.45, 0.120, 32, 0.93),
+    (3, "Blue Cross Blue Shield", "Commercial", 0.68, 0.085, 21, 0.96),
+    (4, "UnitedHealthcare", "Commercial", 0.65, 0.095, 24, 0.95),
+    (5, "Aetna", "Commercial", 0.66, 0.080, 20, 0.96),
+    (6, "Cigna", "Commercial", 0.64, 0.090, 22, 0.95),
+    (7, "Humana Medicare Advantage", "Medicare Advantage", 0.55, 0.100, 26, 0.95),
+    (8, "Self-Pay", "Self-Pay", 1.00, 0.040, 45, 0.20),
 ]
 PAYER_WEIGHTS = [0.24, 0.14, 0.16, 0.14, 0.10, 0.09, 0.09, 0.04]
 
@@ -111,11 +118,15 @@ def main():
         payer = random.choices(PAYERS, weights=PAYER_WEIGHTS)[0]
         sl = random.choices(SERVICE_LINES, weights=SL_WEIGHTS)[0]
         provider = random.choice(providers)
-        service_date = date(2025, 7, 1) + timedelta(days=random.randint(0, 364))
-        submitted_date = service_date + timedelta(days=random.randint(1, 14))
+        # Anchor to the snapshot: a claim can only be on the books if it was
+        # submitted on or before the as-of date. Generating the submission date
+        # first (then working back to the service date) guarantees AR age >= 1
+        # day — a snapshot must never contain a claim submitted in its future.
+        submitted_date = AS_OF - timedelta(days=random.randint(1, 365))
+        service_date = submitted_date - timedelta(days=random.randint(1, 14))
         submitted = round(random.lognormvariate(sl[2], 0.55) + 40, 2)
 
-        payer_id, _, _, contract, denial_rate, lag_mean = payer
+        payer_id, _, _, contract, denial_rate, lag_mean, collect_mean = payer
 
         # Recent submissions are disproportionately still pending (real AR shape).
         days_since_submit = (AS_OF - submitted_date).days
@@ -142,7 +153,8 @@ def main():
                 status = "Paid"
                 allowed = round(submitted * contract * random.uniform(0.92, 1.05), 2)
                 allowed = min(allowed, submitted)
-                paid = round(allowed * random.uniform(0.90, 1.00), 2)
+                collect = min(1.0, max(0.03, random.gauss(collect_mean, collect_mean * 0.20)))
+                paid = round(allowed * collect, 2)
                 reason, resubmitted = "", 0
 
         claims.append({

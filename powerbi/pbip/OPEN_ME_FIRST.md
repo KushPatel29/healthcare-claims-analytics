@@ -1,9 +1,10 @@
 # How to open this Power BI Project
 
 Everything is pre-built in code — no clicking required. The semantic model
-(TMDL) has 6 tables, 4 relationships, and 17 DAX measures; the report (PBIR)
-has 3 finished pages with 25 visuals (gauge, area, treemap, donut, funnel,
-stacked columns), styled with the Meridian Corporate custom theme.
+(TMDL) has 7 tables, 5 relationships, and 22 DAX measures; the report (PBIR)
+has 4 finished pages with 34 visuals (gauge, area, treemap, donut, funnel,
+stacked columns, priority worklist), styled with the Meridian Corporate custom
+theme.
 
 ## Steps
 
@@ -20,4 +21,5 @@ stacked columns), styled with the Meridian Corporate custom theme.
 |---|---|
 | Revenue Cycle Scorecard | Is the revenue cycle healthy? (denial rate vs 5% target, collections trend) |
 | Denial Analytics | Why are we being denied, by whom, and what does it cost? |
-| AR Aging | Which dollars are stuck, how old are they, and who do we chase? |
+| AR Aging | Which dollars are stuck, how old are they, and who do we chase first? |
+| Predictive Yield (NRV) | How much of the open AR will we actually collect, and which accounts yield the most cash? |

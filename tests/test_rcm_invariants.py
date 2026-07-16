@@ -6,8 +6,6 @@ rebuilds the metrics, and re-proves them on every push.
 """
 
 import csv
-import subprocess
-import sys
 from pathlib import Path
 
 import pytest
@@ -17,8 +15,6 @@ ROOT = Path(__file__).resolve().parent.parent
 
 @pytest.fixture(scope="module")
 def dataset():
-    subprocess.run([sys.executable, str(ROOT / "data_generator" / "generate_claims_data.py")], check=True)
-    subprocess.run([sys.executable, str(ROOT / "engine" / "build_rcm_metrics.py")], check=True)
     read = lambda p: list(csv.DictReader(open(p, encoding="utf-8")))
     return {
         "claims": read(ROOT / "data" / "fact_claims.csv"),

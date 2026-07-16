@@ -3,7 +3,8 @@
   "pageOrder": [
     "section_rcm_scorecard",
     "section_denials",
-    "section_ar_aging"
+    "section_ar_aging",
+    "section_yield"
   ],
   "activePageName": "section_rcm_scorecard"
 }

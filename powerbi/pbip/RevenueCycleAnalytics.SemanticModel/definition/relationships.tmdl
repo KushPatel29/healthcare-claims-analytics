@@ -13,3 +13,7 @@ relationship d1000001-0000-4000-8000-000000000003
 relationship d1000001-0000-4000-8000-000000000004
 	fromColumn: fact_claims.claim_month
 	toColumn: dim_month.month
+
+relationship d1000001-0000-4000-8000-000000000005
+	fromColumn: ar_yield_predictions.payer_name
+	toColumn: dim_payer.payer_name

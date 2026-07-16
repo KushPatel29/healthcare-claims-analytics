@@ -1,0 +1,129 @@
+table ar_yield_predictions
+	lineageTag: c9a7f0e2-1b44-4d90-9a2e-7f4c8b210001
+
+	column priority_rank
+		dataType: int64
+		formatString: 0
+		lineageTag: c9a7f0e2-1b44-4d90-9a2e-7f4c8b210002
+		summarizeBy: none
+		sourceColumn: priority_rank
+
+	column claim_id
+		dataType: string
+		lineageTag: c9a7f0e2-1b44-4d90-9a2e-7f4c8b210003
+		summarizeBy: none
+		sourceColumn: claim_id
+
+	column payer_name
+		dataType: string
+		lineageTag: c9a7f0e2-1b44-4d90-9a2e-7f4c8b210004
+		summarizeBy: none
+		sourceColumn: payer_name
+
+	column payer_type
+		dataType: string
+		lineageTag: c9a7f0e2-1b44-4d90-9a2e-7f4c8b210005
+		summarizeBy: none
+		sourceColumn: payer_type
+
+	column service_line
+		dataType: string
+		lineageTag: c9a7f0e2-1b44-4d90-9a2e-7f4c8b210006
+		summarizeBy: none
+		sourceColumn: service_line
+
+	column submitted_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: c9a7f0e2-1b44-4d90-9a2e-7f4c8b210007
+		summarizeBy: none
+		sourceColumn: submitted_date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column ar_age_days
+		dataType: int64
+		formatString: 0
+		lineageTag: c9a7f0e2-1b44-4d90-9a2e-7f4c8b210008
+		summarizeBy: none
+		sourceColumn: ar_age_days
+
+	column ar_bucket
+		dataType: string
+		sortByColumn: ar_bucket_sort
+		lineageTag: c9a7f0e2-1b44-4d90-9a2e-7f4c8b210009
+		summarizeBy: none
+		sourceColumn: ar_bucket
+
+	column ar_bucket_sort
+		dataType: int64
+		formatString: 0
+		lineageTag: c9a7f0e2-1b44-4d90-9a2e-7f4c8b21000a
+		summarizeBy: none
+		sourceColumn: ar_bucket_sort
+
+	column billed_amount
+		dataType: double
+		formatString: \$#,0
+		lineageTag: c9a7f0e2-1b44-4d90-9a2e-7f4c8b21000b
+		summarizeBy: sum
+		sourceColumn: billed_amount
+
+	column contractual_factor
+		dataType: double
+		formatString: 0.0%
+		lineageTag: c9a7f0e2-1b44-4d90-9a2e-7f4c8b21000c
+		summarizeBy: none
+		sourceColumn: contractual_factor
+
+	column net_collection_rate
+		dataType: double
+		formatString: 0.0%
+		lineageTag: c9a7f0e2-1b44-4d90-9a2e-7f4c8b21000d
+		summarizeBy: none
+		sourceColumn: net_collection_rate
+
+	column denial_propensity
+		dataType: double
+		formatString: 0.0%
+		lineageTag: c9a7f0e2-1b44-4d90-9a2e-7f4c8b21000e
+		summarizeBy: none
+		sourceColumn: denial_propensity
+
+	column expected_yield_rate
+		dataType: double
+		formatString: 0.0%
+		lineageTag: c9a7f0e2-1b44-4d90-9a2e-7f4c8b21000f
+		summarizeBy: none
+		sourceColumn: expected_yield_rate
+
+	column expected_allowed
+		dataType: double
+		formatString: \$#,0
+		lineageTag: c9a7f0e2-1b44-4d90-9a2e-7f4c8b210010
+		summarizeBy: sum
+		sourceColumn: expected_allowed
+
+	column expected_nrv
+		dataType: double
+		formatString: \$#,0
+		lineageTag: c9a7f0e2-1b44-4d90-9a2e-7f4c8b210011
+		summarizeBy: sum
+		sourceColumn: expected_nrv
+
+	column priority_score
+		dataType: double
+		formatString: #,0
+		lineageTag: c9a7f0e2-1b44-4d90-9a2e-7f4c8b210012
+		summarizeBy: none
+		sourceColumn: priority_score
+
+	partition ar_yield_predictions = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataPath & "\output\ar_yield_predictions.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"priority_rank", Int64.Type}, {"claim_id", type text}, {"payer_name", type text}, {"payer_type", type text}, {"service_line", type text}, {"submitted_date", type date}, {"ar_age_days", Int64.Type}, {"ar_bucket", type text}, {"ar_bucket_sort", Int64.Type}, {"billed_amount", type number}, {"contractual_factor", type number}, {"net_collection_rate", type number}, {"denial_propensity", type number}, {"expected_yield_rate", type number}, {"expected_allowed", type number}, {"expected_nrv", type number}, {"priority_score", type number}})
+				in
+				    Typed
