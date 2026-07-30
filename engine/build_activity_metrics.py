@@ -267,8 +267,24 @@ def main():
     for name, ch in charts:
         signals += [dict(s, indicator=name) for s in western_electric(ch)]
 
-    naive_alc_signals = len(western_electric(alc_naive))
-    alc_dispersion = dispersion_factor(alc_naive)
+    # Report the dispersion the chart actually applied, not a second estimate of
+    # it. dispersion_factor(alc_naive) measures over the whole series (4.78);
+    # the published chart corrects by the baseline-only figure, because a late
+    # shift must not be allowed to widen the limits that are meant to catch it.
+    # Publishing the whole-series number beside a chart drawn with the baseline
+    # one invites the reader to check the arithmetic and find it doesn't tie.
+    alc_dispersion = alc_chart[0]["dispersion_factor"]
+    alc_dispersion_full = dispersion_factor(alc_naive)
+
+    # Signals are counted per point, matching Minitab and qicharts2: one month
+    # can trip rules 1, 2 and 3 at once, because a point beyond 3 sigma is also
+    # beyond 2 and 1. The count of distinct *months* is reported beside it, since
+    # that is the number an analyst actually works — 41 signals in 19 months and
+    # 41 signals in 3 months are very different situations.
+    naive_sig = western_electric(alc_naive)
+    naive_alc_signals = len(naive_sig)
+    naive_alc_months = len({s["label"] for s in naive_sig})
+    uprime_sig = [s for s in signals if s["indicator"].startswith("ALC days")]
 
     if signals:
         write_csv("spc_signals.csv", [
@@ -322,11 +338,14 @@ def main():
         f" ({worst_alc['alc_rate']:.1%} of patient days)",
         "-" * 58,
         "STATISTICAL PROCESS CONTROL",
-        f"Special-cause signals (published charts): {len(signals)}",
-        f"ALC overdispersion factor (Laney sigma_z): {alc_dispersion:.2f}x",
-        f"  naive u-chart signals:      {naive_alc_signals:>3}  <- mostly false alarms",
-        f"  u-prime corrected signals:  "
-        f"{len([s for s in signals if s['indicator'].startswith('ALC')]):>3}",
+        f"Special-cause signals (published charts): {len(signals)}"
+        f" in {len({(s['indicator'], s['label']) for s in signals})} indicator-months",
+        f"ALC overdispersion (Laney sigma_z, baseline):{alc_dispersion:>7.2f}x",
+        f"  (whole-series estimate, not applied:      {alc_dispersion_full:>7.2f}x)",
+        f"  naive u-chart signals:      {naive_alc_signals:>3}"
+        f" in {naive_alc_months:>2} of {len(monthly)} months  <- mostly false alarms",
+        f"  u-prime corrected signals:  {len(uprime_sig):>3}"
+        f" in {len({s['label'] for s in uprime_sig}):>2} of {len(monthly)} months",
     ]
     (OUT / "activity_summary.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
     print("\n".join(lines))

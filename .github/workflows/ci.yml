@@ -39,15 +39,32 @@ jobs:
         run: python governance/data_quality.py
 
       - name: Gate must close on injected corruption
-        # A gate you have never watched close is decoration. This step inverts
-        # the exit code: the build fails if the corrupted run is *allowed*.
+        # A gate you have never watched close is decoration, so this step runs
+        # the drill and fails the build if the corrupted data is *allowed*.
+        #
+        # Checking "did it exit non-zero" is not enough, and the reason is
+        # specific: argparse also exits 2 on an unrecognised argument. Rename or
+        # typo --inject-failure and the gate never runs at all, yet the step sees
+        # exit 2, prints "correctly blocked", and goes green — the exact failure
+        # this job exists to prevent, arriving through the back door.
+        #
+        # So the drill has to prove it *ran*: exit 2 AND a BLOCKED verdict on
+        # stdout, which a usage error cannot produce.
         run: |
-          if python governance/data_quality.py --inject-failure; then
-            echo "::error::DQ gate did not block a duplicated grain key"
+          set +e
+          out=$(python governance/data_quality.py --inject-failure 2>&1)
+          rc=$?
+          set -e
+          echo "$out"
+          if [ "$rc" -ne 2 ]; then
+            echo "::error::expected exit 2 from the injected-failure drill, got $rc"
             exit 1
-          else
-            echo "gate correctly blocked the corrupted build"
           fi
+          if ! printf '%s' "$out" | grep -q 'Verdict:.*BLOCKED'; then
+            echo "::error::exit 2 but no BLOCKED verdict — the gate did not evaluate the corrupted data (renamed flag? import error?)"
+            exit 1
+          fi
+          echo "gate correctly blocked the corrupted build"
 
   docker-build:
     runs-on: ubuntu-latest

@@ -20,7 +20,8 @@ Highest LOS index:                 Harbourview Hospital (1.039)
 Highest ALC rate:                  Harbourview Hospital (15.7% of patient days)
 ----------------------------------------------------------
 STATISTICAL PROCESS CONTROL
-Special-cause signals (published charts): 24
-ALC overdispersion factor (Laney sigma_z): 4.78x
-  naive u-chart signals:       41  <- mostly false alarms
-  u-prime corrected signals:   10
+Special-cause signals (published charts): 24 in 10 indicator-months
+ALC overdispersion (Laney sigma_z, baseline):   4.60x
+  (whole-series estimate, not applied:         4.78x)
+  naive u-chart signals:       41 in 19 of 24 months  <- mostly false alarms
+  u-prime corrected signals:   10 in  4 of 24 months

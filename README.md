@@ -4,7 +4,7 @@
 ![Python](https://img.shields.io/badge/Python-stdlib%20only-3776AB?logo=python&logoColor=white)
 ![SPC](https://img.shields.io/badge/SPC-Laney%20p'%20%2F%20u'-0B5FA5)
 ![HTA](https://img.shields.io/badge/Health%20economics-ICER%20%2B%20PSA-6A4C93)
-![Tests](https://img.shields.io/badge/tests-97%20passing-3B8C6E)
+![Tests](https://img.shields.io/badge/tests-111%20passing-3B8C6E)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
 Two health systems, one engineering standard.
@@ -45,7 +45,7 @@ what a weighted case costs, whether patients stay longer than their case mix
 predicts, how many beds are occupied by people who no longer need acute care,
 and whether this month's readmission rate is a signal or noise.
 
-**Dataset:** 39,573 discharge abstracts over 24 months, six facilities, 17 CMG+
+**Dataset:** 39,567 discharge abstracts over 24 months, six facilities, 17 CMG+
 case mix groups, with RIW, expected LOS, ALC days, comorbidity level, and
 disposition. Volume is calibrated so the authority is internally coherent —
 ~20,000 discharges a year against 490 staffed beds is roughly 85% occupancy at
@@ -55,8 +55,8 @@ occupancy is physically impossible does not survive its first reading.
 ## The four indicators
 
 ```
-Discharges:                               39,573
-Weighted cases (sum RIW):               56,768.2
+Discharges:                               39,567
+Weighted cases (sum RIW):               58,727.7
 Cost per weighted case:                    8,449
   ...excluding ALC:                        7,635
   ...ALC component:                          814
@@ -77,8 +77,15 @@ on thin strata — the same technique the NRV engine uses on thin payer × servi
 line cells. The defining identity (Σ expected = Σ observed, so the
 authority-wide O/E is exactly 1.00) is asserted by test; if it drifts, the ratios
 are measuring the standardisation rather than the sites. A test also demands the
-crude and adjusted rankings *disagree* — a risk adjustment that never changes
-anything is decoration and should be dropped rather than reported.
+adjustment move the ranking *in the direction case mix predicts* — the site with
+the heaviest case mix has to rank better once adjusted, the site with the
+lightest has to rank worse, and at least one site has to move two places rather
+than swapping on a rounding error. Merely asserting that the two rankings
+differ, which is what this test used to do, is close to free: with six sites any
+tie-break flip satisfies it, and a *broken* adjustment satisfies it more reliably
+than a correct one, because noise reorders more readily than signal. Inverting
+the O/E ratio — an easy bug to write — passes the old assertion and fails the
+new one.
 
 ## Statistical process control, and the trap in it
 
@@ -92,17 +99,22 @@ Electric rules, Laney's overdispersion correction, and phase I/phase II
 baselines. Three findings came out of pointing it at ALC:
 
 **1. The metric everyone asks for is the one that lies.** ALC *days* per 100
-patient days is heavily overdispersed — measured dispersion **4.8×** Poisson,
-because one patient waiting sixty days contributes sixty correlated days, not
-sixty independent events. Run naively it produces **41 signals**, nearly all
-false. A chart that cries wolf every month is ignored within a quarter, which is
-worse than no chart.
+patient days is heavily overdispersed — measured dispersion **4.6×** Poisson over
+the baseline, because one patient waiting sixty days contributes sixty correlated
+days, not sixty independent events. Run naively it fires **41 point-signals
+across 19 of 24 months**. A chart that cries wolf in four months out of five is
+ignored within a quarter, which is worse than no chart.
 
 **2. Correcting is good; changing the unit of analysis is better.** Laney's u′
-brings it to 10. But the share of *stays* with any ALC day is one independent
-observation per patient, has dispersion ≈ 1.05, and detects the planted shift
-**in its first month**. Removing clustering at the source beats correcting for
-it afterwards.
+brings it to **10 signals in 4 months**. But the share of *stays* with any ALC day
+is one independent observation per patient, has dispersion **1.18** against 4.6
+for the day-level chart, and detects the planted shift **in its first month**.
+Removing clustering at the source beats correcting for it afterwards.
+
+Signals are counted per point, as Minitab and qicharts2 count them: a month
+beyond 3σ is also beyond 2σ and 1σ, so one month can trip three rules. The count
+of distinct months is reported beside the raw count throughout, because that is
+the number an analyst actually works.
 
 **3. The baseline is where charts quietly go wrong.** Compute the centre line
 over the whole series, including the period you are assessing, and a genuine
@@ -276,10 +288,10 @@ Two things happen, and they are not the same:
    survives it. Generalise first, suppress only as a fallback.
 
 ```
-Records in:                           39,573
-Unique on quasi-identifiers:             415 (1.05%)
-Records generalised:                   3,449
-Records suppressed:                    1,480 (3.74%)
+Records in:                           39,567
+Unique on quasi-identifiers:             449 (1.14%)
+Records generalised:                   3,390
+Records suppressed:                    1,405 (3.55%)
 Smallest equivalence class:                5
 Max re-identification probability:     0.200
 ```
@@ -341,7 +353,7 @@ python engine/build_rcm_metrics.py
 python governance/deidentify.py
 python governance/data_quality.py
 
-pytest tests/ -v                            # 97 invariants
+pytest tests/ -v                            # 111 invariants
 ```
 
 Then open `powerbi/pbip/RevenueCycleAnalytics.pbip` (see
@@ -352,15 +364,25 @@ Then open `powerbi/pbip/RevenueCycleAnalytics.pbip` (see
 **Activity and funding** — LOS decomposes exactly into acute + ALC days; facility
 and monthly rollups tie to the abstracts to the penny; CPWC ex-ALC differs from
 the headline by precisely the ALC cost; indirect standardisation satisfies
-Σ expected = Σ observed; risk adjustment demonstrably reorders the sites; the
-planted ALC outlier site is recovered.
+Σ expected = Σ observed; risk adjustment reorders the sites in the direction case
+mix predicts, by at least two places; the planted ALC outlier site is recovered.
 
 **SPC** — each Western Electric rule fires on a series built to trip it and stays
-silent otherwise; a missing period breaks a run rather than bridging it; a stable
-process produces zero signals; a planted shift is detected, in the right
-direction, promptly; dispersion ≈ 1.0 on binomial data and > 1.5 on clustered
-data; Laney widens limits and suppresses false alarms while being a no-op on
+silent otherwise; a missing period breaks a run rather than bridging it, checked
+on the *counting* rules 2 and 3 where the guard actually decides the outcome
+(rule 4 cannot distinguish, and the test that only checked rule 4 passed with the
+guard deleted); a stable process produces zero signals; a planted shift is
+detected, in the right direction, promptly; dispersion ≈ 1.0 on binomial data and
+> 1.5 on clustered data; Laney widens limits and suppresses false alarms on
+overdispersed data, and stays inside a documented band — *not* a no-op — on
 well-behaved data; a contaminated baseline misfires in the documented way.
+
+**Published figures** — every headline number in this README and in the two
+decision-support documents is re-derived from the engine output and matched
+against the prose, character for character. If a generator changes and a document
+is not updated, the build fails and names the file. The badge's own test count is
+checked the same way. This section is the claim most worth distrusting in any
+portfolio repo, so it is the one under the tightest guard.
 
 **Health economics** — incremental cost decomposes exactly; NMB and ICER match
 their definitions; QALYs are identical across perspectives while costs are not;
@@ -403,7 +425,7 @@ governance/         deidentify.py — Safe Harbor + k-anonymity + risk report
 docs/               BRIEFING_NOTE.md · BUSINESS_CASE.md · SOURCE_TO_TARGET.md
 output/             every engine result — reproducible outside Power BI
 powerbi/            ready-to-open PBIP (TMDL model + PBIR report, 22 DAX measures)
-tests/              97 invariants across activity, SPC, economics, governance,
+tests/              111 invariants across activity, SPC, economics, governance,
                     revenue cycle, and Power BI model/report integrity
 .github/workflows/  CI — full rebuild, invariants, and the DQ sabotage proof
 ```

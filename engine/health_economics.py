@@ -66,8 +66,26 @@ WTP_THRESHOLD = 50000.0                # $/QALY, the conventional Canadian ancho
 CEAC_GRID = [0, 10000, 20000, 30000, 40000, 50000, 75000, 100000, 150000]
 
 # name: (base, low, high, distribution, note)
-# Low/high are the plausible bounds a reviewer would defend, not confidence
-# intervals — that is what a one-way sensitivity analysis is for.
+#
+# Low/high are the plausible bounds a reviewer would defend. For the one-way
+# analysis they are used literally, as the extremes to push each parameter to.
+# For the PSA they are read as an approximate 95% interval (see sd_from_bounds),
+# which is the conventional HTA treatment — the distribution therefore puts a
+# little mass outside them, deliberately, rather than treating the bounds as
+# hard walls.
+#
+# The PSA draws every parameter independently. The pair most obviously open to
+# challenge is alc_per_diem x variable_share, since they multiply to give the
+# cash-releasing saving and are arguably two views of one cost stack: a higher
+# fully absorbed per-diem usually means a heavier fixed/overhead load, hence a
+# *lower* variable share. That argues for negative correlation. It was tested
+# with a Gaussian copula across rho = -0.9 to +0.6, and the conclusion does not
+# move: P(cost-effective at $50k/QALY) under perspective B stays inside 12-20%
+# against 16.9% independent, and the mean incremental cost stays between $637k
+# and $681k against $657k. Negative correlation makes the program look slightly
+# worse, so independence is, if anything, the marginally generous assumption —
+# which is the safe direction for a recommendation that is already "do not fund
+# this on cash-releasing grounds."
 PARAMS = {
     "alc_reduction": (
         0.22, 0.10, 0.35, "beta",
@@ -114,7 +132,15 @@ def gamma_from(mean, sd):
 
 
 def sd_from_bounds(low, high):
-    """Treat the plausible low/high as roughly a 95% span."""
+    """Treat the plausible low/high as roughly a 95% span (2 x 1.96 sd).
+
+    This is the conventional HTA reading, and it is the *wider* of the two
+    obvious choices: dividing by 6 would treat the bounds as +/-3 sd and put
+    essentially no mass outside them. Choosing 3.92 means the PSA explores a
+    little beyond the stated range, which is the conservative direction for a
+    confidence claim — it makes P(cost-effective) harder to push toward either
+    extreme, not easier.
+    """
     return max((high - low) / 3.92, 1e-9)
 
 
@@ -145,6 +171,19 @@ def evaluate(alc_days_annual, p):
     """
     days_avoided = alc_days_annual * p["alc_reduction"]
     qalys = days_avoided * p["qaly_per_alc_day_avoided"]
+
+    # The community placement is charged at its FULL per-diem under both
+    # perspectives, including the one that only credits the variable share of
+    # the hospital bed day. That asymmetry is deliberate and it is the first
+    # thing a reviewer will query, so: the two sides are not the same kind of
+    # cash flow. The acute bed already exists and is staffed — avoiding a day
+    # releases only supplies, drugs, food and agency premium, because the ward,
+    # the nurse and the overhead do not go anywhere. The community day is net
+    # new purchased capacity: a home-support or interim residential place the
+    # authority was not previously buying, contracted at the margin and paid in
+    # full. Sunk fixed cost on one side, marginal purchase on the other.
+    # Crediting only the variable share of the community cost too would be
+    # symmetrical and wrong.
     community_cost = days_avoided * p["community_per_diem"]
 
     out = {}

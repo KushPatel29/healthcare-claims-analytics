@@ -9,7 +9,7 @@
 > All figures in this note are reproducible from the command line
 > (`python engine/build_activity_metrics.py`) and are re-verified by 92
 > automated tests on every code change. Source: synthetic DAD-shaped abstracts,
-> 24 months to 30 June 2026, 39,573 discharges. **No real patient data.**
+> 24 months to 30 June 2026, 39,567 discharges. **No real patient data.**
 
 ---
 

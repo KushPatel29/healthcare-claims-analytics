@@ -40,10 +40,22 @@ out much too tight, and nearly every month signals — a chart that cries wolf
 every month gets ignored within a quarter, which is worse than having no chart.
 
 Laney's correction estimates the *actual* dispersion from the data — via the
-average moving range of the standardised residuals — and widens sigma by that
-factor. When there is no overdispersion the factor is ~1.0 and the chart is
-unchanged, so it costs nothing to apply. When there is, only genuinely
-exceptional months survive.
+average moving range of the standardised residuals — and scales sigma by that
+factor. When there is genuine overdispersion, only genuinely exceptional months
+survive.
+
+One caveat worth stating plainly, because it is easy to sell this as free and it
+is not. sigma_z is *not* clamped at 1.0, because Laney's published method does
+not clamp it. On well-behaved binomial data the factor lands near 1.0 but not on
+it — a 30-point simulation here measures 0.79, which *tightens* the limits by
+about 20% and makes the chart slightly more trigger-happy than the uncorrected
+one, not less. So `laney=True` is not a no-op you can switch on everywhere and
+forget; it is a correction for a condition you have checked for. Clamping at 1.0
+is a defensible house rule (underdispersion in attribute data usually means the
+denominator is wrong rather than that variation is genuinely sub-binomial) and
+would be a no-op on every chart this repo publishes, since all three measure
+above 1.0 — but it is a deviation from the published method, so it is offered as
+a note rather than taken silently.
 
 The right answer is often also to change the unit of analysis: the proportion
 of *stays* with any ALC day is one independent observation per patient and is

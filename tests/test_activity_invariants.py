@@ -131,16 +131,47 @@ def test_indirect_standardisation_sums_to_observed(abstracts, by_facility):
     assert abs(acute - exp_acute) / acute < 0.001
 
 
-def test_risk_adjustment_moves_the_ranking(by_facility):
-    """A risk adjustment that never changes anything is decoration. Crude and
-    adjusted readmission must disagree about at least one site's rank —
-    otherwise there was no case-mix difference to adjust for and the whole
-    exercise should be dropped rather than reported."""
+def test_risk_adjustment_moves_the_ranking_the_way_case_mix_predicts(by_facility):
+    """A risk adjustment that never changes anything is decoration — but
+    "the two rankings differ" is far too weak a way to say so.
+
+    With six sites, any single adjacent swap satisfies it, including one caused
+    by two sites sitting a ten-thousandth apart. Worse, a *broken* adjustment
+    passes it more reliably than a correct one, because random noise reorders
+    more readily than a real signal does. It is an assertion that gets easier
+    the less the code works.
+
+    So this asserts the mechanism instead. Rank 1 is the worst performer. A site
+    treating the heaviest case mix should look *better* once you account for the
+    patients it actually treats; a site with the lightest case mix should look
+    *worse*, because its low crude rate was partly a gift from its patients.
+    Both are directional claims a broken adjustment fails."""
+    exp_rate = lambda r: float(r["expected_readmits"]) / int(r["discharges"])
     crude = [r["facility_name"] for r in
              sorted(by_facility, key=lambda r: -float(r["readmit_rate"]))]
     adjusted = [r["facility_name"] for r in
                 sorted(by_facility, key=lambda r: -float(r["readmit_oe_ratio"]))]
-    assert crude != adjusted
+
+    assert crude != adjusted, "adjustment reordered nothing at all"
+
+    # A material move, not a tie-break flip.
+    moves = {n: crude.index(n) - adjusted.index(n) for n in crude}
+    assert max(abs(m) for m in moves.values()) >= 2, \
+        f"only tie-break-sized movement, nothing reordered materially: {moves}"
+
+    heaviest = max(by_facility, key=exp_rate)["facility_name"]
+    lightest = min(by_facility, key=exp_rate)["facility_name"]
+    assert heaviest != lightest
+
+    assert adjusted.index(heaviest) > crude.index(heaviest), (
+        f"{heaviest} treats the heaviest case mix "
+        f"(expected {exp_rate(max(by_facility, key=exp_rate)):.4f}) and must rank "
+        f"better once adjusted, not worse"
+    )
+    assert adjusted.index(lightest) < crude.index(lightest), (
+        f"{lightest} treats the lightest case mix and must rank worse once its "
+        f"easy case mix is accounted for"
+    )
 
 
 def test_los_index_is_acute_over_expected(by_facility):

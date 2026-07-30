@@ -37,13 +37,20 @@ def rules_fired(chart):
 # --------------------------------------------------------------------------
 
 def test_p_chart_centre_is_pooled_not_mean_of_rates():
-    """Two months: 1/10 and 100/1000. The mean of the rates is 0.55; the pooled
-    proportion is 0.1 . Averaging rates would let a ten-patient month outvote a
-    thousand-patient one, which is how a small site quietly hijacks a
-    region-wide centre line."""
-    chart = p_chart([("m1", 1, 10), ("m2", 100, 1000)])
-    assert chart[0]["centre"] == pytest.approx(101 / 1010)
-    assert chart[0]["centre"] != pytest.approx((0.1 + 0.1) / 2 + 0.45)
+    """Two months: 5/10 and 100/1000. The mean of the two *rates* is 0.30; the
+    pooled proportion is 105/1010 = 0.104. Averaging rates would let a
+    ten-patient month outvote a thousand-patient one, which is how a small site
+    quietly hijacks a region-wide centre line.
+
+    The denominators have to differ *and* the rates have to differ for this test
+    to mean anything. An earlier version used 1/10 and 100/1000 — both 0.10 —
+    where the pooled proportion and the mean of the rates are identical, so it
+    would have passed just as happily against the bug it exists to catch."""
+    chart = p_chart([("m1", 5, 10), ("m2", 100, 1000)])
+    mean_of_rates = (5 / 10 + 100 / 1000) / 2
+    assert mean_of_rates == pytest.approx(0.30)
+    assert chart[0]["centre"] == pytest.approx(105 / 1010)
+    assert chart[0]["centre"] != pytest.approx(mean_of_rates)
 
 
 def test_p_chart_limits_are_wider_for_smaller_denominators():
@@ -121,6 +128,29 @@ def test_a_missing_period_breaks_a_run_rather_than_bridging_it():
     signals out of missing data."""
     assert 4 in rules_fired(make_chart([0.3] * 8))
     assert 4 not in rules_fired(make_chart([0.3] * 4 + [None] + [0.3] * 4))
+
+
+def test_a_missing_period_breaks_the_counting_rules_too():
+    """Rule 4 cannot actually prove the gap logic works.
+
+    `all(side(j) == s)` already fails on an absent point, because side() returns
+    0 for None — so the rule-4 case above passes whether or not `window()`
+    rejects windows containing a gap. It is the *counting* rules that depend on
+    the guard: rules 2 and 3 tally qualifying points and would happily count
+    across a hole, treating two months either side of a gap as consecutive.
+
+    Each case here is the one the guard decides. Remove the None-check from
+    window() and both of these fire."""
+    # Rule 2 — two points beyond 2 sigma with a missing month between them are
+    # not "2 of 3 consecutive".
+    assert 2 not in rules_fired(make_chart([2.5, None, 2.5]))
+    assert 2 in rules_fired(make_chart([2.5, 0.1, 2.5])), "sanity: fires without the gap"
+
+    # Rule 3 — four points beyond 1 sigma spanning a gap are not "4 of 5
+    # consecutive".
+    assert 3 not in rules_fired(make_chart([1.2, 1.4, None, 1.3, 1.5]))
+    assert 3 in rules_fired(make_chart([1.2, 1.4, 0.1, 1.3, 1.5])), \
+        "sanity: fires without the gap"
 
 
 def test_stable_process_produces_no_signals():
@@ -217,16 +247,32 @@ def test_laney_widens_limits_and_suppresses_false_alarms():
     assert len(western_electric(corrected)) < len(western_electric(naive))
 
 
-def test_laney_is_a_no_op_when_there_is_no_overdispersion():
-    """The correction has to be safe to apply by default: on well-behaved data
-    it must leave the chart essentially untouched, or nobody can use it as a
-    standard."""
+def test_laney_stays_near_nominal_on_well_behaved_data_but_is_not_free():
+    """What the correction actually does to binomial data — stated honestly.
+
+    It is tempting to call this a no-op and wave `laney=True` on by default. It
+    is not. On this seed sigma_z is 0.79, so the corrected limits come out ~21%
+    *tighter* than the uncorrected ones, which makes the chart marginally more
+    trigger-happy rather than less. The factor is not clamped at 1.0 because
+    Laney's published method does not clamp it (see the module docstring).
+
+    The assertion is therefore a band, not an equality, and the band is tight
+    enough to fail if the estimator ever drifts badly — the previous version
+    allowed 45% either way, which is wide enough to hide the very behaviour this
+    test is supposed to document."""
     rng = random.Random(3)
     points = [(f"m{i}", sum(1 for _ in range(800) if rng.random() < 0.12), 800)
               for i in range(30)]
     naive = p_chart(points)
     corrected = p_chart(points, laney=True)
-    assert corrected[0]["sigma"] == pytest.approx(naive[0]["sigma"], rel=0.45)
+    ratio = corrected[0]["sigma"] / naive[0]["sigma"]
+
+    assert 0.70 < ratio < 1.30, f"sigma_z drifted out of the nominal band: {ratio:.3f}"
+    assert ratio < 1.0, (
+        "documented behaviour: this seed is mildly underdispersed, so Laney "
+        "tightens rather than widens. If this ever flips, the docstring in "
+        "spc.py that warns the correction is not free needs rewriting too."
+    )
 
 
 # --------------------------------------------------------------------------
