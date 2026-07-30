@@ -20,13 +20,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "spc_alc_stay"
+                      "Entity": "dim_activity_month"
                     }
                   },
                   "Property": "month"
                 }
               },
-              "queryRef": "spc_alc_stay.month",
+              "queryRef": "dim_activity_month.month",
               "nativeQueryRef": "month"
             }
           ]
@@ -35,59 +35,59 @@
           "projections": [
             {
               "field": {
-                "Column": {
+                "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "spc_alc_stay"
+                      "Entity": "_Measures"
                     }
                   },
-                  "Property": "rate"
+                  "Property": "ALC Stay Rate"
                 }
               },
-              "queryRef": "spc_alc_stay.rate",
-              "nativeQueryRef": "rate"
+              "queryRef": "_Measures.ALC Stay Rate",
+              "nativeQueryRef": "ALC Stay Rate"
             },
             {
               "field": {
-                "Column": {
+                "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "spc_alc_stay"
+                      "Entity": "_Measures"
                     }
                   },
-                  "Property": "centre"
+                  "Property": "p-prime Centre Line"
                 }
               },
-              "queryRef": "spc_alc_stay.centre",
-              "nativeQueryRef": "centre"
+              "queryRef": "_Measures.p-prime Centre Line",
+              "nativeQueryRef": "p-prime Centre Line"
             },
             {
               "field": {
-                "Column": {
+                "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "spc_alc_stay"
+                      "Entity": "_Measures"
                     }
                   },
-                  "Property": "lcl"
+                  "Property": "p-prime Lower Limit"
                 }
               },
-              "queryRef": "spc_alc_stay.lcl",
-              "nativeQueryRef": "lcl"
+              "queryRef": "_Measures.p-prime Lower Limit",
+              "nativeQueryRef": "p-prime Lower Limit"
             },
             {
               "field": {
-                "Column": {
+                "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "spc_alc_stay"
+                      "Entity": "_Measures"
                     }
                   },
-                  "Property": "ucl"
+                  "Property": "p-prime Upper Limit"
                 }
               },
-              "queryRef": "spc_alc_stay.ucl",
-              "nativeQueryRef": "ucl"
+              "queryRef": "_Measures.p-prime Upper Limit",
+              "nativeQueryRef": "p-prime Upper Limit"
             }
           ]
         }
@@ -101,7 +101,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Stays with any ALC day \u2014 Laney p' chart (limits from an 18-month baseline)'"
+                  "Value": "'Stays with any ALC day \u2014 Laney p\u2032 chart (limits from an 18-month baseline)'"
                 }
               }
             },

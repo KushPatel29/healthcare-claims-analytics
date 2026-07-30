@@ -216,6 +216,23 @@ table _Measures
 		formatString: #,0
 		displayFolder: Health economics
 		lineageTag: c8a20020-0000-4000-8000-000000000000
+	/// Centre line for the stays-with-ALC p-prime chart: the pooled proportion over the baseline period, never the mean of the monthly rates. Read from engine/spc.py output, never computed here. The limits come from an 18-month phase I baseline extended forward and carry Laney's overdispersion correction; a DAX measure evaluating in filter context cannot reproduce either. AVERAGE is exact at month grain because spc_alc_stay holds exactly one row per month - it is an aggregation the visual never actually exercises, present only so the column can sit on an axis.
+	measure 'p-prime Centre Line' = AVERAGE(spc_alc_stay[centre])
+		formatString: 0.0%
+		displayFolder: Statistical process control
+		lineageTag: c8a30001-0000-4000-8000-000000000000
+
+	/// Lower control limit, clamped at zero because a proportion cannot go negative. Read from engine/spc.py output, never computed here. The limits come from an 18-month phase I baseline extended forward and carry Laney's overdispersion correction; a DAX measure evaluating in filter context cannot reproduce either. AVERAGE is exact at month grain because spc_alc_stay holds exactly one row per month - it is an aggregation the visual never actually exercises, present only so the column can sit on an axis.
+	measure 'p-prime Lower Limit' = AVERAGE(spc_alc_stay[lcl])
+		formatString: 0.0%
+		displayFolder: Statistical process control
+		lineageTag: c8a30002-0000-4000-8000-000000000000
+
+	/// Upper control limit. Varies month to month because a month with fewer discharges is noisier and its limits are correspondingly wider. Read from engine/spc.py output, never computed here. The limits come from an 18-month phase I baseline extended forward and carry Laney's overdispersion correction; a DAX measure evaluating in filter context cannot reproduce either. AVERAGE is exact at month grain because spc_alc_stay holds exactly one row per month - it is an aggregation the visual never actually exercises, present only so the column can sit on an axis.
+	measure 'p-prime Upper Limit' = AVERAGE(spc_alc_stay[ucl])
+		formatString: 0.0%
+		displayFolder: Statistical process control
+		lineageTag: c8a30003-0000-4000-8000-000000000000
 	partition _Measures = m
 		mode: import
 		source =

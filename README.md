@@ -4,7 +4,7 @@
 ![Python](https://img.shields.io/badge/Python-stdlib%20only-3776AB?logo=python&logoColor=white)
 ![SPC](https://img.shields.io/badge/SPC-Laney%20p'%20%2F%20u'-0B5FA5)
 ![HTA](https://img.shields.io/badge/Health%20economics-ICER%20%2B%20PSA-6A4C93)
-![Tests](https://img.shields.io/badge/tests-114%20passing-3B8C6E)
+![Tests](https://img.shields.io/badge/tests-116%20passing-3B8C6E)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
 Two health systems, one engineering standard.
@@ -392,7 +392,7 @@ python engine/build_rcm_metrics.py
 python governance/deidentify.py
 python governance/data_quality.py
 
-pytest tests/ -v                            # 114 invariants
+pytest tests/ -v                            # 116 invariants
 ```
 
 Then open `powerbi/pbip/RevenueCycleAnalytics.pbip` (see
@@ -446,8 +446,10 @@ Self-Pay dollar is worth materially less than an insured one.
 
 **Power BI integrity, without opening Power BI** — every column, measure, and
 sort field a visual references exists in the TMDL model (a mistyped field renders
-a blank visual, not an error); relationships and sort-by columns point at real
-columns; the yield table's columns match the engine's CSV headers exactly; every
+a blank visual, not an error); no chart plots a column the model cannot
+aggregate, which renders empty rather than raising; relationships and sort-by
+columns point at real columns; the yield table's columns match the engine's CSV
+headers exactly; every
 discharge month in the abstracts exists in the calendar it is joined to, because
 a date dimension that does not span its fact table drops the unmatched rows into
 a blank member and under-reports in silence; and the risk-adjusted measures still
@@ -468,7 +470,7 @@ governance/         deidentify.py — Safe Harbor + k-anonymity + risk report
 docs/               BRIEFING_NOTE.md · BUSINESS_CASE.md · SOURCE_TO_TARGET.md
 output/             every engine result — reproducible outside Power BI
 powerbi/            ready-to-open PBIP (TMDL model + PBIR report, 22 DAX measures)
-tests/              114 invariants across activity, SPC, economics, governance,
+tests/              116 invariants across activity, SPC, economics, governance,
                     revenue cycle, and Power BI model/report integrity
 .github/workflows/  CI — full rebuild, invariants, and the DQ sabotage proof
 ```

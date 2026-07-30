@@ -205,3 +205,93 @@ def test_risk_adjusted_measures_read_the_engine_rather_than_recomputing():
             f"'{name}' no longer reads the engine output — it must not be "
             f"recomputed from the fact table in DAX"
         )
+
+
+def test_no_chart_plots_a_column_it_cannot_aggregate():
+    """The bug this test was written for shipped, and it shipped silently.
+
+    The p' control chart originally put spc_alc_stay[rate], [centre], [lcl] and
+    [ucl] straight onto the Y axis. Every one of those columns is
+    `summarizeBy: none` — correct, because summing a control limit is nonsense —
+    but a chart has to aggregate what it plots. Power BI does not raise: it
+    renders the visual empty. Field references all resolved, so the existing
+    integrity test passed, and the page looked finished until someone opened it.
+
+    A column belongs on a value axis only if the model says how to aggregate it.
+    Anything else goes through a measure, which is what the rest of this report
+    already does. Cards, tables and slicers are exempt — none of them aggregate.
+    """
+    NUMERIC = {"double", "int64", "decimal"}
+    VALUE_WELLS = {"Y", "Y2", "Values", "Size", "X"}
+    EXEMPT = {"slicer", "tableEx", "pivotTable", "card", "multiRowCard"}
+
+    no_agg = {}
+    for tmdl in (MODEL / "tables").glob("*.tmdl"):
+        text = tmdl.read_text(encoding="utf-8")
+        m = re.search(r"^table\s+('([^']+)'|(\S+))", text, re.M)
+        table = m.group(2) or m.group(3)
+        for col in re.finditer(
+                r"^\tcolumn\s+(\S+)\n(?:\t\t.*\n)*?\t\tsummarizeBy:\s*none", text, re.M):
+            block = text[col.start():col.end()]
+            dtype = re.search(r"dataType:\s*(\S+)", block)
+            if dtype and dtype.group(1) in NUMERIC:
+                no_agg.setdefault(table, set()).add(col.group(1))
+
+    problems = []
+    for vf in sorted(REPORT.glob("pages/*/visuals/*/visual.json")):
+        tree = json.loads(vf.read_text(encoding="utf-8"))
+        vis = tree.get("visual", {})
+        if vis.get("visualType") in EXEMPT:
+            continue
+        page = vf.parent.parent.parent.name
+        for well, spec in vis.get("query", {}).get("queryState", {}).items():
+            if well not in VALUE_WELLS:
+                continue
+            for proj in spec.get("projections", []):
+                col = proj.get("field", {}).get("Column")
+                if not col:
+                    continue
+                entity = col.get("Expression", {}).get("SourceRef", {}).get("Entity")
+                prop = col.get("Property")
+                if prop in no_agg.get(entity, ()):
+                    problems.append(
+                        f"{page}/{tree['name']} ({vis.get('visualType')}): "
+                        f"{entity}[{prop}] sits on '{well}' but is summarizeBy:none "
+                        f"— this renders an empty visual, not an error"
+                    )
+
+    assert not problems, "charts that will render blank:\n" + "\n".join(problems)
+
+
+def test_the_control_chart_reads_its_limits_from_the_engine():
+    """The p' chart's four series, and where each one legitimately comes from.
+
+    The observed rate is recomputed from the fact table; the three limits are
+    read from the engine. That split is the point — if the limits ever became
+    DAX, they would be recomputed inside filter context and would no longer be
+    the phase I baseline limits the chart claims to show.
+    """
+    vf = (REPORT / "pages" / "section_alc_flow" / "visuals" / "visualD06" / "visual.json")
+    tree = json.loads(vf.read_text(encoding="utf-8"))
+    qs = tree["visual"]["query"]["queryState"]
+
+    axis = qs["Category"]["projections"][0]["queryRef"]
+    assert axis == "dim_activity_month.month", (
+        f"axis is {axis}; it must be the conformed dimension, or the fact-based "
+        f"observed rate is not filtered by the month on the axis"
+    )
+
+    series = {p["queryRef"] for p in qs["Y"]["projections"]}
+    assert series == {
+        "_Measures.ALC Stay Rate",
+        "_Measures.p-prime Centre Line",
+        "_Measures.p-prime Lower Limit",
+        "_Measures.p-prime Upper Limit",
+    }, f"control chart series changed: {sorted(series)}"
+
+    tmdl = (MODEL / "tables" / "_Measures.tmdl").read_text(encoding="utf-8")
+    for limit in ("p-prime Centre Line", "p-prime Lower Limit", "p-prime Upper Limit"):
+        expr = re.search(rf"measure '{re.escape(limit)}' = (.+)", tmdl)
+        assert expr and "spc_alc_stay" in expr.group(1), (
+            f"'{limit}' no longer reads the engine's chart output"
+        )
