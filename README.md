@@ -1,6 +1,6 @@
 # Health System Decision Support — activity, economics, and revenue cycle
 
-![Power BI](https://img.shields.io/badge/Power%20BI-Revenue%20Cycle-F2C811?logo=powerbi&logoColor=black)
+![Power BI](https://img.shields.io/badge/Power%20BI-6%20pages%20%C2%B7%2053%20visuals-F2C811?logo=powerbi&logoColor=black)
 ![Python](https://img.shields.io/badge/Python-stdlib%20only-3776AB?logo=python&logoColor=white)
 ![SPC](https://img.shields.io/badge/SPC-Laney%20p'%20%2F%20u'-0B5FA5)
 ![HTA](https://img.shields.io/badge/Health%20economics-ICER%20%2B%20PSA-6A4C93)
@@ -179,11 +179,39 @@ of US revenue cycle to reach the work that speaks to them.
 
 **Acute Activity & Funding** — discharges, weighted cases, CPWC, LOS index and
 risk-adjusted readmission across the six sites, with case mix and the monthly
-CPWC trend.
+CPWC trend:
+
+![Acute Activity & Funding](powerbi/screenshots/05-acute-activity.png)
+
+Both LOS index and readmission O/E read exactly **1.000** at the authority level,
+which is not a coincidence and not a placeholder — it is the Σ expected =
+Σ observed identity of indirect standardisation, asserted by test in the engine
+and reproduced here by the presentation layer. A site's ratio is only meaningful
+read against that 1.000.
+
+The cost chart plots CPWC and CPWC ex-ALC on one axis deliberately: the gap
+between the two bars *is* the ALC component, so the reader sees the size of the
+adjustment rather than being asked to trust it. Riverbend has the highest cost
+per weighted case on both measures. Harbourview is second on the headline figure
+and mid-pack once ALC comes out — the difference between a site that spends too
+much and a site whose community has nowhere to discharge to.
 
 **ALC, Flow & SPC** — the ALC bed-equivalent picture by site, the Laney p′
 control chart with its centre line and limits, the risk-adjusted site table, and
-the two costing perspectives side by side.
+the two costing perspectives side by side:
+
+![ALC, Flow & SPC](powerbi/screenshots/06-alc-flow-spc.png)
+
+The control chart is the page's argument. The observed rate sits inside its
+limits for the whole 18-month baseline, then breaks the upper limit from
+2026-01 and stays out — a shift the chart identifies in its first month, not
+after a quarter of arguing about whether the number moved. The limits themselves
+are computed once, from the baseline, and extended forward; they do not widen to
+accommodate the shift they exist to catch.
+
+The observed series is recomputed from the fact table and the three limit series
+are read from the engine, which is the split the whole model is built around.
+They agree month for month — 2024-07 reads 0.0723 either way.
 
 Two things in the model are worth stating because they are the kind of decision
 that usually goes unrecorded:
