@@ -17,3 +17,23 @@ relationship d1000001-0000-4000-8000-000000000004
 relationship d1000001-0000-4000-8000-000000000005
 	fromColumn: ar_yield_predictions.payer_name
 	toColumn: dim_payer.payer_name
+
+relationship d1000001-0000-4000-8000-000000000006
+	fromColumn: fact_inpatient_abstracts.facility_id
+	toColumn: dim_facility.facility_id
+
+relationship d1000001-0000-4000-8000-000000000007
+	fromColumn: fact_inpatient_abstracts.cmg_code
+	toColumn: dim_cmg.cmg_code
+
+relationship d1000001-0000-4000-8000-000000000008
+	fromColumn: fact_inpatient_abstracts.discharge_month
+	toColumn: dim_activity_month.month
+
+relationship d1000001-0000-4000-8000-000000000009
+	fromColumn: spc_alc_stay.month
+	toColumn: dim_activity_month.month
+
+relationship d1000001-0000-4000-8000-000000000010
+	fromColumn: activity_by_facility.facility_name
+	toColumn: dim_facility.facility_name

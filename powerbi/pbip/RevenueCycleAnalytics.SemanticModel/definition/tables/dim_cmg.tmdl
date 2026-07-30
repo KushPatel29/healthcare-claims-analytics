@@ -1,0 +1,47 @@
+/// CIHI CMG+ case mix groups with their resource intensity weight and expected
+/// length of stay. RIW is what makes a tertiary and a community site comparable.
+table dim_cmg
+	lineageTag: c8a10002-0000-4000-8000-000000000000
+
+	column cmg_code
+		dataType: int64
+		formatString: 0
+		lineageTag: c8a10002-0000-4000-8000-000000000001
+		summarizeBy: none
+		sourceColumn: cmg_code
+
+	column cmg_name
+		dataType: string
+		lineageTag: c8a10002-0000-4000-8000-000000000002
+		summarizeBy: none
+		sourceColumn: cmg_name
+
+	column program
+		dataType: string
+		lineageTag: c8a10002-0000-4000-8000-000000000003
+		summarizeBy: none
+		sourceColumn: program
+
+	column riw
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10002-0000-4000-8000-000000000004
+		summarizeBy: none
+		sourceColumn: riw
+
+	column elos_days
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10002-0000-4000-8000-000000000005
+		summarizeBy: none
+		sourceColumn: elos_days
+
+	partition dim_cmg = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataPath & "\data\dim_cmg.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"cmg_code", Int64.Type}, {"cmg_name", type text}, {"program", type text}, {"riw", type number}, {"elos_days", type number}})
+				in
+				    Typed

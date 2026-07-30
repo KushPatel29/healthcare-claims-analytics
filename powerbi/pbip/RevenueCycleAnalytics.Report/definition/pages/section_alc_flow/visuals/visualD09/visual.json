@@ -1,0 +1,92 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "visualD09",
+  "position": {
+    "x": 660,
+    "y": 482,
+    "z": 2009,
+    "height": 218,
+    "width": 600,
+    "tabOrder": 2009
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "hta_base_case"
+                    }
+                  },
+                  "Property": "perspective"
+                }
+              },
+              "queryRef": "hta_base_case.perspective",
+              "nativeQueryRef": "perspective"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Incremental Cost"
+                }
+              },
+              "queryRef": "_Measures.Incremental Cost",
+              "nativeQueryRef": "Incremental Cost"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Net Monetary Benefit"
+                }
+              },
+              "queryRef": "_Measures.Net Monetary Benefit",
+              "nativeQueryRef": "Net Monetary Benefit"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Same evidence, opposite recommendations: incremental cost and NMB by perspective'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "visualC03",
+  "position": {
+    "x": 508,
+    "y": 20,
+    "z": 1003,
+    "height": 110,
+    "width": 232,
+    "tabOrder": 1003
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Cost per Weighted Case"
+                }
+              },
+              "queryRef": "_Measures.Cost per Weighted Case",
+              "nativeQueryRef": "Cost per Weighted Case"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

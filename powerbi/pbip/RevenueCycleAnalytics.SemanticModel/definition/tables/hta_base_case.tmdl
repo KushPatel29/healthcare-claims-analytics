@@ -1,0 +1,62 @@
+/// The two costing perspectives from the economic evaluation. Both are carried so
+/// the dashboard can show that the same evidence supports opposite
+/// recommendations depending on whether a freed bed day is valued in full.
+table hta_base_case
+	lineageTag: c8a10006-0000-4000-8000-000000000000
+
+	column perspective
+		dataType: string
+		lineageTag: c8a10006-0000-4000-8000-000000000001
+		summarizeBy: none
+		sourceColumn: perspective
+
+	column alc_days_avoided_annual
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10006-0000-4000-8000-000000000002
+		summarizeBy: none
+		sourceColumn: alc_days_avoided_annual
+
+	column incremental_cost
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10006-0000-4000-8000-000000000003
+		summarizeBy: none
+		sourceColumn: incremental_cost
+
+	column incremental_qalys
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10006-0000-4000-8000-000000000004
+		summarizeBy: none
+		sourceColumn: incremental_qalys
+
+	column icer
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10006-0000-4000-8000-000000000005
+		summarizeBy: none
+		sourceColumn: icer
+
+	column dominant
+		dataType: string
+		lineageTag: c8a10006-0000-4000-8000-000000000006
+		summarizeBy: none
+		sourceColumn: dominant
+
+	column net_monetary_benefit
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10006-0000-4000-8000-000000000007
+		summarizeBy: none
+		sourceColumn: net_monetary_benefit
+
+	partition hta_base_case = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataPath & "\output\hta_base_case.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"perspective", type text}, {"alc_days_avoided_annual", type number}, {"incremental_cost", type number}, {"incremental_qalys", type number}, {"icer", type number}, {"dominant", type text}, {"net_monetary_benefit", type number}})
+				in
+				    Typed

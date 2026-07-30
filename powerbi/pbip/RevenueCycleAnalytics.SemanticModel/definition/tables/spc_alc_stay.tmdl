@@ -1,0 +1,86 @@
+/// Laney p-prime control chart for the share of stays with any ALC day, straight
+/// from engine/spc.py. Centre line and control limits are columns, not DAX: the
+/// limits are set from an 18-month phase I baseline and extended forward, which
+/// is not something a measure evaluating in filter context can reproduce
+/// correctly.
+table spc_alc_stay
+	lineageTag: c8a10005-0000-4000-8000-000000000000
+
+	column month
+		dataType: string
+		lineageTag: c8a10005-0000-4000-8000-000000000001
+		summarizeBy: none
+		sourceColumn: month
+
+	column stays_with_alc
+		dataType: int64
+		formatString: 0
+		lineageTag: c8a10005-0000-4000-8000-000000000002
+		summarizeBy: none
+		sourceColumn: stays_with_alc
+
+	column discharges
+		dataType: int64
+		formatString: 0
+		lineageTag: c8a10005-0000-4000-8000-000000000003
+		summarizeBy: none
+		sourceColumn: discharges
+
+	column rate
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10005-0000-4000-8000-000000000004
+		summarizeBy: none
+		sourceColumn: rate
+
+	column centre
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10005-0000-4000-8000-000000000005
+		summarizeBy: none
+		sourceColumn: centre
+
+	column lcl
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10005-0000-4000-8000-000000000006
+		summarizeBy: none
+		sourceColumn: lcl
+
+	column ucl
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10005-0000-4000-8000-000000000007
+		summarizeBy: none
+		sourceColumn: ucl
+
+	column sigma
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10005-0000-4000-8000-000000000008
+		summarizeBy: none
+		sourceColumn: sigma
+
+	column z
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10005-0000-4000-8000-000000000009
+		summarizeBy: none
+		sourceColumn: z
+
+	column dispersion_factor
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10005-0000-4000-8000-000000000010
+		summarizeBy: none
+		sourceColumn: dispersion_factor
+
+	partition spc_alc_stay = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataPath & "\output\spc_alc_stay_pchart.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"month", type text}, {"stays_with_alc", Int64.Type}, {"discharges", Int64.Type}, {"rate", type number}, {"centre", type number}, {"lcl", type number}, {"ucl", type number}, {"sigma", type number}, {"z", type number}, {"dispersion_factor", type number}})
+				in
+				    Typed

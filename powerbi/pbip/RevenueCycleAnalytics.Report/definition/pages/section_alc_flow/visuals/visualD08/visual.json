@@ -1,0 +1,102 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "visualD08",
+  "position": {
+    "x": 20,
+    "y": 482,
+    "z": 2008,
+    "height": 218,
+    "width": 620,
+    "tabOrder": 2008
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "activity_by_facility"
+                    }
+                  },
+                  "Property": "facility_name"
+                }
+              },
+              "queryRef": "activity_by_facility.facility_name",
+              "nativeQueryRef": "facility_name"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "activity_by_facility"
+                    }
+                  },
+                  "Property": "los_index"
+                }
+              },
+              "queryRef": "activity_by_facility.los_index",
+              "nativeQueryRef": "los_index"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "activity_by_facility"
+                    }
+                  },
+                  "Property": "readmit_oe_ratio"
+                }
+              },
+              "queryRef": "activity_by_facility.readmit_oe_ratio",
+              "nativeQueryRef": "readmit_oe_ratio"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "activity_by_facility"
+                    }
+                  },
+                  "Property": "alc_rate"
+                }
+              },
+              "queryRef": "activity_by_facility.alc_rate",
+              "nativeQueryRef": "alc_rate"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Risk-adjusted site comparison (engine-computed)'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

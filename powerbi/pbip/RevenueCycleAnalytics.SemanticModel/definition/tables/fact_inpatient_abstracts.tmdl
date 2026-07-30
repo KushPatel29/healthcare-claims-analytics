@@ -1,0 +1,133 @@
+/// One row per inpatient discharge abstract, CIHI DAD-shaped. 39,567 rows over 24
+/// months. Grain: one discharge. All synthetic.
+table fact_inpatient_abstracts
+	lineageTag: c8a10003-0000-4000-8000-000000000000
+
+	column abstract_id
+		dataType: string
+		lineageTag: c8a10003-0000-4000-8000-000000000001
+		summarizeBy: none
+		sourceColumn: abstract_id
+
+	column facility_id
+		dataType: int64
+		formatString: 0
+		lineageTag: c8a10003-0000-4000-8000-000000000002
+		summarizeBy: none
+		sourceColumn: facility_id
+
+	column cmg_code
+		dataType: int64
+		formatString: 0
+		lineageTag: c8a10003-0000-4000-8000-000000000003
+		summarizeBy: none
+		sourceColumn: cmg_code
+
+	column program
+		dataType: string
+		lineageTag: c8a10003-0000-4000-8000-000000000004
+		summarizeBy: none
+		sourceColumn: program
+
+	column admit_date
+		dataType: string
+		lineageTag: c8a10003-0000-4000-8000-000000000005
+		summarizeBy: none
+		sourceColumn: admit_date
+
+	column discharge_date
+		dataType: string
+		lineageTag: c8a10003-0000-4000-8000-000000000006
+		summarizeBy: none
+		sourceColumn: discharge_date
+
+	column discharge_month
+		dataType: string
+		lineageTag: c8a10003-0000-4000-8000-000000000007
+		summarizeBy: none
+		sourceColumn: discharge_month
+
+	column age_band
+		dataType: string
+		lineageTag: c8a10003-0000-4000-8000-000000000008
+		summarizeBy: none
+		sourceColumn: age_band
+
+	column comorbidity_level
+		dataType: int64
+		formatString: 0
+		lineageTag: c8a10003-0000-4000-8000-000000000009
+		summarizeBy: none
+		sourceColumn: comorbidity_level
+
+	column entry_via_ed
+		dataType: int64
+		formatString: 0
+		lineageTag: c8a10003-0000-4000-8000-000000000010
+		summarizeBy: none
+		sourceColumn: entry_via_ed
+
+	column acute_los_days
+		dataType: int64
+		formatString: 0
+		lineageTag: c8a10003-0000-4000-8000-000000000011
+		summarizeBy: none
+		sourceColumn: acute_los_days
+
+	column alc_days
+		dataType: int64
+		formatString: 0
+		lineageTag: c8a10003-0000-4000-8000-000000000012
+		summarizeBy: none
+		sourceColumn: alc_days
+
+	column total_los_days
+		dataType: int64
+		formatString: 0
+		lineageTag: c8a10003-0000-4000-8000-000000000013
+		summarizeBy: none
+		sourceColumn: total_los_days
+
+	column elos_days
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10003-0000-4000-8000-000000000014
+		summarizeBy: none
+		sourceColumn: elos_days
+
+	column riw
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10003-0000-4000-8000-000000000015
+		summarizeBy: none
+		sourceColumn: riw
+
+	column total_cost
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10003-0000-4000-8000-000000000016
+		summarizeBy: none
+		sourceColumn: total_cost
+
+	column discharge_disposition
+		dataType: string
+		lineageTag: c8a10003-0000-4000-8000-000000000017
+		summarizeBy: none
+		sourceColumn: discharge_disposition
+
+	column readmit_30d
+		dataType: int64
+		formatString: 0
+		lineageTag: c8a10003-0000-4000-8000-000000000018
+		summarizeBy: none
+		sourceColumn: readmit_30d
+
+	partition fact_inpatient_abstracts = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataPath & "\data\fact_inpatient_abstracts.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"abstract_id", type text}, {"facility_id", Int64.Type}, {"cmg_code", Int64.Type}, {"program", type text}, {"admit_date", type text}, {"discharge_date", type text}, {"discharge_month", type text}, {"age_band", type text}, {"comorbidity_level", Int64.Type}, {"entry_via_ed", Int64.Type}, {"acute_los_days", Int64.Type}, {"alc_days", Int64.Type}, {"total_los_days", Int64.Type}, {"elos_days", type number}, {"riw", type number}, {"total_cost", type number}, {"discharge_disposition", type text}, {"readmit_30d", Int64.Type}})
+				in
+				    Typed

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "visualD05",
+  "position": {
+    "x": 996,
+    "y": 20,
+    "z": 2005,
+    "height": 110,
+    "width": 264,
+    "tabOrder": 2005
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "ALC Stay Rate"
+                }
+              },
+              "queryRef": "_Measures.ALC Stay Rate",
+              "nativeQueryRef": "ALC Stay Rate"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

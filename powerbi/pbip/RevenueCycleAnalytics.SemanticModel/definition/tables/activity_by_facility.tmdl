@@ -1,0 +1,157 @@
+/// Engine-computed facility rollup. This table exists because LOS index and
+/// readmission O/E are indirectly standardised with empirical-Bayes shrinkage in
+/// engine/build_activity_metrics.py, and the repository's rule is that Power BI
+/// presents modelled numbers rather than recomputing them in DAX. Recreating the
+/// standardisation as a measure would give a second, subtly different answer with
+/// no test behind it.
+table activity_by_facility
+	lineageTag: c8a10004-0000-4000-8000-000000000000
+
+	column facility_name
+		dataType: string
+		lineageTag: c8a10004-0000-4000-8000-000000000001
+		summarizeBy: none
+		sourceColumn: facility_name
+
+	column discharges
+		dataType: int64
+		formatString: 0
+		lineageTag: c8a10004-0000-4000-8000-000000000002
+		summarizeBy: none
+		sourceColumn: discharges
+
+	column weighted_cases
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10004-0000-4000-8000-000000000003
+		summarizeBy: none
+		sourceColumn: weighted_cases
+
+	column total_cost
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10004-0000-4000-8000-000000000004
+		summarizeBy: none
+		sourceColumn: total_cost
+
+	column cost_per_weighted_case
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10004-0000-4000-8000-000000000005
+		summarizeBy: none
+		sourceColumn: cost_per_weighted_case
+
+	column cost_per_weighted_case_ex_alc
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10004-0000-4000-8000-000000000006
+		summarizeBy: none
+		sourceColumn: cost_per_weighted_case_ex_alc
+
+	column acute_days
+		dataType: int64
+		formatString: 0
+		lineageTag: c8a10004-0000-4000-8000-000000000007
+		summarizeBy: none
+		sourceColumn: acute_days
+
+	column expected_acute_days
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10004-0000-4000-8000-000000000008
+		summarizeBy: none
+		sourceColumn: expected_acute_days
+
+	column los_index
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10004-0000-4000-8000-000000000009
+		summarizeBy: none
+		sourceColumn: los_index
+
+	column alc_days
+		dataType: int64
+		formatString: 0
+		lineageTag: c8a10004-0000-4000-8000-000000000010
+		summarizeBy: none
+		sourceColumn: alc_days
+
+	column alc_stays
+		dataType: int64
+		formatString: 0
+		lineageTag: c8a10004-0000-4000-8000-000000000011
+		summarizeBy: none
+		sourceColumn: alc_stays
+
+	column patient_days
+		dataType: int64
+		formatString: 0
+		lineageTag: c8a10004-0000-4000-8000-000000000012
+		summarizeBy: none
+		sourceColumn: patient_days
+
+	column alc_rate
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10004-0000-4000-8000-000000000013
+		summarizeBy: none
+		sourceColumn: alc_rate
+
+	column alc_stay_rate
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10004-0000-4000-8000-000000000014
+		summarizeBy: none
+		sourceColumn: alc_stay_rate
+
+	column alc_bed_equivalents
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10004-0000-4000-8000-000000000015
+		summarizeBy: none
+		sourceColumn: alc_bed_equivalents
+
+	column alc_cost
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10004-0000-4000-8000-000000000016
+		summarizeBy: none
+		sourceColumn: alc_cost
+
+	column observed_readmits
+		dataType: int64
+		formatString: 0
+		lineageTag: c8a10004-0000-4000-8000-000000000017
+		summarizeBy: none
+		sourceColumn: observed_readmits
+
+	column expected_readmits
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10004-0000-4000-8000-000000000018
+		summarizeBy: none
+		sourceColumn: expected_readmits
+
+	column readmit_rate
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10004-0000-4000-8000-000000000019
+		summarizeBy: none
+		sourceColumn: readmit_rate
+
+	column readmit_oe_ratio
+		dataType: double
+		formatString: #,0.00
+		lineageTag: c8a10004-0000-4000-8000-000000000020
+		summarizeBy: none
+		sourceColumn: readmit_oe_ratio
+
+	partition activity_by_facility = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataPath & "\output\activity_by_facility.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"facility_name", type text}, {"discharges", Int64.Type}, {"weighted_cases", type number}, {"total_cost", type number}, {"cost_per_weighted_case", type number}, {"cost_per_weighted_case_ex_alc", type number}, {"acute_days", Int64.Type}, {"expected_acute_days", type number}, {"los_index", type number}, {"alc_days", Int64.Type}, {"alc_stays", Int64.Type}, {"patient_days", Int64.Type}, {"alc_rate", type number}, {"alc_stay_rate", type number}, {"alc_bed_equivalents", type number}, {"alc_cost", type number}, {"observed_readmits", Int64.Type}, {"expected_readmits", type number}, {"readmit_rate", type number}, {"readmit_oe_ratio", type number}})
+				in
+				    Typed

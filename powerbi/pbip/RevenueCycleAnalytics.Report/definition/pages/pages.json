@@ -1,10 +1,12 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.0.0/schema.json",
   "pageOrder": [
+    "section_acute_activity",
+    "section_alc_flow",
     "section_rcm_scorecard",
     "section_denials",
     "section_ar_aging",
     "section_yield"
   ],
-  "activePageName": "section_rcm_scorecard"
+  "activePageName": "section_acute_activity"
 }

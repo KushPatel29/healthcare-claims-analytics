@@ -1,0 +1,40 @@
+/// The six sites of the synthetic health authority, with staffed acute bed counts
+/// so occupancy and ALC bed-equivalents can be read against real capacity.
+table dim_facility
+	lineageTag: c8a10001-0000-4000-8000-000000000000
+
+	column facility_id
+		dataType: int64
+		formatString: 0
+		lineageTag: c8a10001-0000-4000-8000-000000000001
+		summarizeBy: none
+		sourceColumn: facility_id
+
+	column facility_name
+		dataType: string
+		lineageTag: c8a10001-0000-4000-8000-000000000002
+		summarizeBy: none
+		sourceColumn: facility_name
+
+	column site_type
+		dataType: string
+		lineageTag: c8a10001-0000-4000-8000-000000000003
+		summarizeBy: none
+		sourceColumn: site_type
+
+	column staffed_acute_beds
+		dataType: int64
+		formatString: 0
+		lineageTag: c8a10001-0000-4000-8000-000000000004
+		summarizeBy: none
+		sourceColumn: staffed_acute_beds
+
+	partition dim_facility = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataPath & "\data\dim_facility.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"facility_id", Int64.Type}, {"facility_name", type text}, {"site_type", type text}, {"staffed_acute_beds", Int64.Type}})
+				in
+				    Typed

@@ -1,0 +1,120 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "visualD06",
+  "position": {
+    "x": 20,
+    "y": 146,
+    "z": 2006,
+    "height": 320,
+    "width": 840,
+    "tabOrder": 2006
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "spc_alc_stay"
+                    }
+                  },
+                  "Property": "month"
+                }
+              },
+              "queryRef": "spc_alc_stay.month",
+              "nativeQueryRef": "month"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "spc_alc_stay"
+                    }
+                  },
+                  "Property": "rate"
+                }
+              },
+              "queryRef": "spc_alc_stay.rate",
+              "nativeQueryRef": "rate"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "spc_alc_stay"
+                    }
+                  },
+                  "Property": "centre"
+                }
+              },
+              "queryRef": "spc_alc_stay.centre",
+              "nativeQueryRef": "centre"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "spc_alc_stay"
+                    }
+                  },
+                  "Property": "lcl"
+                }
+              },
+              "queryRef": "spc_alc_stay.lcl",
+              "nativeQueryRef": "lcl"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "spc_alc_stay"
+                    }
+                  },
+                  "Property": "ucl"
+                }
+              },
+              "queryRef": "spc_alc_stay.ucl",
+              "nativeQueryRef": "ucl"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Stays with any ALC day \u2014 Laney p' chart (limits from an 18-month baseline)'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

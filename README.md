@@ -4,7 +4,7 @@
 ![Python](https://img.shields.io/badge/Python-stdlib%20only-3776AB?logo=python&logoColor=white)
 ![SPC](https://img.shields.io/badge/SPC-Laney%20p'%20%2F%20u'-0B5FA5)
 ![HTA](https://img.shields.io/badge/Health%20economics-ICER%20%2B%20PSA-6A4C93)
-![Tests](https://img.shields.io/badge/tests-111%20passing-3B8C6E)
+![Tests](https://img.shields.io/badge/tests-114%20passing-3B8C6E)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
 Two health systems, one engineering standard.
@@ -171,13 +171,52 @@ commitment**, and explicitly *not* as a savings initiative. On the evidence this
 program is very probably the right thing to do and very probably not a saving.
 Saying both is what makes the first half believable.
 
+## The decision-support dashboard
+
+The first two pages of the Power BI report are the Canadian layer, and they lead
+deliberately: a health-authority reader should not have to page past four screens
+of US revenue cycle to reach the work that speaks to them.
+
+**Acute Activity & Funding** — discharges, weighted cases, CPWC, LOS index and
+risk-adjusted readmission across the six sites, with case mix and the monthly
+CPWC trend.
+
+**ALC, Flow & SPC** — the ALC bed-equivalent picture by site, the Laney p′
+control chart with its centre line and limits, the risk-adjusted site table, and
+the two costing perspectives side by side.
+
+Two things in the model are worth stating because they are the kind of decision
+that usually goes unrecorded:
+
+**There are two date tables, and that is deliberate.** `dim_month` covers the
+claims period (2025-07 onward); `dim_activity_month` covers the inpatient
+abstracts (2024-07 to 2026-06). Twelve activity months fall outside `dim_month`
+entirely, so relating discharge month to it would push half the authority's
+activity into a blank row — every month-sliced visual would under-report with
+nothing on the canvas to say so. Widening `dim_month` backwards instead would
+hang twelve empty months off the left of every revenue-cycle chart that already
+works.
+
+**Risk-adjusted figures are read, not recomputed.** `LOS Index` and
+`Readmission O/E` come from the engine's `activity_by_facility` output, and the
+p′ chart's limits come from `spc_alc_stay`. Both are indirectly standardised with
+empirical-Bayes shrinkage, and the limits are set from an 18-month phase I
+baseline and extended forward — neither is something a DAX measure evaluating in
+filter context reproduces correctly. A second, subtly different answer with no
+test behind it is worse than no answer.
+
+The DAX reproduces the engine exactly: authority-wide `Readmission O/E` and
+`LOS Index` both evaluate to **1.000**, which is the Σ expected = Σ observed
+identity surviving all the way into the presentation layer.
+
 ---
 
 # Act two — US hospital revenue cycle
 
-Four-page Power BI report, hand-authored as a Power BI Project (TMDL semantic
-model + PBIR report definition) in [`powerbi/pbip/`](powerbi/pbip/) — open
-`RevenueCycleAnalytics.pbip` in Power BI Desktop and hit Refresh.
+Six-page Power BI report in total, hand-authored as a Power BI Project (TMDL
+semantic model + PBIR report definition) in [`powerbi/pbip/`](powerbi/pbip/) —
+open `RevenueCycleAnalytics.pbip` in Power BI Desktop and hit Refresh. The four
+revenue-cycle pages:
 
 **Revenue Cycle Scorecard** — denial rate vs target, cash collected trend, denial
 rate by payer:
@@ -353,7 +392,7 @@ python engine/build_rcm_metrics.py
 python governance/deidentify.py
 python governance/data_quality.py
 
-pytest tests/ -v                            # 111 invariants
+pytest tests/ -v                            # 114 invariants
 ```
 
 Then open `powerbi/pbip/RevenueCycleAnalytics.pbip` (see
@@ -408,7 +447,11 @@ Self-Pay dollar is worth materially less than an insured one.
 **Power BI integrity, without opening Power BI** — every column, measure, and
 sort field a visual references exists in the TMDL model (a mistyped field renders
 a blank visual, not an error); relationships and sort-by columns point at real
-columns; the yield table's columns match the engine's CSV headers exactly.
+columns; the yield table's columns match the engine's CSV headers exactly; every
+discharge month in the abstracts exists in the calendar it is joined to, because
+a date dimension that does not span its fact table drops the unmatched rows into
+a blank member and under-reports in silence; and the risk-adjusted measures still
+read the engine output rather than recomputing the standardisation in DAX.
 
 ## Repo layout
 
@@ -425,7 +468,7 @@ governance/         deidentify.py — Safe Harbor + k-anonymity + risk report
 docs/               BRIEFING_NOTE.md · BUSINESS_CASE.md · SOURCE_TO_TARGET.md
 output/             every engine result — reproducible outside Power BI
 powerbi/            ready-to-open PBIP (TMDL model + PBIR report, 22 DAX measures)
-tests/              111 invariants across activity, SPC, economics, governance,
+tests/              114 invariants across activity, SPC, economics, governance,
                     revenue cycle, and Power BI model/report integrity
 .github/workflows/  CI — full rebuild, invariants, and the DQ sabotage proof
 ```

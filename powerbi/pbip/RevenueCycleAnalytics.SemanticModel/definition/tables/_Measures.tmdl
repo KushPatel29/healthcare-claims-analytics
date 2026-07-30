@@ -97,6 +97,125 @@ table _Measures
 		summarizeBy: none
 		sourceColumn: Value
 
+	/// Inpatient discharge abstracts. The denominator for most acute indicators.
+	measure 'Discharges' = COUNTROWS(fact_inpatient_abstracts)
+		formatString: #,0
+		displayFolder: Acute activity (Canada)
+		lineageTag: c8a20001-0000-4000-8000-000000000000
+
+	/// Sum of RIW. Prices the case mix rather than counting cases, which is the only fair way to compare a tertiary site with a community one.
+	measure 'Weighted Cases' = SUM(fact_inpatient_abstracts[riw])
+		formatString: #,0.0
+		displayFolder: Acute activity (Canada)
+		lineageTag: c8a20002-0000-4000-8000-000000000000
+
+	/// Total modelled cost of inpatient activity.
+	measure 'Acute Cost' = SUM(fact_inpatient_abstracts[total_cost])
+		formatString: #,0
+		displayFolder: Acute activity (Canada)
+		lineageTag: c8a20003-0000-4000-8000-000000000000
+
+	/// CPWC. Total cost over weighted cases.
+	measure 'Cost per Weighted Case' = DIVIDE([Acute Cost], [Weighted Cases])
+		formatString: #,0
+		displayFolder: Acute activity (Canada)
+		lineageTag: c8a20004-0000-4000-8000-000000000000
+
+	/// Days spent by patients who no longer need acute care but have nowhere to go.
+	measure 'ALC Days' = SUM(fact_inpatient_abstracts[alc_days])
+		formatString: #,0
+		displayFolder: Acute activity (Canada)
+		lineageTag: c8a20005-0000-4000-8000-000000000000
+
+	/// ALC days at the modelled staffed-bed per-diem of $1,150. Matches ALC_PER_DIEM in engine/build_activity_metrics.py.
+	measure 'ALC Cost' = [ALC Days] * 1150
+		formatString: #,0
+		displayFolder: Acute activity (Canada)
+		lineageTag: c8a20006-0000-4000-8000-000000000000
+
+	/// CPWC with the ALC component removed. Not cosmetic: ALC cost measures the community's missing discharge destinations, not the site's cost control, so leaving it in makes the site with the weakest community capacity look like the worst-run one.
+	measure 'Cost per Weighted Case ex-ALC' = DIVIDE([Acute Cost] - [ALC Cost], [Weighted Cases])
+		formatString: #,0
+		displayFolder: Acute activity (Canada)
+		lineageTag: c8a20007-0000-4000-8000-000000000000
+
+	/// Acute plus ALC days.
+	measure 'Patient Days' = SUM(fact_inpatient_abstracts[total_los_days])
+		formatString: #,0
+		displayFolder: Acute activity (Canada)
+		lineageTag: c8a20008-0000-4000-8000-000000000000
+
+	/// ALC days as a share of all patient days.
+	measure 'ALC Rate' = DIVIDE([ALC Days], [Patient Days])
+		formatString: 0.0%
+		displayFolder: Acute activity (Canada)
+		lineageTag: c8a20009-0000-4000-8000-000000000000
+
+	/// ALC days converted to the unit an executive can act on: how many staffed beds are occupied by ALC patients every day, all year. 730 = 365 x the 2-year span of the dataset.
+	measure 'ALC Bed Equivalents' = DIVIDE([ALC Days], 730)
+		formatString: #,0.0
+		displayFolder: Acute activity (Canada)
+		lineageTag: c8a20010-0000-4000-8000-000000000000
+
+	/// Stays containing at least one ALC day. One independent observation per patient, which is why the stay-level control chart behaves and the day-level one does not.
+	measure 'Stays with ALC' = CALCULATE(COUNTROWS(fact_inpatient_abstracts), fact_inpatient_abstracts[alc_days] > 0)
+		formatString: #,0
+		displayFolder: Acute activity (Canada)
+		lineageTag: c8a20011-0000-4000-8000-000000000000
+
+	/// Share of discharges with any ALC day. This is the indicator the p-prime chart tracks.
+	measure 'ALC Stay Rate' = DIVIDE([Stays with ALC], [Discharges])
+		formatString: 0.0%
+		displayFolder: Acute activity (Canada)
+		lineageTag: c8a20012-0000-4000-8000-000000000000
+
+	/// 30-day readmissions, unadjusted count.
+	measure 'Readmissions' = SUM(fact_inpatient_abstracts[readmit_30d])
+		formatString: #,0
+		displayFolder: Acute activity (Canada)
+		lineageTag: c8a20013-0000-4000-8000-000000000000
+
+	/// Crude 30-day readmission rate. Crude on purpose: the risk-adjusted view is Readmission O/E, and showing both is the point.
+	measure 'Readmission Rate' = DIVIDE([Readmissions], [Discharges])
+		formatString: 0.0%
+		displayFolder: Acute activity (Canada)
+		lineageTag: c8a20014-0000-4000-8000-000000000000
+
+	/// Risk-adjusted readmission, observed over expected. Expected comes from indirect standardisation with empirical-Bayes shrinkage in the Python engine, not from DAX - recomputing the standardisation here would give a second, subtly different answer with no test behind it. Above 1.00 means more readmissions than the site's case mix predicts.
+	measure 'Readmission O/E' = DIVIDE(SUM(activity_by_facility[observed_readmits]), SUM(activity_by_facility[expected_readmits]))
+		formatString: 0.000
+		displayFolder: Acute activity (Canada)
+		lineageTag: c8a20015-0000-4000-8000-000000000000
+
+	/// Actual acute days over indirectly standardised expected days. Above 1.00 means patients stay longer than their case mix, age and comorbidity predict. Expected days are engine-computed for the same reason as Readmission O/E.
+	measure 'LOS Index' = DIVIDE(SUM(activity_by_facility[acute_days]), SUM(activity_by_facility[expected_acute_days]))
+		formatString: 0.000
+		displayFolder: Acute activity (Canada)
+		lineageTag: c8a20016-0000-4000-8000-000000000000
+
+	/// Incremental cost of the transitional-care program. Sign matters: negative is cost-saving.
+	measure 'Incremental Cost' = SUM(hta_base_case[incremental_cost])
+		formatString: #,0
+		displayFolder: Health economics
+		lineageTag: c8a20017-0000-4000-8000-000000000000
+
+	/// Quality-adjusted life years gained.
+	measure 'Incremental QALYs' = SUM(hta_base_case[incremental_qalys])
+		formatString: #,0.0
+		displayFolder: Health economics
+		lineageTag: c8a20018-0000-4000-8000-000000000000
+
+	/// QALYs valued at the $50,000 threshold, less incremental cost. Positive means fund it.
+	measure 'Net Monetary Benefit' = SUM(hta_base_case[net_monetary_benefit])
+		formatString: #,0
+		displayFolder: Health economics
+		lineageTag: c8a20019-0000-4000-8000-000000000000
+
+	/// Cost per QALY, blanked when the option is dominant. A negative ICER is ambiguous - it means cheaper-and-better or dearer-and-worse and the ratio cannot tell you which - so dominance is reported as a label instead of a number.
+	measure 'ICER' = IF(HASONEVALUE(hta_base_case[perspective]), IF(SELECTEDVALUE(hta_base_case[dominant]) = "True", BLANK(), DIVIDE([Incremental Cost], [Incremental QALYs])), BLANK())
+		formatString: #,0
+		displayFolder: Health economics
+		lineageTag: c8a20020-0000-4000-8000-000000000000
 	partition _Measures = m
 		mode: import
 		source =
