@@ -1,38 +1,174 @@
-# Healthcare Claims Analytics — Revenue Cycle Dashboard
+# Health System Decision Support — activity, economics, and revenue cycle
 
 ![Power BI](https://img.shields.io/badge/Power%20BI-Revenue%20Cycle-F2C811?logo=powerbi&logoColor=black)
-![Python](https://img.shields.io/badge/Python-Synthetic%20Claims%20Engine-3776AB?logo=python&logoColor=white)
+![Python](https://img.shields.io/badge/Python-stdlib%20only-3776AB?logo=python&logoColor=white)
+![SPC](https://img.shields.io/badge/SPC-Laney%20p'%20%2F%20u'-0B5FA5)
+![HTA](https://img.shields.io/badge/Health%20economics-ICER%20%2B%20PSA-6A4C93)
+![Tests](https://img.shields.io/badge/tests-92%20passing-3B8C6E)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
-A hospital revenue-cycle analytics platform: synthetic claims lifecycle data
-(submission → adjudication → paid / denied / pending AR), a metrics engine
-that reproduces every dashboard number outside Power BI, and a four-page
-Power BI dashboard that goes from **descriptive** (denial rate, AR aging) to
-**predictive** — a Net Realizable Value (NRV) model that forecasts how much of
-the open AR the hospital will actually collect, and an expected-yield worklist
-that tells the follow-up team which accounts to work first.
+Two health systems, one engineering standard.
 
-**Synthetic data only — no PHI.** No real patients, providers, or payer
-contracts; payer behavior (contractual rates, denial rates, adjudication lag,
-collection rates) is modeled on publicly documented industry norms.
+**Act one — a Canadian health authority.** CIHI-DAD-shaped inpatient activity for
+a six-site authority: cost per weighted case, length-of-stay index, alternate
+level of care, and risk-adjusted readmission; statistical process control that
+separates a real shift from ordinary variation; and a full economic evaluation
+of a proposed intervention — ICER, tornado, and probabilistic sensitivity — that
+ends in a briefing note and a costed business case.
+
+**Act two — a US hospital revenue cycle.** The claim lifecycle from submission to
+paid, denied, or pending AR, plus a Net Realizable Value model that prices $3.6M
+of open AR at the ~$1.7M it will actually collect, and an expected-yield worklist
+telling the follow-up team which accounts to work first.
+
+**All data is synthetic — no PHI.** No real patients, facilities, providers, or
+payer contracts. Behaviour is modelled on publicly documented patterns.
 
 ## The engineering principle
 
-All business logic lives in a verifiable Python engine and is proven by
-`pytest` in CI **before** Power BI opens the file. Power BI is a presentation
-layer only — no probability modeling or yield math in DAX. Every number on the
-dashboard can be reproduced from the command line and is guarded by an
-invariant test. The predictive layer holds to the same rule: the NRV and
-priority math is Python, tested to the penny; the dashboard just draws it.
+Every number lives in a verifiable Python engine and is proven by `pytest` in CI
+**before** Power BI opens the file. Power BI is a presentation layer only — no
+probability modelling, yield maths, or control limits in DAX. Every figure on a
+dashboard, in the briefing note, or in the business case reproduces from the
+command line and is guarded by an invariant test.
 
-## Dashboard
+Pure standard library throughout. No install step, no database; the whole thing
+rebuilds in about five seconds.
+
+---
+
+# Act one — Canadian health authority decision support
+
+In a single-payer system there are no payers, no denials, and no bad-debt
+reserve. A BC health authority does not ask what its denial rate is. It asks
+what a weighted case costs, whether patients stay longer than their case mix
+predicts, how many beds are occupied by people who no longer need acute care,
+and whether this month's readmission rate is a signal or noise.
+
+**Dataset:** 39,573 discharge abstracts over 24 months, six facilities, 17 CMG+
+case mix groups, with RIW, expected LOS, ALC days, comorbidity level, and
+disposition. Volume is calibrated so the authority is internally coherent —
+~20,000 discharges a year against 490 staffed beds is roughly 85% occupancy at
+the modelled length of stay. A bed-day business case built on a dataset whose
+occupancy is physically impossible does not survive its first reading.
+
+## The four indicators
+
+```
+Discharges:                               39,573
+Weighted cases (sum RIW):               56,768.2
+Cost per weighted case:                    8,449
+  ...excluding ALC:                        7,635
+  ...ALC component:                          814
+ALC rate (% of patient days):              13.8%
+ALC bed equivalents (24 mo):            56.9 beds
+30-day readmission rate:                    9.9%
+```
+
+**Splitting ALC out of cost per weighted case is not cosmetic.** ALC cost is not
+a measure of how efficiently a site treats its cases — it is the price of a
+discharge destination that does not exist. Leaving it inside CPWC makes the site
+with the weakest *community* capacity look like the site with the worst cost
+control. Harbourview is second-highest on the headline figure and mid-pack once
+ALC is removed.
+
+**Risk adjustment uses indirect standardisation** with empirical-Bayes shrinkage
+on thin strata — the same technique the NRV engine uses on thin payer × service
+line cells. The defining identity (Σ expected = Σ observed, so the
+authority-wide O/E is exactly 1.00) is asserted by test; if it drifts, the ratios
+are measuring the standardisation rather than the sites. A test also demands the
+crude and adjusted rankings *disagree* — a risk adjustment that never changes
+anything is decoration and should be dropped rather than reported.
+
+## Statistical process control, and the trap in it
+
+The default way an indicator gets reported — "readmissions were 11.4%, up from
+10.8%" — is a category error. Every process varies. Reacting to ordinary
+variation makes the process worse; sitting on a genuine shift because it looked
+small is how a problem runs for two quarters.
+
+[`engine/spc.py`](engine/spc.py) implements p-charts, u-charts, the four Western
+Electric rules, Laney's overdispersion correction, and phase I/phase II
+baselines. Three findings came out of pointing it at ALC:
+
+**1. The metric everyone asks for is the one that lies.** ALC *days* per 100
+patient days is heavily overdispersed — measured dispersion **4.8×** Poisson,
+because one patient waiting sixty days contributes sixty correlated days, not
+sixty independent events. Run naively it produces **41 signals**, nearly all
+false. A chart that cries wolf every month is ignored within a quarter, which is
+worse than no chart.
+
+**2. Correcting is good; changing the unit of analysis is better.** Laney's u′
+brings it to 10. But the share of *stays* with any ALC day is one independent
+observation per patient, has dispersion ≈ 1.05, and detects the planted shift
+**in its first month**. Removing clustering at the source beats correcting for
+it afterwards.
+
+**3. The baseline is where charts quietly go wrong.** Compute the centre line
+over the whole series, including the period you are assessing, and a genuine
+late shift drags the centre up — flagging every *stable* month before it as a
+downward special cause. You get a chart reporting a problem in the period where
+nothing happened. There is a test that plants a shift, runs the chart both ways,
+and asserts the contaminated version misfires exactly this way.
+
+Readmission was deliberately left stable, and the chart correctly says nothing —
+the negative control that stops the whole exercise being confirmation bias.
+
+## Health economics: the same evidence, opposite recommendations
+
+[`engine/health_economics.py`](engine/health_economics.py) evaluates a $1.45M
+transitional-care program against the ALC problem, and the interesting result is
+that it does not have one answer.
+
+Almost every hospital business case values an avoided bed day at the fully
+absorbed per-diem and books it as a saving. That is usually wrong. Unless the bed
+closes and the staffing goes, the fixed cost stays. What you created is
+*capacity*, not cash. So the model reports both perspectives explicitly:
+
+| | Perspective A — opportunity cost | Perspective B — cash-releasing |
+|---|---|---|
+| Bed day valued at | full $1,150 per-diem | variable share only (32%) |
+| Incremental cost | **−$2,916,613** | **+$658,980** |
+| Result | **Dominant** | **ICER $192,163/QALY** |
+| P(cost-effective @ $50k/QALY) | **99.7%** | **16.9%** |
+
+Both are correct; they answer different questions. Perspective A asks what the
+program is worth to the health system, B asks what it does to next year's
+operating budget. A business case presenting only A is why finance departments
+distrust business cases.
+
+The tornado shows **two parameters flip the recommendation on their own** — the
+cash-releasing share and the effectiveness rate — and neither is the program
+price. Negotiating the cost down does not rescue a weak case, so that is not
+where the effort should go.
+
+10,000-iteration PSA (Beta for proportions, Gamma for costs) produces the
+acceptability curves. They never converge, because the uncertainty that matters
+here is *structural* — which perspective applies — and no amount of extra Monte
+Carlo sampling resolves a structural question.
+
+**Deliverables, in the form a health authority actually consumes:**
+
+- **[`docs/BRIEFING_NOTE.md`](docs/BRIEFING_NOTE.md)** — Issue / Background /
+  Analysis / Options / Risks / Recommendation, for a VP.
+- **[`docs/BUSINESS_CASE.md`](docs/BUSINESS_CASE.md)** — full costing, both
+  perspectives, sensitivity, risk register, measurement plan, exit criteria.
+
+The recommendation is to approve — **conditional on a documented backfill
+commitment**, and explicitly *not* as a savings initiative. On the evidence this
+program is very probably the right thing to do and very probably not a saving.
+Saying both is what makes the first half believable.
+
+---
+
+# Act two — US hospital revenue cycle
 
 Four-page Power BI report, hand-authored as a Power BI Project (TMDL semantic
 model + PBIR report definition) in [`powerbi/pbip/`](powerbi/pbip/) — open
 `RevenueCycleAnalytics.pbip` in Power BI Desktop and hit Refresh.
 
-**Revenue Cycle Scorecard** — the numbers a CFO asks for first: denial rate
-vs target (gauge), cash collected trend, denial rate by payer:
+**Revenue Cycle Scorecard** — denial rate vs target, cash collected trend, denial
+rate by payer:
 
 ![Revenue Cycle Scorecard](powerbi/screenshots/01-revenue-cycle-scorecard.png)
 
@@ -41,47 +177,34 @@ concentration by service line, trend by payer type:
 
 ![Denial Analytics](powerbi/screenshots/02-denial-analytics.png)
 
-**AR Aging** — the collections view: aging buckets by payer type, claim
-pipeline, and the priority-sorted **Intelligent Worklist** a follow-up team
-works from:
+**AR Aging** — aging buckets by payer type, claim pipeline, and the
+priority-sorted Intelligent Worklist:
 
 ![AR Aging](powerbi/screenshots/03-ar-aging.png)
 
-**Predictive Yield (NRV)** — the CFO reserve view: gross AR vs. Net Realizable
-Value by payer type, where the collectable cash actually sits by aging bucket,
-and the expected-yield worklist sorted by priority score:
+**Predictive Yield (NRV)** — gross AR vs Net Realizable Value by payer type, and
+the expected-yield worklist:
 
 ![Predictive Yield (NRV)](powerbi/screenshots/04-predictive-yield.png)
 
 ## Why NRV changes the conversation
 
-Anyone can sum "days in AR." The senior insight is that **not every AR dollar is
+Anyone can sum days in AR. The senior insight is that **not every AR dollar is
 worth a dollar.** $100k of Medicare AR is close to cash — Medicare pays ~91% of
-the allowed amount, reliably. $100k of Self-Pay AR is worth a fraction of that,
-because self-pay collects ~20 cents on the dollar and the rest ages into bad
-debt. A worklist sorted alphabetically by payer ignores this; a worklist sorted
-by **expected cash yield** works the dollars most likely to actually land.
+allowed, reliably. $100k of Self-Pay AR is worth a fraction, because self-pay
+collects ~20 cents on the dollar and the rest ages into bad debt.
 
-In this dataset the model nets **$3.63M of gross open AR down to $1.66M of
-Expected NRV** — a 46% realization rate, i.e. a **~54% bad-debt reserve**. That
-delta is exactly the number a hospital CFO books as a reserve, and here it is
-computed from first principles, not guessed.
+The model nets **$3.63M of gross open AR down to $1.66M of Expected NRV** — a 46%
+realization rate, i.e. a ~54% bad-debt reserve. That delta is exactly the number
+a CFO books as a reserve, computed from first principles rather than guessed.
 
-| Payer type | Net collection rate (of allowed) | Expected yield (per billed $) |
+| Payer type | Net collection rate | Expected yield (per billed $) |
 |---|---:|---:|
 | Commercial | 90% | 53% |
 | Medicare Advantage | 90% | 45% |
 | Medicare | 91% | 44% |
 | Medicaid | 89% | 35% |
 | **Self-Pay** | **21%** | **20%** |
-
-## How the NRV / yield model works
-
-A pending claim has only a *billed* (submitted) amount — it hasn't been
-adjudicated, so it has no allowed or paid amount yet. To forecast the cash it
-will realize, the engine decomposes the billed dollar through the three things
-that historically happen to it, learned **per payer × service line** from
-adjudicated claims only:
 
 ```
 expected_yield_rate = contractual_factor      # allowed / billed   (paid claims)
@@ -92,36 +215,23 @@ Expected_NRV   = billed_amount × expected_yield_rate
 Priority_Score = Expected_NRV × (days_in_AR / 30)
 ```
 
-**Empirical-Bayes shrinkage.** Payer × service-line cells are thin — a payer
-that shows up in a handful of Oncology claims would otherwise get a wild rate
-(0% or 100% denial off two claims). The engine shrinks every cell toward its
-own payer's rate, and each payer toward the portfolio rate (a two-level
-hierarchical prior). A thin Self-Pay/Oncology cell borrows strength from *all*
-Self-Pay claims — which really do collect ~20¢ — not from the global average
-that Medicare and commercial payers dominate. Shrinkage also guarantees every
-probability lands strictly inside (0, 1), which the invariant tests then prove.
+**Empirical-Bayes shrinkage.** Payer × service-line cells are thin — a payer with
+a handful of Oncology claims would otherwise get a wild rate. Every cell shrinks
+toward its own payer's rate, and each payer toward the portfolio rate. A thin
+Self-Pay/Oncology cell borrows strength from *all* Self-Pay claims, which really
+do collect ~20¢, not from a global average Medicare dominates.
 
-## Deliberate deviations from the brief
+### Deliberate deviations from the brief
 
-This upgrade was scoped from a written brief. Two points were changed on
-purpose, because implementing them verbatim would have produced numbers that
-can't be defended — and this repo's whole point is that it ships nothing it
-can't prove:
+- **NRV is decomposed from billed, not allowed.** A *pending* claim has no
+  allowed amount — multiplying a blank field would produce zero NRV for the whole
+  open AR. The engine estimates expected allowed (`billed × contractual_factor`)
+  and carries it through, so the ceiling test becomes `NRV ≤ billed` — a bound
+  that exists in the data.
+- **Priority does not multiply by `(1 − denial)` twice.** `Expected_NRV` already
+  nets out denial probability, so the naive formula double-counts it.
 
-- **NRV is decomposed from the billed amount, not the allowed amount.** The
-  brief specified `Expected_NRV = allowed × yield`, but a *pending* claim has no
-  allowed amount yet — it isn't adjudicated. Multiplying a blank field would
-  produce zero NRV for the entire open AR. The engine instead estimates the
-  expected allowed amount (`billed × contractual_factor`) and carries it through
-  collection and denial, so the NRV ceiling test becomes `NRV ≤ billed` — a
-  bound that actually exists in the data.
-- **The priority score does not multiply by `(1 − denial)` a second time.** The
-  brief's `Expected_NRV × (1 − denial) × age` double-counts denial, because
-  Expected_NRV already nets out denial probability. The engine uses
-  `Expected_NRV × (days_in_AR / 30)` so a claim is not penalized for denial risk
-  twice.
-
-## KPI definitions
+### KPI definitions
 
 | KPI | Definition in this model |
 |---|---|
@@ -134,8 +244,6 @@ can't prove:
 | **Bad-debt reserve** | Gross open AR − Expected NRV |
 | **Priority score** | Expected NRV × (days in AR ÷ 30) — the worklist rank |
 
-## The claim lifecycle modeled
-
 ```mermaid
 flowchart LR
     SUB[Claim submitted] --> ADJ{Adjudication}
@@ -146,72 +254,169 @@ flowchart LR
     AR --> NRV[[Yield engine:<br/>Expected NRV + priority]]
 ```
 
-## Repo layout
+---
+
+# Governance: privacy and data quality
+
+## De-identification with a measured risk
+
+Every dataset here is synthetic, so nothing in
+[`governance/deidentify.py`](governance/deidentify.py) protects a real person.
+That is exactly why it is worth building — the technique has to exist and be
+tested *before* it is pointed at real data, and "we de-identified it" is the most
+over-claimed sentence in health analytics.
+
+Two things happen, and they are not the same:
+
+1. **HIPAA Safe Harbor** — the 18 direct-identifier categories, matched by
+   *pattern* rather than a hard-coded list, so a newly added identifier column
+   fails the test on arrival.
+2. **k-anonymity (k=5)** — the hard half. Nobody is re-identified by their name
+   in a de-identified file; they are re-identified by the *combination* that
+   survives it. Generalise first, suppress only as a fallback.
 
 ```
-data_generator/     synthetic claims generator (12k claims, 8 payers, fixed seed)
-data/               generated CSVs: dim_payer, dim_provider, dim_service_line, fact_claims
-engine/             metrics engine: denial summary, AR aging, KPI summary, NRV/yield worklist
-output/             engine results — every dashboard number, reproducible outside Power BI
-                    incl. ar_yield_predictions.csv (worklist) + payer_yield_rates.csv
-powerbi/            ready-to-open PBIP (TMDL model + PBIR report, 22 DAX measures, 4 pages)
-tests/              pytest suite: financial ordering, status/AR control totals,
-                    NRV invariants, and Power BI report/model integrity
-.github/workflows/  CI — regenerates data, rebuilds metrics, runs the tests on every push
+Records in:                           39,573
+Unique on quasi-identifiers:             415 (1.05%)
+Records generalised:                   3,449
+Records suppressed:                    1,480 (3.74%)
+Smallest equivalence class:                5
+Max re-identification probability:     0.200
 ```
 
-## How to reproduce (60 seconds, no database needed)
+The suppression *cost* is reported, because a de-identification that hides its
+cost cannot be argued with. A test also proves the surviving dataset still
+reproduces the authority's ALC share — privacy work that leaves the data unable
+to answer its question has only relocated the failure. Another test confirms the
+audit trail records keys only, never a suppressed value.
+
+## The data quality gate
+
+[`governance/data_quality.py`](governance/data_quality.py) — 15 declarative rules
+across completeness, uniqueness, referential integrity, domain, business logic,
+and a freshness SLA. Critical failures exit non-zero and block the refresh;
+warnings are recorded and let the run proceed, because halting month-end over
+three unexpected disposition codes trades a data problem for an availability
+problem.
+
+Rules are data, not code, each carrying a **rationale** — a rule nobody can
+explain gets deleted the first time it fires inconveniently. Expression rules use
+a tiny named-form language rather than `eval()`, and a test proves an unknown
+expression is *refused*: configuration that can execute arbitrary Python is a
+supply-chain vulnerability wearing a YAML hat.
 
 ```bash
-python data_generator/generate_claims_data.py   # 12,000 synthetic claims
-python engine/build_rcm_metrics.py              # denial + AR aging + KPI + NRV worklist
-pytest tests/ -v                                # 19 invariants
+python governance/data_quality.py                   # PUBLISH, exit 0
+python governance/data_quality.py --inject-failure  # BLOCKED, exit 2
+```
+
+CI runs both, and **fails the build if the corrupted run is allowed through.**
+A gate you have never watched close is decoration.
+
+Every run appends JSONL events — `run_id`, rule, status, violations, rows
+scanned, duration, verdict — to an ops log Datadog or Azure Monitor can tail
+as-is. One `run_id` reconstructs any run end to end, including the failed ones,
+which are the runs telemetry exists for.
+
+**[`docs/SOURCE_TO_TARGET.md`](docs/SOURCE_TO_TARGET.md)** carries the full
+column-level mapping, transformation rules, ownership, and a consolidated list of
+known limitations — in the mapping itself rather than in a separate risk log,
+because the place a limitation gets read is next to the column it applies to.
+
+---
+
+## Reproduce everything (about five seconds)
+
+```bash
+# Canadian decision support
+python canadian/generate_activity_data.py   # 40k DAD-shaped abstracts
+python engine/build_activity_metrics.py     # CPWC, LOS index, ALC, SPC charts
+python engine/health_economics.py           # base case, tornado, PSA/CEAC
+
+# US revenue cycle
+python data_generator/generate_claims_data.py
+python engine/build_rcm_metrics.py
+
+# Governance
+python governance/deidentify.py
+python governance/data_quality.py
+
+pytest tests/ -v                            # 92 invariants
 ```
 
 Then open `powerbi/pbip/RevenueCycleAnalytics.pbip` (see
 [`powerbi/pbip/OPEN_ME_FIRST.md`](powerbi/pbip/OPEN_ME_FIRST.md)) and Refresh.
 
-## Data-quality invariants CI enforces
+## What CI enforces
 
-Descriptive layer:
+**Activity and funding** — LOS decomposes exactly into acute + ALC days; facility
+and monthly rollups tie to the abstracts to the penny; CPWC ex-ALC differs from
+the headline by precisely the ALC cost; indirect standardisation satisfies
+Σ expected = Σ observed; risk adjustment demonstrably reorders the sites; the
+planted ALC outlier site is recovered.
 
-- **Financial ordering** — paid ≤ allowed ≤ submitted on every paid claim.
-- **Status consistency** — every denial carries a CARC reason and zero payment;
-  every pending claim carries an AR bucket and no adjudication date.
-- **AR control totals** — the AR aging output ties to pending claims to the
-  penny, the same control-total discipline as a GL reconciliation.
-- **Plausibility band** — overall denial rate stays within 5–15%.
+**SPC** — each Western Electric rule fires on a series built to trip it and stays
+silent otherwise; a missing period breaks a run rather than bridging it; a stable
+process produces zero signals; a planted shift is detected, in the right
+direction, promptly; dispersion ≈ 1.0 on binomial data and > 1.5 on clustered
+data; Laney widens limits and suppresses false alarms while being a no-op on
+well-behaved data; a contaminated baseline misfires in the documented way.
 
-Predictive layer (NRV / yield):
+**Health economics** — incremental cost decomposes exactly; NMB and ICER match
+their definitions; QALYs are identical across perspectives while costs are not;
+dominance is *labelled*, never left as a bare negative ratio; a zero-effect
+program reports no ICER rather than dividing by zero; more effectiveness never
+lowers NMB; the CEAC is monotonic and bounded; at least one parameter flips the
+decision; Beta fitting survives an impossible standard deviation.
 
-- **NRV ceiling** — Expected NRV never exceeds the billed amount, nor the
-  expected allowed amount. You cannot forecast collecting more than a claim is
-  worth.
-- **Probability bounds** — every denial propensity is strictly inside (0, 1),
-  and each yield factor stays in its natural range.
-- **Decomposition identity** — yield = contract × NCR × (1 − denial), and
-  NRV = billed × yield, proven row by row.
-- **Priority ranking** — the worklist is sorted by priority score with a dense
-  1..N rank, and every open claim is scored exactly once.
-- **Yield control total** — total Expected NRV ties to gross open AR and is
-  strictly below it, and the overall realization rate stays in a believable band.
-- **Self-pay economics** — a Self-Pay dollar of AR must be worth materially less
-  than an insured dollar; if the engine stops seeing that, the NRV story is
-  broken regardless of whether the arithmetic still balances.
+**Governance** — no direct identifier survives (and the source genuinely had
+some); every equivalence class meets k; a uniquely identifying combination is
+removed; generalisation outweighs suppression; the de-identified data still
+answers the question; pseudonyms are salted, stable, and not a bare hash; the
+gate closes on a duplicated grain key; every rule carries a severity and a
+rationale; an unknown expression rule is refused; every run leaves a
+reconstructable trail, including the failures.
 
-Power BI integrity (proven without opening Power BI):
+**Revenue cycle** — paid ≤ allowed ≤ submitted; every denial carries a CARC
+reason and zero payment; AR aging ties to pending claims to the penny; NRV never
+exceeds billed or expected allowed; yield = contract × NCR × (1 − denial) row by
+row; the worklist is densely ranked and every open claim scored exactly once; a
+Self-Pay dollar is worth materially less than an insured one.
 
-- **Field references resolve** — every column/measure/sort field a visual
-  references exists in the TMDL model (a mistyped field renders a blank visual,
-  not an error).
-- **Model consistency** — relationships and sort-by columns point at real
-  columns; the yield table's columns match the engine's CSV headers exactly.
+**Power BI integrity, without opening Power BI** — every column, measure, and
+sort field a visual references exists in the TMDL model (a mistyped field renders
+a blank visual, not an error); relationships and sort-by columns point at real
+columns; the yield table's columns match the engine's CSV headers exactly.
+
+## Repo layout
+
+```
+canadian/           generate_activity_data.py — DAD-shaped abstracts (CMG+, RIW, ALC)
+data_generator/     synthetic claims generator (12k claims, 8 payers)
+data/               generated CSVs for both datasets
+engine/             build_activity_metrics.py — CPWC, LOS index, ALC, risk adjustment
+                    spc.py — p/u charts, Western Electric, Laney, baselines
+                    health_economics.py — ICER, NMB, tornado, PSA/CEAC
+                    build_rcm_metrics.py — denial summary, AR aging, NRV worklist
+governance/         deidentify.py — Safe Harbor + k-anonymity + risk report
+                    data_quality.py — 15-rule gate, JSONL observability
+docs/               BRIEFING_NOTE.md · BUSINESS_CASE.md · SOURCE_TO_TARGET.md
+output/             every engine result — reproducible outside Power BI
+powerbi/            ready-to-open PBIP (TMDL model + PBIR report, 22 DAX measures)
+tests/              92 invariants across activity, SPC, economics, governance,
+                    revenue cycle, and Power BI model/report integrity
+.github/workflows/  CI — full rebuild, invariants, and the DQ sabotage proof
+```
 
 ## Notes on the synthetic data
 
-Generated with a fixed seed for reproducibility. Payer mix, denial reason
-distribution (CO-16 missing info leading, as it does in practice), adjudication
-lags, and collection rates are calibrated to publicly available industry
-benchmarks, not to any real organization's data. Self-Pay is deliberately
-modeled with full-charge billing and low collection so the yield engine can
-demonstrate the payer-economics point that NRV exists to capture.
+Both datasets use fixed seeds. Payer mix, denial reason distribution (CO-16
+leading, as in practice), adjudication lags, collection rates, case mix, RIW,
+ALC concentration, and readmission drivers are calibrated to publicly documented
+patterns — not to any real organisation's data. Facility names are invented.
+
+Two things are planted on purpose and labelled as such: a **step increase in ALC
+risk from January 2026**, so the control charts have a real shift to find, and
+**site-level differences** in cost, length of stay, ALC, and acuity, so the site
+comparison and the risk adjustment have something genuine to recover. A detector
+that cannot find a planted signal will not find a real one.

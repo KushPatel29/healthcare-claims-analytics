@@ -1,0 +1,25 @@
+indicator,month,rule,direction,z,description
+ALC days per 100 patient days (u-prime),2026-02,1,above,3.385,1 point beyond 3 sigma
+ALC days per 100 patient days (u-prime),2026-02,2,above,3.385,"2 of 3 consecutive points beyond 2 sigma, same side"
+ALC days per 100 patient days (u-prime),2026-04,1,above,3.687,1 point beyond 3 sigma
+ALC days per 100 patient days (u-prime),2026-04,2,above,3.687,"2 of 3 consecutive points beyond 2 sigma, same side"
+ALC days per 100 patient days (u-prime),2026-04,3,above,3.687,"4 of 5 consecutive points beyond 1 sigma, same side"
+ALC days per 100 patient days (u-prime),2026-05,1,above,3.524,1 point beyond 3 sigma
+ALC days per 100 patient days (u-prime),2026-05,2,above,3.524,"2 of 3 consecutive points beyond 2 sigma, same side"
+ALC days per 100 patient days (u-prime),2026-05,3,above,3.524,"4 of 5 consecutive points beyond 1 sigma, same side"
+ALC days per 100 patient days (u-prime),2026-06,2,above,2.086,"2 of 3 consecutive points beyond 2 sigma, same side"
+ALC days per 100 patient days (u-prime),2026-06,3,above,2.086,"4 of 5 consecutive points beyond 1 sigma, same side"
+Stays with any ALC day (p-prime),2026-01,1,above,3.359,1 point beyond 3 sigma
+Stays with any ALC day (p-prime),2026-02,1,above,4.542,1 point beyond 3 sigma
+Stays with any ALC day (p-prime),2026-02,2,above,4.542,"2 of 3 consecutive points beyond 2 sigma, same side"
+Stays with any ALC day (p-prime),2026-03,1,above,3.552,1 point beyond 3 sigma
+Stays with any ALC day (p-prime),2026-03,2,above,3.552,"2 of 3 consecutive points beyond 2 sigma, same side"
+Stays with any ALC day (p-prime),2026-04,1,above,5.136,1 point beyond 3 sigma
+Stays with any ALC day (p-prime),2026-04,2,above,5.136,"2 of 3 consecutive points beyond 2 sigma, same side"
+Stays with any ALC day (p-prime),2026-04,3,above,5.136,"4 of 5 consecutive points beyond 1 sigma, same side"
+Stays with any ALC day (p-prime),2026-05,1,above,5.234,1 point beyond 3 sigma
+Stays with any ALC day (p-prime),2026-05,2,above,5.234,"2 of 3 consecutive points beyond 2 sigma, same side"
+Stays with any ALC day (p-prime),2026-05,3,above,5.234,"4 of 5 consecutive points beyond 1 sigma, same side"
+Stays with any ALC day (p-prime),2026-06,1,above,4.391,1 point beyond 3 sigma
+Stays with any ALC day (p-prime),2026-06,2,above,4.391,"2 of 3 consecutive points beyond 2 sigma, same side"
+Stays with any ALC day (p-prime),2026-06,3,above,4.391,"4 of 5 consecutive points beyond 1 sigma, same side"

@@ -1,0 +1,28 @@
+ECONOMIC EVALUATION — TRANSITIONAL CARE / ALC REDUCTION
+==============================================================
+Scope:                           authority-wide (phase 1: Harbourview Hospital)
+ALC days (annualised, authority):      20,784  = 57 beds
+  of which Harbourview Hospital:        3,892
+ALC days avoided at base case:          4,572  (22% reduction = 12.5 beds)
+QALYs gained:                             3.4
+--------------------------------------------------------------
+PERSPECTIVE A — opportunity cost (bed day valued in full)
+  Incremental cost:                -2,916,613
+  Result:                        DOMINANT (cost-saving and health-improving)
+  Net monetary benefit @ $50,000/QALY:    3,088,077
+--------------------------------------------------------------
+PERSPECTIVE B — cash-releasing (variable cost only)  <- the decision case
+  Incremental cost:                   658,980
+  Result:                        ICER 192,163 /QALY
+  Net monetary benefit @ $50,000/QALY:     -487,516
+--------------------------------------------------------------
+PROBABILISTIC SENSITIVITY (10,000 iterations)
+  P(cost-effective @ $50,000/QALY), perspective A:   99.7%
+  P(cost-effective @ $50,000/QALY), perspective B:   16.9%
+  P(cost-saving outright), perspective B:              10.4%
+  Mean incremental cost, perspective B:           656,906
+--------------------------------------------------------------
+MOST INFLUENTIAL PARAMETERS (one-way, perspective B)
+  variable_share             swing $   1,314,556  ** flips the decision **
+  alc_reduction              swing $   1,093,732  ** flips the decision **
+  program_cost_annual        swing $     800,000

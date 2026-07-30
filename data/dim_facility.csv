@@ -1,0 +1,7 @@
+facility_id,facility_name,site_type,staffed_acute_beds
+1,Riverbend Regional Hospital,Tertiary,165
+2,Cedar Valley General Hospital,Community,100
+3,Harbourview Hospital,Community,78
+4,Mount Ashton General Hospital,Community,55
+5,Two Rivers Health Centre,Rural,22
+6,Fernwood Memorial Hospital,Community,70

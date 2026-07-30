@@ -1,0 +1,3 @@
+perspective,alc_days_avoided_annual,incremental_cost,incremental_qalys,icer,dominant,net_monetary_benefit
+A_opportunity_cost,4572.4,-2916613.35,3.429277,-850503.74,True,3088077.23
+B_cash_releasing,4572.4,658979.99,3.429277,192162.92,False,-487516.11

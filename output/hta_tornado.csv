@@ -1,0 +1,7 @@
+parameter,low_value,high_value,nmb_at_low,nmb_at_high,swing,flips_decision,note
+variable_share,0.2,0.45,-1118503.18,196053.2,1314556.38,True,"Share of the per-diem that is genuinely cash-releasing within the fiscal year (supplies, drugs, food, premium/agency nursing)."
+alc_reduction,0.1,0.35,-1012507.33,81224.36,1093731.69,True,Relative reduction in ALC days. Published transitional-care and early-discharge-planning programs report 10-35%; 22% is mid-range.
+program_cost_annual,1100000.0,1900000.0,-137516.11,-937516.11,800000.0,False,"8.0 FTE (5 care coordinators, 2 OT/PT, 1 manager) plus purchased interim community capacity and program overhead."
+alc_per_diem,950.0,1350.0,-780147.79,-194884.44,585263.36,False,Fully absorbed cost of a staffed acute bed-day occupied by an ALC patient.
+community_per_diem,140.0,260.0,-236035.76,-784720.17,548684.4,False,"Cost of the home-support or interim residential day the patient receives instead. The saving is a difference, never the full per-diem."
+qaly_per_alc_day_avoided,0.0002,0.0015,-613256.29,-316052.24,297204.05,False,"Health gain per avoided ALC day: less deconditioning, delirium, and hospital-acquired infection. Small per day, meaningful over thousands."

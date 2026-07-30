@@ -1,0 +1,26 @@
+ACUTE CARE ACTIVITY & FUNDING SUMMARY
+==========================================================
+Discharges:                              39,567
+Weighted cases (sum RIW):              58,727.7
+Total cost:                         496,166,175
+Cost per weighted case:                   8,449
+  ...excluding ALC:                       7,635
+  ...ALC component:                         814
+Acute patient days:                     260,552
+ALC days:                                41,567
+ALC rate (% of patient days):             13.8%
+Stays with any ALC day:                   4,397 (11.1%)
+ALC bed equivalents (24 mo):               56.9 beds
+ALC cost @ $1,150/day:              47,802,050
+30-day readmission rate:                   9.9%
+----------------------------------------------------------
+SITE VARIATION (risk-adjusted where noted)
+Highest cost/weighted case ex-ALC: Riverbend Regional Hospital ($8,409)
+Highest LOS index:                 Harbourview Hospital (1.039)
+Highest ALC rate:                  Harbourview Hospital (15.7% of patient days)
+----------------------------------------------------------
+STATISTICAL PROCESS CONTROL
+Special-cause signals (published charts): 24
+ALC overdispersion factor (Laney sigma_z): 4.78x
+  naive u-chart signals:       41  <- mostly false alarms
+  u-prime corrected signals:   10

@@ -1,0 +1,18 @@
+cmg_code,cmg_name,program,riw,elos_days
+139,Chronic Obstructive Pulmonary Disease,Medicine,0.95,5.5
+140,Pneumonia,Medicine,1.05,6.2
+145,Urinary Tract Infection,Medicine,0.7,4.4
+152,Gastrointestinal Hemorrhage,Medicine,0.88,4.0
+196,Heart Failure,Cardiac Sciences,1.2,7.0
+202,Acute Myocardial Infarction,Cardiac Sciences,1.35,4.8
+208,Coronary Artery Bypass Graft,Cardiac Sciences,4.1,8.5
+025,"Stroke, Ischemic",Neurosciences,1.85,9.4
+032,Seizure Disorder,Neurosciences,0.8,3.6
+305,Hip Replacement,Surgery,2.05,4.2
+306,Knee Replacement,Surgery,1.9,3.8
+284,Bowel Resection,Surgery,2.6,8.0
+291,Cholecystectomy,Surgery,1.1,2.5
+560,Vaginal Delivery,Maternity,0.55,1.9
+563,Cesarean Section,Maternity,0.9,3.1
+675,Schizophrenia / Psychotic Disorder,Mental Health,1.15,14.0
+680,Substance-Related Disorder,Mental Health,0.7,5.5

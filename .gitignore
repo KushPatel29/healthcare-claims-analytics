@@ -6,3 +6,6 @@ __pycache__/
 **/.pbi/localSettings.json
 **/.pbi/cache.abf
 **/.pbi/unappliedChanges.json
+
+# Append-only ops log — regenerated on every run, not a source artefact
+output/dq_events.jsonl

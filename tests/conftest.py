@@ -14,5 +14,24 @@ ROOT = Path(__file__).resolve().parent.parent
 
 @pytest.fixture(scope="session", autouse=True)
 def build_outputs():
-    subprocess.run([sys.executable, str(ROOT / "data_generator" / "generate_claims_data.py")], check=True)
-    subprocess.run([sys.executable, str(ROOT / "engine" / "build_rcm_metrics.py")], check=True)
+    for script in (
+        # US revenue cycle
+        ROOT / "data_generator" / "generate_claims_data.py",
+        ROOT / "engine" / "build_rcm_metrics.py",
+        # Canadian acute-care activity, SPC, and the economic evaluation
+        # (order matters: the HTA model reads the activity engine's output)
+        ROOT / "canadian" / "generate_activity_data.py",
+        ROOT / "engine" / "build_activity_metrics.py",
+        ROOT / "engine" / "health_economics.py",
+        # governance layer
+        ROOT / "governance" / "deidentify.py",
+        ROOT / "governance" / "data_quality.py",
+    ):
+        subprocess.run([sys.executable, str(script)], check=True)
+
+
+def read_csv(name):
+    """Read an engine output CSV as a list of dicts."""
+    import csv
+    with open(ROOT / "output" / name, encoding="utf-8") as f:
+        return list(csv.DictReader(f))

@@ -18,8 +18,36 @@ jobs:
       - name: Install test dependencies
         run: pip install pytest
 
-      - name: Regenerate claims data, rebuild metrics, verify invariants
+      - name: Regenerate all data, rebuild every engine, verify invariants
         run: pytest tests/ -v
+
+  data-quality-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build the datasets
+        run: |
+          python data_generator/generate_claims_data.py
+          python canadian/generate_activity_data.py
+
+      - name: Gate must pass on clean data
+        run: python governance/data_quality.py
+
+      - name: Gate must close on injected corruption
+        # A gate you have never watched close is decoration. This step inverts
+        # the exit code: the build fails if the corrupted run is *allowed*.
+        run: |
+          if python governance/data_quality.py --inject-failure; then
+            echo "::error::DQ gate did not block a duplicated grain key"
+            exit 1
+          else
+            echo "gate correctly blocked the corrupted build"
+          fi
 
   docker-build:
     runs-on: ubuntu-latest

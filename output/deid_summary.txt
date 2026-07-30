@@ -1,0 +1,18 @@
+DE-IDENTIFICATION & RE-IDENTIFICATION RISK
+======================================================
+Safe Harbor categories found and handled: 4
+  - date                             admit_date, discharge_date
+  - geographic_subdivision           postal_code
+  - health_plan_or_record_number     mrn
+  - name                             patient_name
+------------------------------------------------------
+Records in:                           39,567
+Unique on quasi-identifiers:             449 (1.14%)
+Records generalised:                   3,390
+Records suppressed:                    1,405 (3.55%)
+Records out:                          38,162
+------------------------------------------------------
+k target:                                  5
+Smallest equivalence class:                5
+Equivalence classes:                   2,913
+Max re-identification probability:     0.200   (1 / smallest class)

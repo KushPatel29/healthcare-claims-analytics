@@ -1,0 +1,15 @@
+metric,value
+records_in,39567
+records_out,38162
+unique_records_before,449
+unique_share_before,0.01135
+records_generalised,3390
+records_suppressed,1405
+suppression_rate,0.03551
+k_target,5
+min_equivalence_class_after,5
+equivalence_classes_after,2913
+safe_harbor_removed:date,admit_date;discharge_date
+safe_harbor_removed:geographic_subdivision,postal_code
+safe_harbor_removed:health_plan_or_record_number,mrn
+safe_harbor_removed:name,patient_name
