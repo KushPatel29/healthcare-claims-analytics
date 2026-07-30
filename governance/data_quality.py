@@ -248,23 +248,22 @@ def main():
         if status == "fail":
             critical_failures += 1
 
+        # The results CSV is the *report*: what was checked and what it found.
+        # Run id and timings are telemetry — they belong in the JSONL event log,
+        # which is where an observability tool reads them from. Keeping
+        # nondeterministic values out of the committed artefact also means a
+        # clean run produces no diff, so a real change to the data stands out
+        # in review instead of hiding among churn.
         row = {"rule_id": rule["id"], "dataset": rule["dataset"],
                "type": rule["type"], "column": rule.get("column", ""),
                "severity": rule["severity"], "status": status,
                "violations": violations, "rows_scanned": scanned,
-               "duration_ms": duration_ms, "detail": detail,
-               "rationale": rule["rationale"]}
+               "detail": detail, "rationale": rule["rationale"]}
         results.append(row)
         emit(log, {"ts": datetime.now(timezone.utc).isoformat(), "run_id": run_id,
-                   "event": "rule_evaluated", **{k: row[k] for k in
-                                                 ("rule_id", "status", "severity",
-                                                  "violations", "rows_scanned",
-                                                  "duration_ms")}})
-
-    with open(OUT / "dq_results.csv", "w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=results[0].keys())
-        w.writeheader()
-        w.writerows(results)
+                   "event": "rule_evaluated", "duration_ms": duration_ms,
+                   **{k: row[k] for k in ("rule_id", "status", "severity",
+                                          "violations", "rows_scanned")}})
 
     passed = sum(1 for r in results if r["status"] == "pass")
     warned = sum(1 for r in results if r["status"] == "warn")
@@ -278,7 +277,6 @@ def main():
     lines = [
         "DATA QUALITY GATE",
         "=" * 46,
-        f"Run id:            {run_id}",
         f"Rules evaluated:   {len(results)}",
         f"  passed:          {passed}",
         f"  warnings:        {warned}",
@@ -289,8 +287,22 @@ def main():
         if r["status"] != "pass":
             lines.append(f"  [{r['status'].upper():4}] {r['rule_id']} "
                          f"{r['dataset']}.{r['column']} — {r['detail']}")
-    (OUT / "dq_summary.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    # A sabotage drill must not overwrite the published evidence. The injected
+    # run still emits its full telemetry to the event log — that is how the
+    # test suite proves the gate closed — but the artefacts downstream
+    # consumers read continue to describe the last *real* run.
+    if not args.inject_failure:
+        with open(OUT / "dq_results.csv", "w", newline="", encoding="utf-8") as f:
+            w = csv.DictWriter(f, fieldnames=results[0].keys())
+            w.writeheader()
+            w.writerows(results)
+        (OUT / "dq_summary.txt").write_text("\n".join(lines) + "\n",
+                                            encoding="utf-8")
+
+    # The run id goes to the console and the event log, not into the committed
+    # summary — it is how you find this run in telemetry, not a finding.
     print("\n".join(lines))
+    print(f"\nrun_id {run_id} — full trail in output/dq_events.jsonl")
 
     # Exit code is the interface to the scheduler: 0 publish, 2 blocked.
     if critical_failures:

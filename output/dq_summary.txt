@@ -1,9 +1,7 @@
 DATA QUALITY GATE
 ==============================================
-Run id:            c2a72405955f
 Rules evaluated:   15
-  passed:          14
+  passed:          15
   warnings:        0
-  critical fails:  1
-Verdict:           BLOCKED
-  [FAIL] DQ-002 fact_inpatient_abstracts.csv.abstract_id — 1 duplicate key(s)
+  critical fails:  0
+Verdict:           PUBLISH

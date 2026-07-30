@@ -1,16 +1,16 @@
-rule_id,dataset,type,column,severity,status,violations,rows_scanned,duration_ms,detail,rationale
-DQ-001,fact_inpatient_abstracts.csv,not_null,abstract_id,critical,pass,0,39568,5.34,0 null/blank,The grain of the fact table. A null grain key means rows cannot be counted once.
-DQ-002,fact_inpatient_abstracts.csv,unique,abstract_id,critical,fail,1,39568,8.4,1 duplicate key(s),"A duplicated abstract double-counts a discharge, its cost, and its bed days — the single most expensive silent error in activity reporting."
-DQ-003,fact_inpatient_abstracts.csv,referential,facility_id,critical,pass,0,39568,3.86,0 orphan(s) vs dim_facility.csv,"An orphan facility key drops the row out of every site-level report while leaving the authority total intact — the totals still tie, so nobody notices."
-DQ-004,fact_inpatient_abstracts.csv,referential,cmg_code,critical,pass,0,39568,2.5,0 orphan(s) vs dim_cmg.csv,"An unmapped CMG has no RIW, so the case silently carries zero weight in cost per weighted case."
-DQ-010,fact_inpatient_abstracts.csv,range,acute_los_days,critical,pass,0,39568,5.95,"0 outside [1, 365]","A stay of zero or negative days is a data-entry or timezone error, not a real admission."
-DQ-011,fact_inpatient_abstracts.csv,range,alc_days,critical,pass,0,39568,6.19,"0 outside [0, 365]",ALC days are a subset of the stay and cannot be negative.
-DQ-012,fact_inpatient_abstracts.csv,range,riw,critical,pass,0,39568,7.41,"0 outside [0.0001, 60.0]",A zero or absent RIW makes cost per weighted case divide by something meaningless.
-DQ-013,fact_inpatient_abstracts.csv,domain,discharge_disposition,warning,pass,0,39568,6.06,all values in domain,"New disposition codes appear legitimately when a source system is upgraded. Worth knowing about, not worth halting month-end for."
-DQ-014,fact_inpatient_abstracts.csv,domain,readmit_30d,critical,pass,0,39568,5.88,all values in domain,A flag with a third value breaks every rate that divides by it.
-DQ-015,fact_inpatient_abstracts.csv,expression,,critical,pass,0,39568,6.4,0 row(s) violate: total_los_days == acute_los_days + alc_days,The decomposition every bed-day figure depends on.
-DQ-016,fact_inpatient_abstracts.csv,expression,,critical,pass,0,39568,2.88,0 row(s) violate: admit_date < discharge_date,"Discharged before admitted. Rare, and always a real defect."
-DQ-020,fact_inpatient_abstracts.csv,freshness,discharge_date,warning,pass,0,39568,3.68,"newest discharge_date is 2026-06-30, 1d old (SLA 45d)","Coding lag is normal in acute care; a stale extract is a service-level conversation with Health Information Management, not a pipeline defect."
-DQ-030,fact_claims.csv,unique,claim_id,critical,pass,0,12000,1.45,0 duplicate key(s),Duplicate claims double-count both revenue and AR.
-DQ-031,fact_claims.csv,referential,payer_id,critical,pass,0,12000,0.74,0 orphan(s) vs dim_payer.csv,An orphan payer key hides a claim from every payer cut.
-DQ-032,fact_claims.csv,domain,status,critical,pass,0,12000,1.36,all values in domain,Status drives the entire adjudication and AR split.
+rule_id,dataset,type,column,severity,status,violations,rows_scanned,detail,rationale
+DQ-001,fact_inpatient_abstracts.csv,not_null,abstract_id,critical,pass,0,39567,0 null/blank,The grain of the fact table. A null grain key means rows cannot be counted once.
+DQ-002,fact_inpatient_abstracts.csv,unique,abstract_id,critical,pass,0,39567,0 duplicate key(s),"A duplicated abstract double-counts a discharge, its cost, and its bed days — the single most expensive silent error in activity reporting."
+DQ-003,fact_inpatient_abstracts.csv,referential,facility_id,critical,pass,0,39567,0 orphan(s) vs dim_facility.csv,"An orphan facility key drops the row out of every site-level report while leaving the authority total intact — the totals still tie, so nobody notices."
+DQ-004,fact_inpatient_abstracts.csv,referential,cmg_code,critical,pass,0,39567,0 orphan(s) vs dim_cmg.csv,"An unmapped CMG has no RIW, so the case silently carries zero weight in cost per weighted case."
+DQ-010,fact_inpatient_abstracts.csv,range,acute_los_days,critical,pass,0,39567,"0 outside [1, 365]","A stay of zero or negative days is a data-entry or timezone error, not a real admission."
+DQ-011,fact_inpatient_abstracts.csv,range,alc_days,critical,pass,0,39567,"0 outside [0, 365]",ALC days are a subset of the stay and cannot be negative.
+DQ-012,fact_inpatient_abstracts.csv,range,riw,critical,pass,0,39567,"0 outside [0.0001, 60.0]",A zero or absent RIW makes cost per weighted case divide by something meaningless.
+DQ-013,fact_inpatient_abstracts.csv,domain,discharge_disposition,warning,pass,0,39567,all values in domain,"New disposition codes appear legitimately when a source system is upgraded. Worth knowing about, not worth halting month-end for."
+DQ-014,fact_inpatient_abstracts.csv,domain,readmit_30d,critical,pass,0,39567,all values in domain,A flag with a third value breaks every rate that divides by it.
+DQ-015,fact_inpatient_abstracts.csv,expression,,critical,pass,0,39567,0 row(s) violate: total_los_days == acute_los_days + alc_days,The decomposition every bed-day figure depends on.
+DQ-016,fact_inpatient_abstracts.csv,expression,,critical,pass,0,39567,0 row(s) violate: admit_date < discharge_date,"Discharged before admitted. Rare, and always a real defect."
+DQ-020,fact_inpatient_abstracts.csv,freshness,discharge_date,warning,pass,0,39567,"newest discharge_date is 2026-06-30, 1d old (SLA 45d)","Coding lag is normal in acute care; a stale extract is a service-level conversation with Health Information Management, not a pipeline defect."
+DQ-030,fact_claims.csv,unique,claim_id,critical,pass,0,12000,0 duplicate key(s),Duplicate claims double-count both revenue and AR.
+DQ-031,fact_claims.csv,referential,payer_id,critical,pass,0,12000,0 orphan(s) vs dim_payer.csv,An orphan payer key hides a claim from every payer cut.
+DQ-032,fact_claims.csv,domain,status,critical,pass,0,12000,all values in domain,Status drives the entire adjudication and AR split.
