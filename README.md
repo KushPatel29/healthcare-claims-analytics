@@ -1,5 +1,6 @@
 # Health System Decision Support — activity, economics, and revenue cycle
 
+[![CI](https://github.com/KushPatel29/healthcare-claims-analytics/actions/workflows/ci.yml/badge.svg)](https://github.com/KushPatel29/healthcare-claims-analytics/actions/workflows/ci.yml)
 ![Power BI](https://img.shields.io/badge/Power%20BI-6%20pages%20%C2%B7%2053%20visuals-F2C811?logo=powerbi&logoColor=black)
 ![Python](https://img.shields.io/badge/Python-stdlib%20only-3776AB?logo=python&logoColor=white)
 ![SPC](https://img.shields.io/badge/SPC-Laney%20p'%20%2F%20u'-0B5FA5)
