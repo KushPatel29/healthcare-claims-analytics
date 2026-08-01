@@ -60,3 +60,4 @@ table hta_base_case
 				    Typed = Table.TransformColumnTypes(Promoted, {{"perspective", type text}, {"alc_days_avoided_annual", type number}, {"incremental_cost", type number}, {"incremental_qalys", type number}, {"icer", type number}, {"dominant", type text}, {"net_monetary_benefit", type number}})
 				in
 				    Typed
+

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "visual034",
   "position": {
     "x": 980,
@@ -27,13 +27,13 @@
                 }
               },
               "queryRef": "ar_yield_predictions.ar_bucket",
-              "nativeQueryRef": "ar_bucket"
+              "nativeQueryRef": "ar_bucket",
+              "active": true
             }
           ]
         }
       }
     },
-    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
       "title": [
         {
@@ -55,6 +55,7 @@
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
   }
 }

@@ -131,3 +131,4 @@ table fact_inpatient_abstracts
 				    Typed = Table.TransformColumnTypes(Promoted, {{"abstract_id", type text}, {"facility_id", Int64.Type}, {"cmg_code", Int64.Type}, {"program", type text}, {"admit_date", type text}, {"discharge_date", type text}, {"discharge_month", type text}, {"age_band", type text}, {"comorbidity_level", Int64.Type}, {"entry_via_ed", Int64.Type}, {"acute_los_days", Int64.Type}, {"alc_days", Int64.Type}, {"total_los_days", Int64.Type}, {"elos_days", type number}, {"riw", type number}, {"total_cost", type number}, {"discharge_disposition", type text}, {"readmit_30d", Int64.Type}})
 				in
 				    Typed
+

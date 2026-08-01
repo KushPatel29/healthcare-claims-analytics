@@ -84,3 +84,4 @@ table spc_alc_stay
 				    Typed = Table.TransformColumnTypes(Promoted, {{"month", type text}, {"stays_with_alc", Int64.Type}, {"discharges", Int64.Type}, {"rate", type number}, {"centre", type number}, {"lcl", type number}, {"ucl", type number}, {"sigma", type number}, {"z", type number}, {"dispersion_factor", type number}})
 				in
 				    Typed
+

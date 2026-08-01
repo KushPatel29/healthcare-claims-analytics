@@ -23,3 +23,4 @@ table dim_service_line
 				    Typed = Table.TransformColumnTypes(Promoted, {{"service_line_id", Int64.Type}, {"service_line", type text}})
 				in
 				    Typed
+

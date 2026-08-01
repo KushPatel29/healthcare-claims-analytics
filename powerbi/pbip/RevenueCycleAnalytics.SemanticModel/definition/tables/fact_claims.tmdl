@@ -108,10 +108,10 @@ table fact_claims
 
 	column ar_bucket
 		dataType: string
-		sortByColumn: ar_bucket_sort
 		lineageTag: f74a2d5e-07f7-4bc1-975b-906b2927f7d9
 		summarizeBy: none
 		sourceColumn: ar_bucket
+		sortByColumn: ar_bucket_sort
 
 	column ar_bucket_sort
 		dataType: int64
@@ -136,3 +136,4 @@ table fact_claims
 				    AddedMonth = Table.AddColumn(Typed, "claim_month", each Date.ToText([submitted_date], "yyyy-MM"), type text)
 				in
 				    AddedMonth
+

@@ -38,3 +38,4 @@ table dim_facility
 				    Typed = Table.TransformColumnTypes(Promoted, {{"facility_id", Int64.Type}, {"facility_name", type text}, {"site_type", type text}, {"staffed_acute_beds", Int64.Type}})
 				in
 				    Typed
+

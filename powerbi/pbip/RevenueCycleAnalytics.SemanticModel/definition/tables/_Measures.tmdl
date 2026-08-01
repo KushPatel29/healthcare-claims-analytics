@@ -89,16 +89,8 @@ table _Measures
 		formatString: #,0
 		lineageTag: a7c10001-0000-4000-8000-000000000005
 
-	column Value
-		dataType: int64
-		isHidden
-		formatString: 0
-		lineageTag: fd4e8534-e18a-4551-948c-a38f325e234d
-		summarizeBy: none
-		sourceColumn: Value
-
 	/// Inpatient discharge abstracts. The denominator for most acute indicators.
-	measure 'Discharges' = COUNTROWS(fact_inpatient_abstracts)
+	measure Discharges = COUNTROWS(fact_inpatient_abstracts)
 		formatString: #,0
 		displayFolder: Acute activity (Canada)
 		lineageTag: c8a20001-0000-4000-8000-000000000000
@@ -170,7 +162,7 @@ table _Measures
 		lineageTag: c8a20012-0000-4000-8000-000000000000
 
 	/// 30-day readmissions, unadjusted count.
-	measure 'Readmissions' = SUM(fact_inpatient_abstracts[readmit_30d])
+	measure Readmissions = SUM(fact_inpatient_abstracts[readmit_30d])
 		formatString: #,0
 		displayFolder: Acute activity (Canada)
 		lineageTag: c8a20013-0000-4000-8000-000000000000
@@ -212,10 +204,11 @@ table _Measures
 		lineageTag: c8a20019-0000-4000-8000-000000000000
 
 	/// Cost per QALY, blanked when the option is dominant. A negative ICER is ambiguous - it means cheaper-and-better or dearer-and-worse and the ratio cannot tell you which - so dominance is reported as a label instead of a number.
-	measure 'ICER' = IF(HASONEVALUE(hta_base_case[perspective]), IF(SELECTEDVALUE(hta_base_case[dominant]) = "True", BLANK(), DIVIDE([Incremental Cost], [Incremental QALYs])), BLANK())
+	measure ICER = IF(HASONEVALUE(hta_base_case[perspective]), IF(SELECTEDVALUE(hta_base_case[dominant]) = "True", BLANK(), DIVIDE([Incremental Cost], [Incremental QALYs])), BLANK())
 		formatString: #,0
 		displayFolder: Health economics
 		lineageTag: c8a20020-0000-4000-8000-000000000000
+
 	/// Centre line for the stays-with-ALC p-prime chart: the pooled proportion over the baseline period, never the mean of the monthly rates. Read from engine/spc.py output, never computed here. The limits come from an 18-month phase I baseline extended forward and carry Laney's overdispersion correction; a DAX measure evaluating in filter context cannot reproduce either. AVERAGE is exact at month grain because spc_alc_stay holds exactly one row per month - it is an aggregation the visual never actually exercises, present only so the column can sit on an axis.
 	measure 'p-prime Centre Line' = AVERAGE(spc_alc_stay[centre])
 		formatString: 0.0%
@@ -233,6 +226,15 @@ table _Measures
 		formatString: 0.0%
 		displayFolder: Statistical process control
 		lineageTag: c8a30003-0000-4000-8000-000000000000
+
+	column Value
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: fd4e8534-e18a-4551-948c-a38f325e234d
+		summarizeBy: none
+		sourceColumn: Value
+
 	partition _Measures = m
 		mode: import
 		source =
@@ -240,3 +242,4 @@ table _Measures
 				    Source = #table(type table [Value = Int64.Type], {})
 				in
 				    Source
+

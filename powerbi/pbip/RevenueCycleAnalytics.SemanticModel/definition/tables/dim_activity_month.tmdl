@@ -1,5 +1,5 @@
 /// Month dimension for the Canadian acute-activity layer, 2024-07 to 2026-06.
-///
+/// 
 /// This is deliberately a second date table rather than a reuse of dim_month,
 /// and the reason is a data range mismatch that would otherwise fail silently.
 /// dim_month is generated for the revenue-cycle claims period (2025-07 onward,
@@ -7,7 +7,7 @@
 /// them fall outside dim_month entirely — relating discharge_month to it would
 /// push half the authority's activity into a blank row and every month-sliced
 /// visual would quietly under-report, with nothing on the canvas to say so.
-///
+/// 
 /// The alternative, widening dim_month backwards, would hang twelve empty months
 /// off the left of every revenue-cycle chart that already works. The two subject
 /// areas genuinely cover different periods and are never cross-filtered, so they
@@ -17,10 +17,10 @@ table dim_activity_month
 
 	column month
 		dataType: string
-		sortByColumn: month_start
 		lineageTag: c8a10001-0000-4000-8000-000000000002
 		summarizeBy: none
 		sourceColumn: month
+		sortByColumn: month_start
 
 	column month_start
 		dataType: dateTime
@@ -52,3 +52,4 @@ table dim_activity_month
 				    Reordered = Table.ReorderColumns(AddedFiscal, {"month", "month_start", "fiscal_year"})
 				in
 				    Reordered
+

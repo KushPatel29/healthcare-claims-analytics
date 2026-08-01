@@ -50,10 +50,10 @@ table ar_yield_predictions
 
 	column ar_bucket
 		dataType: string
-		sortByColumn: ar_bucket_sort
 		lineageTag: c9a7f0e2-1b44-4d90-9a2e-7f4c8b210009
 		summarizeBy: none
 		sourceColumn: ar_bucket
+		sortByColumn: ar_bucket_sort
 
 	column ar_bucket_sort
 		dataType: int64
@@ -127,3 +127,4 @@ table ar_yield_predictions
 				    Typed = Table.TransformColumnTypes(Promoted, {{"priority_rank", Int64.Type}, {"claim_id", type text}, {"payer_name", type text}, {"payer_type", type text}, {"service_line", type text}, {"submitted_date", type date}, {"ar_age_days", Int64.Type}, {"ar_bucket", type text}, {"ar_bucket_sort", Int64.Type}, {"billed_amount", type number}, {"contractual_factor", type number}, {"net_collection_rate", type number}, {"denial_propensity", type number}, {"expected_yield_rate", type number}, {"expected_allowed", type number}, {"expected_nrv", type number}, {"priority_score", type number}})
 				in
 				    Typed
+

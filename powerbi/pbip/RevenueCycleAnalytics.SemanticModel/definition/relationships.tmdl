@@ -37,3 +37,4 @@ relationship d1000001-0000-4000-8000-000000000009
 relationship d1000001-0000-4000-8000-000000000010
 	fromColumn: activity_by_facility.facility_name
 	toColumn: dim_facility.facility_name
+

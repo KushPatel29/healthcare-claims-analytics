@@ -1,5 +1,5 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "visualD06",
   "position": {
     "x": 20,
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "dim_activity_month.month",
-              "nativeQueryRef": "month"
+              "nativeQueryRef": "month",
+              "active": true
             }
           ]
         },
@@ -93,7 +94,6 @@
         }
       }
     },
-    "drillFilterOtherVisuals": true,
     "visualContainerObjects": {
       "title": [
         {
@@ -101,7 +101,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Stays with any ALC day \u2014 Laney p\u2032 chart (limits from an 18-month baseline)'"
+                  "Value": "'Stays with any ALC day — Laney p′ chart (limits from an 18-month baseline)'"
                 }
               }
             },
@@ -115,6 +115,7 @@
           }
         }
       ]
-    }
+    },
+    "drillFilterOtherVisuals": true
   }
 }

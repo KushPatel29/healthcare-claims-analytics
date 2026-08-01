@@ -29,3 +29,4 @@ table dim_payer
 				    Typed = Table.TransformColumnTypes(Promoted, {{"payer_id", Int64.Type}, {"payer_name", type text}, {"payer_type", type text}})
 				in
 				    Typed
+

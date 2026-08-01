@@ -45,3 +45,4 @@ table dim_cmg
 				    Typed = Table.TransformColumnTypes(Promoted, {{"cmg_code", Int64.Type}, {"cmg_name", type text}, {"program", type text}, {"riw", type number}, {"elos_days", type number}})
 				in
 				    Typed
+

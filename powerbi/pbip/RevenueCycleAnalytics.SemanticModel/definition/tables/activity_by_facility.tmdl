@@ -155,3 +155,4 @@ table activity_by_facility
 				    Typed = Table.TransformColumnTypes(Promoted, {{"facility_name", type text}, {"discharges", Int64.Type}, {"weighted_cases", type number}, {"total_cost", type number}, {"cost_per_weighted_case", type number}, {"cost_per_weighted_case_ex_alc", type number}, {"acute_days", Int64.Type}, {"expected_acute_days", type number}, {"los_index", type number}, {"alc_days", Int64.Type}, {"alc_stays", Int64.Type}, {"patient_days", Int64.Type}, {"alc_rate", type number}, {"alc_stay_rate", type number}, {"alc_bed_equivalents", type number}, {"alc_cost", type number}, {"observed_readmits", Int64.Type}, {"expected_readmits", type number}, {"readmit_rate", type number}, {"readmit_oe_ratio", type number}})
 				in
 				    Typed
+
