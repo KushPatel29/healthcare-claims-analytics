@@ -5,7 +5,7 @@
     "x": 1080,
     "y": 462,
     "z": 1010,
-    "height": 238,
+    "height": 76,
     "width": 180,
     "tabOrder": 1010
   },
@@ -56,6 +56,21 @@
         }
       ]
     },
-    "drillFilterOtherVisuals": true
+    "drillFilterOtherVisuals": true,
+    "objects": {
+      "data": [
+        {
+          "properties": {
+            "mode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Dropdown'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
   }
 }

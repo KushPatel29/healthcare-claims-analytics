@@ -1,38 +1,20 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
-  "name": "visualC07",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "visual090",
   "position": {
-    "x": 660,
-    "y": 146,
-    "z": 1007,
-    "height": 300,
-    "width": 600,
-    "tabOrder": 1007
+    "x": 640,
+    "y": 516,
+    "z": 1090,
+    "height": 184,
+    "width": 620,
+    "tabOrder": 1090
   },
   "visual": {
-    "visualType": "clusteredBarChart",
+    "visualType": "card",
+    "drillFilterOtherVisuals": true,
     "query": {
       "queryState": {
-        "Category": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "dim_cmg"
-                    }
-                  },
-                  "Property": "cmg_name"
-                }
-              },
-              "queryRef": "dim_cmg.cmg_name",
-              "nativeQueryRef": "cmg_name",
-              "active": true
-            }
-          ]
-        },
-        "Y": {
+        "Values": {
           "projections": [
             {
               "field": {
@@ -42,11 +24,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Weighted Cases"
+                  "Property": "RCM Insight"
                 }
               },
-              "queryRef": "_Measures.Weighted Cases",
-              "nativeQueryRef": "Weighted Cases"
+              "queryRef": "_Measures.RCM Insight",
+              "nativeQueryRef": "RCM Insight"
             }
           ]
         }
@@ -59,7 +41,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Case mix: weighted cases by CMG+ group'"
+                  "Value": "'What the revenue cycle is telling you'"
                 }
               }
             },
@@ -74,9 +56,28 @@
         }
       ]
     },
-    "drillFilterOtherVisuals": true,
     "objects": {
       "labels": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Segoe UI'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "wordWrap": [
         {
           "properties": {
             "show": {
@@ -89,23 +90,10 @@
           }
         }
       ],
-      "categoryAxis": [
+      "categoryLabels": [
         {
           "properties": {
-            "showAxisTitle": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "valueAxis": [
-        {
-          "properties": {
-            "showAxisTitle": {
+            "show": {
               "expr": {
                 "Literal": {
                   "Value": "false"
