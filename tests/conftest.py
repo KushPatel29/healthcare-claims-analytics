@@ -18,6 +18,7 @@ def build_outputs():
         # US revenue cycle
         ROOT / "data_generator" / "generate_claims_data.py",
         ROOT / "engine" / "build_rcm_metrics.py",
+        ROOT / "engine" / "build_revenue_integrity.py",
         # Canadian acute-care activity, SPC, and the economic evaluation
         # (order matters: the HTA model reads the activity engine's output)
         ROOT / "canadian" / "generate_activity_data.py",
