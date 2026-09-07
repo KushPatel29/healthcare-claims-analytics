@@ -1,0 +1,31 @@
+REVENUE INTEGRITY
+==============================================================
+Days in AR                         104.8   ($3,773,849 AR / $36,027 a day)
+First-pass resolution rate         92.0%
+Charge lag (service->bill)           3.3 days   slowest: Surgery at 9.0
+Follow-up touches                 19,465   (1.62 per claim)
+--------------------------------------------------------------
+CONTRACT VARIANCE
+Cells under contract                   3 of 80
+Underpaid claims                     304
+Underpaid amount              $  120,461
+Worst by rate                 Humana Medicare Advantage / Cardiology  at -14.0%
+Worst by dollars              Blue Cross Blue Shield / Surgery  $56,780
+--------------------------------------------------------------
+APPEAL YIELD
+Denials                              842
+Appealed                             418  (50%)
+Overturned                           246  (59%)
+Recovered                     $  309,417
+Left on the table             $  209,113   un-appealed denials at their own overturn rate
+Biggest by volume             CO-16 Missing or invalid information
+Biggest by recoverable        CO-16 Missing or invalid information
+--------------------------------------------------------------
+PRICE / VOLUME / MIX   (2025-11-17 to 2026-04-16 vs the 150 days before)
+                              both windows end 75 days back, so neither is still adjudicating
+Prior net revenue             $4,707,610   3,711 claims at $1,269
+  volume                      $ +822,024
+  mix                         $  -39,976
+  rate                        $ -139,584
+Recent net revenue            $5,350,074   4,359 claims at $1,227
+==============================================================

@@ -27,3 +27,14 @@ ref table fact_inpatient_abstracts
 ref table hta_base_case
 ref table spc_alc_stay
 
+ref table contract_variance
+
+ref table denial_appeals
+
+ref table revenue_bridge
+
+ref table revenue_bridge_detail
+
+ref table rcm_operations
+
+ref table revenue_bridge_summary

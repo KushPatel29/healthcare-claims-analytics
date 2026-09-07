@@ -5,7 +5,7 @@
 ![Python](https://img.shields.io/badge/Python-stdlib%20only-3776AB?logo=python&logoColor=white)
 ![SPC](https://img.shields.io/badge/SPC-Laney%20p'%20%2F%20u'-0B5FA5)
 ![HTA](https://img.shields.io/badge/Health%20economics-ICER%20%2B%20PSA-6A4C93)
-![Tests](https://img.shields.io/badge/tests-134%20passing-3B8C6E)
+![Tests](https://img.shields.io/badge/tests-171%20passing-3B8C6E)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
 Two health systems, one engineering standard.
@@ -242,9 +242,9 @@ identity surviving all the way into the presentation layer.
 
 # Act two — US hospital revenue cycle
 
-Six-page Power BI report in total, hand-authored as a Power BI Project (TMDL
-semantic model + PBIR report definition) in [`powerbi/pbip/`](powerbi/pbip/) —
-open `RevenueCycleAnalytics.pbip` in Power BI Desktop and hit Refresh. The four
+Eight-page Power BI report in total, hand-authored as a Power BI Project
+(TMDL semantic model + PBIR report definition) in [`powerbi/pbip/`](powerbi/pbip/)
+— open `RevenueCycleAnalytics.pbip` in Power BI Desktop and hit Refresh. The six
 revenue-cycle pages:
 
 **Revenue Cycle Scorecard** — denial rate vs target, cash collected trend, denial
@@ -257,6 +257,11 @@ concentration by service line, trend by payer type:
 
 ![Denial Analytics](powerbi/screenshots/02-denial-analytics.png)
 
+**Contract & Appeal Recovery** — allowed against the fee schedule per payer
+and service line, and where the next hour of appeal work belongs:
+
+![Contract and Appeal Recovery](powerbi/screenshots/07-contract-appeal-recovery.png)
+
 **AR Aging** — aging buckets by payer type, claim pipeline, and the
 priority-sorted Intelligent Worklist:
 
@@ -267,6 +272,130 @@ the expected-yield worklist:
 
 ![Predictive Yield (NRV)](powerbi/screenshots/04-predictive-yield.png)
 
+**Revenue Bridge** — price, volume and mix between two mature periods, plus the
+charge-lag view of what the hospital owns in its own cycle time:
+
+![Revenue Bridge](powerbi/screenshots/08-revenue-bridge.png)
+
+## What a denial rate cannot tell you
+
+Denial rate, days in AR and net collection rate describe the claim as the payer
+left it. Three questions sit outside all of them, and each needs data the claim
+alone does not carry.
+
+### A claim can be paid, clean, and still short
+
+The payer pays what it pays. The **contract** says what it owes, and the two are
+not the same document. Measuring one against the other needs a fee schedule, so
+[`dim_payer_contract`](data/dim_payer_contract.csv) is a dimension — 80 payer x
+service-line rates — rather than something the report re-derives from the
+payments. That distinction is the whole discipline: **a variance report that
+learns the contract from what was paid will always conclude the payer paid
+correctly**, and it will do it convincingly. A test asserts the expected allowed
+amount reconciles to the published schedule and not to the remittance.
+
+| | |
+|---|---|
+| Cells paying under contract | **3 of 80** |
+| Underpaid claims | **304** |
+| Recoverable | **$120,461** |
+| Worst by rate | **Humana Medicare Advantage / Cardiology, −14.0%** |
+| Worst by dollars | **Blue Cross Blue Shield / Surgery, $56,780** |
+
+Those are two different cells, and the report names them separately. "Worst"
+is ambiguous the moment a small contract is badly wrong and a large one is
+slightly wrong; a single label quietly means whichever the code happened to
+sort by.
+
+A materiality band does the other half of the work. Adjudication moves every
+allowed amount a few percent either way, so a report that flags every dollar
+below contract flags roughly half the paid book and gets ignored by week two.
+Only a shortfall past 5% counts, at the claim **and** at the cell — and the test
+checks that more claims fall inside the band than are flagged, so the band is
+demonstrably suppressing noise rather than decorating the method.
+
+### "We appealed it" is not "we got the money"
+
+`resubmitted` says a denial was worked. It does not say whether anything came
+back, and by reason the answer differs enormously:
+
+| Denial reason | Denied | Appealed | Overturned | Recovered |
+|---|---:|---:|---:|---:|
+| CO-16 Missing or invalid information | 222 | 76% | **82%** | $170k |
+| CO-11 Diagnosis inconsistent with procedure | 108 | 56% | 69% | $83k |
+| CO-45 Exceeds fee schedule | 100 | 48% | 48% | $15k |
+| CO-97 Service bundled/included | 127 | 35% | 25% | $7k |
+| CO-29 Timely filing limit expired | 90 | 20% | **11%** | $0.6k |
+| PR-1 Deductible amount | 75 | 8% | 0% | $0 |
+
+A missing-information denial is a clerical fix that mostly comes back. A
+timely-filing denial is money that is gone, and every hour spent appealing one
+is an hour not spent on the first. So the page does not rank denial reasons by
+size — it ranks them by **recoverable dollars left**: the denials nobody
+appealed, valued at that reason's own overturn rate. **$209,113** is sitting in
+that column, and the ranking it produces is not the ranking by volume. An
+expected value, clearly labelled as one; it is the only honest way to sequence a
+backlog.
+
+Appeals have already brought back **$309,417** on 246 overturns.
+
+### Revenue went up. That is not a finding.
+
+Net revenue rose **$642,464 (+13.6%)** between two 150-day windows. Whether that
+happened because the hospital did more cases, because each case pays more, or
+because the case mix moved are three different conversations with three
+different owners, and the growth number alone cannot tell them apart:
+
+| | |
+|---|---:|
+| Prior window | $4,707,610 · 3,711 claims at **$1,269** |
+| Volume | **+$822,024** |
+| Mix | −$39,976 |
+| Rate | −$139,584 |
+| Recent window | $5,350,074 · 4,359 claims at **$1,227** |
+
+All of the growth is volume, and **revenue per claim fell while revenue rose** —
+a Medicare fee-schedule update part-way through the year, plus a book drifting
+toward Medicare Advantage. A headline of "+13.6%" hides both.
+
+Two decisions make that decomposition mean anything:
+
+**The cell is payer x service line, not service line.** Split on service line
+alone, a shift from a commercial plan to a Medicare Advantage plan — same
+procedures, lower contracted share of billed — has nowhere to land but the rate
+term, and the report says prices fell when what moved was the mix. The test
+computes the decomposition **both ways** and asserts the coarse grain pushes
+materially more of the movement into rate; the modelling choice is demonstrated
+rather than asserted.
+
+**Both windows end 75 days back.** Claims submitted recently are still
+adjudicating, so the last weeks of any window are systematically short of paid
+dollars. A bridge that runs to the snapshot date reports a volume collapse that
+is really the adjudication lag — and it does it every single period. The windows
+are also derived from the data rather than hard-coded, because a fixed six
+months either side silently runs off the front of the dataset and reports the
+shortfall the same way.
+
+Volume + mix + rate reconciles to the movement to the cent, and that is asserted
+in the engine as well as in the tests: a bridge whose bars do not add up is
+worse than no bridge, because it looks like one.
+
+### Underneath days in AR
+
+Days in AR is **104.8** (open AR over 90 days of net revenue). Roughly a third
+of the cycle happens before the payer has seen the claim at all: charge lag
+averages **3.3 days** overall but **9.0 for Surgery** against **1.0 for
+Laboratory**, and that half of the number is the hospital's to fix without
+anyone's cooperation. First-pass resolution is **92.0%**, and the book carries
+**19,465 follow-up touches** — 1.62 a claim, which is the revenue cycle's real
+capacity constraint.
+
+**What this deliberately does not compute.** Cost to collect in dollars. Touch
+counts are an operational fact; a cost per touch is an assumption, and
+multiplying the two would turn a measurement into an opinion with a currency
+symbol in front of it.
+
+
 ## Why NRV changes the conversation
 
 Anyone can sum days in AR. The senior insight is that **not every AR dollar is
@@ -274,8 +403,8 @@ worth a dollar.** $100k of Medicare AR is close to cash — Medicare pays ~91% o
 allowed, reliably. $100k of Self-Pay AR is worth a fraction, because self-pay
 collects ~20 cents on the dollar and the rest ages into bad debt.
 
-The model nets **$3.63M of gross open AR down to $1.66M of Expected NRV** — a 46%
-realization rate, i.e. a ~54% bad-debt reserve. That delta is exactly the number
+The model nets **$3.77M of gross open AR down to $1.70M of Expected NRV** — a 45%
+realization rate, i.e. a ~55% bad-debt reserve. That delta is exactly the number
 a CFO books as a reserve, computed from first principles rather than guessed.
 
 | Payer type | Net collection rate | Expected yield (per billed $) |
@@ -415,13 +544,14 @@ python engine/health_economics.py           # base case, tornado, PSA/CEAC
 
 # US revenue cycle
 python data_generator/generate_claims_data.py
-python engine/build_rcm_metrics.py
+python engine/build_rcm_metrics.py           # denials, AR aging, NRV worklist
+python engine/build_revenue_integrity.py     # contract variance, appeals, bridge
 
 # Governance
 python governance/deidentify.py
 python governance/data_quality.py
 
-pytest tests/ -v                            # 116 invariants
+pytest tests/ -v                            # 171 invariants
 ```
 
 Then open `powerbi/pbip/RevenueCycleAnalytics.pbip` (see
@@ -494,6 +624,8 @@ engine/             build_activity_metrics.py — CPWC, LOS index, ALC, risk adj
                     spc.py — p/u charts, Western Electric, Laney, baselines
                     health_economics.py — ICER, NMB, tornado, PSA/CEAC
                     build_rcm_metrics.py — denial summary, AR aging, NRV worklist
+                    build_revenue_integrity.py — contract variance, appeal
+                    yield, price/volume/mix bridge, charge lag
 governance/         deidentify.py — Safe Harbor + k-anonymity + risk report
                     data_quality.py — 15-rule gate, JSONL observability
 docs/               BRIEFING_NOTE.md · BUSINESS_CASE.md · SOURCE_TO_TARGET.md

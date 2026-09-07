@@ -5,8 +5,10 @@
     "section_alc_flow",
     "section_rcm_scorecard",
     "section_denials",
+    "section_contract",
     "section_ar_aging",
-    "section_yield"
+    "section_yield",
+    "section_bridge"
   ],
   "activePageName": "section_acute_activity"
 }

@@ -1,0 +1,90 @@
+/// What sits underneath days in AR: charge lag (the half the hospital owns, before the payer sees the claim), first-pass resolution, and follow-up touches.
+table rcm_operations
+	lineageTag: ff2de5bc-5f8a-5be1-9aa6-c8250d074a88
+
+	column service_line
+		dataType: string
+		lineageTag: 2d638606-9770-55ab-a9d2-77039f7ae348
+		summarizeBy: none
+		sourceColumn: service_line
+
+	column claims
+		dataType: int64
+		formatString: #,0
+		lineageTag: 6cd1eb1b-0b67-5ba7-9fde-789435eb55bb
+		summarizeBy: none
+		sourceColumn: claims
+
+	column billed
+		dataType: double
+		formatString: \$#,0
+		lineageTag: eec85114-28b1-5a3d-a268-1b6177ef6f23
+		summarizeBy: none
+		sourceColumn: billed
+
+	column avg_charge_lag_days
+		dataType: double
+		formatString: 0.0
+		lineageTag: 6bd20ec5-1f02-5f56-831e-c65c5c21cd2b
+		summarizeBy: none
+		sourceColumn: avg_charge_lag_days
+
+	column avg_days_to_adjudicate
+		dataType: double
+		formatString: 0.0
+		lineageTag: fecfc3c3-e934-5215-a860-8efd401c8a10
+		summarizeBy: none
+		sourceColumn: avg_days_to_adjudicate
+
+	column avg_total_cycle_days
+		dataType: double
+		formatString: 0.0
+		lineageTag: 25a8637f-25e2-5a1f-b1f1-677f88a24475
+		summarizeBy: none
+		sourceColumn: avg_total_cycle_days
+
+	column adjudicated
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: e42a4319-dbff-5287-a2fc-d45e38e74b87
+		summarizeBy: none
+		sourceColumn: adjudicated
+
+	column first_pass_rate
+		dataType: double
+		formatString: 0.0%
+		lineageTag: 726c8a90-ad00-5512-aa59-2c4ff7550ec8
+		summarizeBy: none
+		sourceColumn: first_pass_rate
+
+	column denial_rate
+		dataType: double
+		formatString: 0.0%
+		lineageTag: c1d044ea-e74b-5060-bdca-5488b5f27f28
+		summarizeBy: none
+		sourceColumn: denial_rate
+
+	column touches_per_claim
+		dataType: double
+		formatString: 0.00
+		lineageTag: c84a2547-cc54-599d-9c58-0bd4dc3077ef
+		summarizeBy: none
+		sourceColumn: touches_per_claim
+
+	column total_touches
+		dataType: int64
+		formatString: #,0
+		lineageTag: a1eac46f-2d46-57bf-9b04-e319291d9c03
+		summarizeBy: none
+		sourceColumn: total_touches
+
+	partition rcm_operations = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataPath & "\\output\\rcm_operations.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"service_line", type text}, {"claims", Int64.Type}, {"billed", type number}, {"avg_charge_lag_days", type number}, {"avg_days_to_adjudicate", type number}, {"avg_total_cycle_days", type number}, {"adjudicated", Int64.Type}, {"first_pass_rate", type number}, {"denial_rate", type number}, {"touches_per_claim", type number}, {"total_touches", Int64.Type}})
+				in
+				    Typed

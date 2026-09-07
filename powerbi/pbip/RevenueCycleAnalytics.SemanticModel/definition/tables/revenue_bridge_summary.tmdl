@@ -1,0 +1,137 @@
+/// The bridge as one row. The detail table carries the same decomposition twice, once per roll-up, so a card that sums it doubles every number.
+table revenue_bridge_summary
+	lineageTag: 34d239d7-6e23-518a-85a0-506b7086bbb1
+
+	column prior_revenue
+		dataType: double
+		formatString: \$#,0
+		lineageTag: 3dec4db1-5f7f-527d-9c3b-74ab7ad0c214
+		summarizeBy: none
+		sourceColumn: prior_revenue
+
+	column recent_revenue
+		dataType: double
+		formatString: \$#,0
+		lineageTag: 23266c5c-1c23-50a2-aa93-333ef356ba78
+		summarizeBy: none
+		sourceColumn: recent_revenue
+
+	column movement
+		dataType: double
+		formatString: \$#,0;(\$#,0)
+		lineageTag: 8adec146-eec3-5b06-8234-a928594c0f38
+		summarizeBy: none
+		sourceColumn: movement
+
+	column volume_effect
+		dataType: double
+		formatString: \$#,0;(\$#,0)
+		lineageTag: ccf9e915-286b-5f2b-bb50-843d971a4537
+		summarizeBy: none
+		sourceColumn: volume_effect
+
+	column mix_effect
+		dataType: double
+		formatString: \$#,0;(\$#,0)
+		lineageTag: a157c70e-dd98-51ca-8474-b7103b10c1a7
+		summarizeBy: none
+		sourceColumn: mix_effect
+
+	column rate_effect
+		dataType: double
+		formatString: \$#,0;(\$#,0)
+		lineageTag: c88d6071-ef53-5f9a-8fc2-bbf88920d93d
+		summarizeBy: none
+		sourceColumn: rate_effect
+
+	column prior_claims
+		dataType: int64
+		formatString: #,0
+		lineageTag: fee04ad8-8055-5359-a02f-515d823164cd
+		summarizeBy: none
+		sourceColumn: prior_claims
+
+	column recent_claims
+		dataType: int64
+		formatString: #,0
+		lineageTag: 34c91ae0-d348-5203-ab75-781a93a14c6f
+		summarizeBy: none
+		sourceColumn: recent_claims
+
+	column prior_rate
+		dataType: double
+		formatString: \$#,0
+		lineageTag: aea0ccbb-3861-5cbf-bf97-57240727e423
+		summarizeBy: none
+		sourceColumn: prior_rate
+
+	column recent_rate
+		dataType: double
+		formatString: \$#,0
+		lineageTag: da233136-4225-5488-bf52-61b3246e8bac
+		summarizeBy: none
+		sourceColumn: recent_rate
+
+	column bridge_window_days
+		dataType: int64
+		formatString: #,0
+		lineageTag: 2e58f267-7362-576f-b958-ef023e146c0e
+		summarizeBy: none
+		sourceColumn: bridge_window_days
+
+	column bridge_prior_from
+		dataType: string
+		lineageTag: 9fd8bafc-791c-5de3-925d-4190885c16ad
+		summarizeBy: none
+		sourceColumn: bridge_prior_from
+
+	column bridge_recent_to
+		dataType: string
+		lineageTag: 6289fd71-4dd1-59b0-831c-de0ab69c7d83
+		summarizeBy: none
+		sourceColumn: bridge_recent_to
+
+	column days_in_ar
+		dataType: double
+		formatString: 0.0
+		lineageTag: aa608dea-b510-530e-b9b6-6462644c4752
+		summarizeBy: none
+		sourceColumn: days_in_ar
+
+	column first_pass_rate
+		dataType: double
+		formatString: 0.0%
+		lineageTag: a248da3f-c5de-547e-99e7-5b4bfbe286d9
+		summarizeBy: none
+		sourceColumn: first_pass_rate
+
+	column avg_charge_lag_days
+		dataType: double
+		formatString: 0.0
+		lineageTag: d64e8192-6ee6-5981-b8cc-67732b66ce5c
+		summarizeBy: none
+		sourceColumn: avg_charge_lag_days
+
+	column touches_total
+		dataType: int64
+		formatString: #,0
+		lineageTag: d2957044-c861-5b94-aaca-6b062e587abf
+		summarizeBy: none
+		sourceColumn: touches_total
+
+	column touches_per_claim
+		dataType: double
+		formatString: 0.00
+		lineageTag: da518d7b-4061-5cbe-abce-3db0af6fd046
+		summarizeBy: none
+		sourceColumn: touches_per_claim
+
+	partition revenue_bridge_summary = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataPath & "\output\revenue_bridge_summary.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"prior_revenue", type number}, {"recent_revenue", type number}, {"movement", type number}, {"volume_effect", type number}, {"mix_effect", type number}, {"rate_effect", type number}, {"prior_claims", Int64.Type}, {"recent_claims", Int64.Type}, {"prior_rate", type number}, {"recent_rate", type number}, {"bridge_window_days", Int64.Type}, {"bridge_prior_from", type text}, {"bridge_recent_to", type text}, {"days_in_ar", type number}, {"first_pass_rate", type number}, {"avg_charge_lag_days", type number}, {"touches_total", Int64.Type}, {"touches_per_claim", type number}})
+				in
+				    Typed

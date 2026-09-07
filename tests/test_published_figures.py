@@ -270,3 +270,112 @@ def test_the_test_count_on_the_badge_is_the_real_test_count():
         f"badge claims {claimed} tests, the suite defines {actual}. "
         f"Update the badge in README.md."
     )
+
+
+# ---------------------------------------------------------------------------
+# Revenue integrity
+#
+# Same rule, applied to the other half of the repository. Every figure below is
+# read back from the engine, then checked to still appear in the prose in the
+# form a reader sees it.
+# ---------------------------------------------------------------------------
+
+@pytest.fixture(scope="module")
+def integrity():
+    import json
+    return json.loads((OUT / "revenue_integrity.json").read_text(encoding="utf-8"))
+
+
+def test_contract_variance_headlines_are_quoted(integrity):
+    s = integrity
+    assert s["cells_under_contract"] == 3
+    assert s["underpaid_claims"] == 304
+    assert s["underpaid_amount"] == pytest.approx(120_461, rel=1e-4)
+    # Two different "worst" questions. The dollars answer and the rate
+    # answer are different cells here, which is exactly why they are named
+    # separately rather than one label meaning whichever the code sorted by.
+    assert s["worst_contract_by_dollars"] == "Blue Cross Blue Shield / Surgery"
+    assert s["worst_contract_by_rate"] == "Humana Medicare Advantage / Cardiology"
+    assert s["worst_contract_by_dollars"] != s["worst_contract_by_rate"]
+    assert s["worst_contract_variance"] == pytest.approx(-0.140, abs=0.002)
+    assert s["worst_contract_dollars"] == pytest.approx(56_780, rel=1e-3)
+
+    prose = text(README)
+    assert "**3 of 80**" in prose
+    assert "**304**" in prose
+    assert f"${s['underpaid_amount']:,.0f}" in prose
+    assert s["worst_contract_by_rate"] in prose
+    assert s["worst_contract_by_dollars"] in prose
+
+
+def test_appeal_recovery_headlines_are_quoted(integrity):
+    s = integrity
+    assert s["recovered"] == pytest.approx(309_417, rel=1e-4)
+    assert s["overturned"] == 246
+    assert s["recoverable_left"] == pytest.approx(209_113, rel=1e-4)
+
+    prose = text(README)
+    assert f"${s['recovered']:,.0f}" in prose
+    assert f"${s['recoverable_left']:,.0f}" in prose
+    assert f"on {s['overturned']} overturns" in prose
+
+
+def test_the_revenue_bridge_in_the_readme_still_adds_up(integrity):
+    """Not merely quoted - the five numbers in the table must reconcile, so a
+    reader with a calculator is never the first line of defence."""
+    s = integrity
+    assert (s["prior_revenue"] + s["volume_effect"] + s["mix_effect"]
+            + s["rate_effect"]) == pytest.approx(s["recent_revenue"], abs=1.0)
+
+    prose = text(README)
+    for value in (s["prior_revenue"], s["recent_revenue"], s["volume_effect"]):
+        assert f"{abs(value):,.0f}" in prose, f"{value:,.0f} is not in the README"
+    assert f"{abs(s['mix_effect']):,.0f}" in prose
+    assert f"{abs(s['rate_effect']):,.0f}" in prose
+    assert f"{s['prior_claims']:,}" in prose and f"{s['recent_claims']:,}" in prose
+    assert f"${s['prior_rate']:,.0f}" in prose
+    assert f"${s['recent_rate']:,.0f}" in prose
+
+    movement = s["recent_revenue"] - s["prior_revenue"]
+    assert f"${movement:,.0f}" in prose
+    assert f"+{movement / s['prior_revenue']:.1%}" in prose
+
+
+def test_the_operating_metrics_under_days_in_ar_are_quoted(integrity):
+    s = integrity
+    prose = text(README)
+    assert f"**{s['days_in_ar']:.1f}**" in prose
+    assert f"**{s['avg_charge_lag_days']:.1f} days**" in prose
+    assert f"**{s['first_pass_rate']:.1%}**" in prose
+    assert f"**{s['touches_total']:,} follow-up touches**" in prose
+    assert f"{s['touches_per_claim']:.2f} a claim" in prose
+
+
+def test_the_appeal_table_rows_match_the_engine():
+    """The five denial reasons the README tabulates, read back from the CSV."""
+    import csv as _csv
+    rows = {r["denial_reason"]: r for r in
+            _csv.DictReader(open(OUT / "denial_appeals.csv", encoding="utf-8"))}
+    prose = text(README)
+    for prefix, denials, appeal, overturn in [
+            ("CO-16", 222, 0.76, 0.82), ("CO-11", 108, 0.56, 0.69),
+            ("CO-45", 100, 0.48, 0.48), ("CO-29", 90, 0.20, 0.11)]:
+        row = next(r for k, r in rows.items() if k.startswith(prefix))
+        assert int(row["denials"]) == denials
+        assert float(row["appeal_rate"]) == pytest.approx(appeal, abs=0.005)
+        assert float(row["overturn_rate"]) == pytest.approx(overturn, abs=0.005)
+        assert f"| {denials} | {appeal:.0%}" in prose, \
+            f"{prefix} row in the README no longer matches the engine"
+
+
+def test_nrv_headline_is_still_the_published_one():
+    """The figure that was already stale once. Both halves of the sentence are
+    checked, and against each other."""
+    import csv as _csv
+    rows = list(_csv.DictReader(open(OUT / "ar_yield_predictions.csv", encoding="utf-8")))
+    gross = sum(float(r["billed_amount"]) for r in rows)
+    nrv = sum(float(r["expected_nrv"]) for r in rows)
+    prose = text(README)
+    assert f"${gross / 1e6:.2f}M of gross open AR" in prose
+    assert f"${nrv / 1e6:.2f}M of Expected NRV" in prose
+    assert f"a {nrv / gross:.0%}" in prose

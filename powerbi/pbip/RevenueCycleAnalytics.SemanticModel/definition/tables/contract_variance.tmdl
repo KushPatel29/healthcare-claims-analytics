@@ -1,0 +1,107 @@
+/// Paid claims against the fee schedule, per payer x service line. A claim can be paid, clean and still short; this is the report that says so.
+table contract_variance
+	lineageTag: 4bd35eb5-041d-50aa-a059-d763336f1f64
+
+	column cell
+		dataType: string
+		lineageTag: 67cbdfd6-2c70-565e-8a94-a04a273f8337
+		summarizeBy: none
+		sourceColumn: cell
+
+	column payer
+		dataType: string
+		lineageTag: 400cef36-3425-5284-bf79-ca6ce9724aa1
+		summarizeBy: none
+		sourceColumn: payer
+
+	column service_line
+		dataType: string
+		lineageTag: d3ca6300-7139-5512-b0a2-edc94774615f
+		summarizeBy: none
+		sourceColumn: service_line
+
+	column contracted_rate
+		dataType: double
+		formatString: 0.000
+		lineageTag: 91c70301-8a7c-5b98-b70a-d31679c12b05
+		summarizeBy: none
+		sourceColumn: contracted_rate
+
+	column realised_rate
+		dataType: double
+		formatString: 0.000
+		lineageTag: 1f555aaa-0b31-5f3c-a43e-483d369b3f55
+		summarizeBy: none
+		sourceColumn: realised_rate
+
+	column paid_claims
+		dataType: int64
+		formatString: #,0
+		lineageTag: 016285c9-6977-5b73-8465-8c2f6cad231f
+		summarizeBy: none
+		sourceColumn: paid_claims
+
+	column billed
+		dataType: double
+		formatString: \$#,0
+		lineageTag: 7f4f8e99-1fd3-5d1e-9043-6cca3a990ac2
+		summarizeBy: none
+		sourceColumn: billed
+
+	column expected_allowed
+		dataType: double
+		formatString: \$#,0
+		lineageTag: 5be6f8b8-4cec-5671-b25a-9b5041dc8299
+		summarizeBy: none
+		sourceColumn: expected_allowed
+
+	column actual_allowed
+		dataType: double
+		formatString: \$#,0
+		lineageTag: b40edcab-1e7f-5cca-8b0c-8930819636fa
+		summarizeBy: none
+		sourceColumn: actual_allowed
+
+	column variance_amount
+		dataType: double
+		formatString: \$#,0;(\$#,0)
+		lineageTag: 4a5ee959-24a9-545b-a467-d60e4c06528d
+		summarizeBy: none
+		sourceColumn: variance_amount
+
+	column variance_pct
+		dataType: double
+		formatString: +0.0%;-0.0%;0.0%
+		lineageTag: 88412691-9556-5811-84fb-c7646997ded0
+		summarizeBy: none
+		sourceColumn: variance_pct
+
+	column underpaid_claims
+		dataType: int64
+		formatString: #,0
+		lineageTag: b27326ff-bcdf-5ecc-9a6f-d81c8dd8d610
+		summarizeBy: none
+		sourceColumn: underpaid_claims
+
+	column underpaid_amount
+		dataType: double
+		formatString: \$#,0
+		lineageTag: 6d564f2d-76b7-54ee-a883-60f8d0b21964
+		summarizeBy: none
+		sourceColumn: underpaid_amount
+
+	column verdict
+		dataType: string
+		lineageTag: ef1f6c5d-0690-50be-93d8-ad471a2ead50
+		summarizeBy: none
+		sourceColumn: verdict
+
+	partition contract_variance = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataPath & "\\output\\contract_variance.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"cell", type text}, {"payer", type text}, {"service_line", type text}, {"contracted_rate", type number}, {"realised_rate", type number}, {"paid_claims", Int64.Type}, {"billed", type number}, {"expected_allowed", type number}, {"actual_allowed", type number}, {"variance_amount", type number}, {"variance_pct", type number}, {"underpaid_claims", Int64.Type}, {"underpaid_amount", type number}, {"verdict", type text}})
+				in
+				    Typed

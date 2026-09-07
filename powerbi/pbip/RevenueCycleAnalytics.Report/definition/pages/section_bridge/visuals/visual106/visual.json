@@ -1,0 +1,211 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "visual106",
+  "position": {
+    "x": 20,
+    "y": 374,
+    "z": 1000,
+    "height": 204,
+    "width": 1240,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "revenue_bridge_detail"
+                    }
+                  },
+                  "Property": "dimension"
+                }
+              },
+              "queryRef": "revenue_bridge_detail.dimension",
+              "nativeQueryRef": "dimension"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "revenue_bridge_detail"
+                    }
+                  },
+                  "Property": "category"
+                }
+              },
+              "queryRef": "revenue_bridge_detail.category",
+              "nativeQueryRef": "category"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "revenue_bridge_detail"
+                    }
+                  },
+                  "Property": "claims_prior"
+                }
+              },
+              "queryRef": "revenue_bridge_detail.claims_prior",
+              "nativeQueryRef": "claims_prior"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "revenue_bridge_detail"
+                    }
+                  },
+                  "Property": "claims_recent"
+                }
+              },
+              "queryRef": "revenue_bridge_detail.claims_recent",
+              "nativeQueryRef": "claims_recent"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "revenue_bridge_detail"
+                    }
+                  },
+                  "Property": "rate_prior"
+                }
+              },
+              "queryRef": "revenue_bridge_detail.rate_prior",
+              "nativeQueryRef": "rate_prior"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "revenue_bridge_detail"
+                    }
+                  },
+                  "Property": "rate_recent"
+                }
+              },
+              "queryRef": "revenue_bridge_detail.rate_recent",
+              "nativeQueryRef": "rate_recent"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "revenue_bridge_detail"
+                    }
+                  },
+                  "Property": "mix_effect"
+                }
+              },
+              "queryRef": "revenue_bridge_detail.mix_effect",
+              "nativeQueryRef": "mix_effect"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "revenue_bridge_detail"
+                    }
+                  },
+                  "Property": "rate_effect"
+                }
+              },
+              "queryRef": "revenue_bridge_detail.rate_effect",
+              "nativeQueryRef": "rate_effect"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "revenue_bridge_detail"
+                  }
+                },
+                "Property": "total_effect"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Mix and rate, payer by payer and line by line'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'The cell is payer x service line: split on service line alone, a shift toward a lower-paying plan reads as a price cut'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "objects": {
+      "total": [
+        {
+          "properties": {
+            "totals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,183 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "visual096",
+  "position": {
+    "x": 20,
+    "y": 374,
+    "z": 1000,
+    "height": 204,
+    "width": 620,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "denial_appeals"
+                    }
+                  },
+                  "Property": "denial_reason"
+                }
+              },
+              "queryRef": "denial_appeals.denial_reason",
+              "nativeQueryRef": "denial_reason"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "denial_appeals"
+                    }
+                  },
+                  "Property": "denials"
+                }
+              },
+              "queryRef": "denial_appeals.denials",
+              "nativeQueryRef": "denials"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "denial_appeals"
+                    }
+                  },
+                  "Property": "appeal_rate"
+                }
+              },
+              "queryRef": "denial_appeals.appeal_rate",
+              "nativeQueryRef": "appeal_rate"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "denial_appeals"
+                    }
+                  },
+                  "Property": "overturn_rate"
+                }
+              },
+              "queryRef": "denial_appeals.overturn_rate",
+              "nativeQueryRef": "overturn_rate"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "denial_appeals"
+                    }
+                  },
+                  "Property": "recovered"
+                }
+              },
+              "queryRef": "denial_appeals.recovered",
+              "nativeQueryRef": "recovered"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "denial_appeals"
+                    }
+                  },
+                  "Property": "avg_appeal_days"
+                }
+              },
+              "queryRef": "denial_appeals.avg_appeal_days",
+              "nativeQueryRef": "avg_appeal_days"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "denial_appeals"
+                  }
+                },
+                "Property": "denials"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Denial reasons behave nothing alike'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'A missing-information denial is a clerical fix; a timely-filing denial is money that is gone'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "objects": {
+      "total": [
+        {
+          "properties": {
+            "totals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

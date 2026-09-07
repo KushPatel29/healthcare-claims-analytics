@@ -210,14 +210,14 @@ table _Measures
 		lineageTag: 57384542-1ef2-5d35-a4fb-940527931c0a
 
 	measure 'Denial Rate Status' =
-			VAR Actual = [Denial Rate]
-			VAR Target = [Denial Rate Target]
+			VAR vActual = [Denial Rate]
+			VAR vTarget = [Denial Rate Target]
 			RETURN
 			    SWITCH(
 			        TRUE(),
-			        ISBLANK(Actual), "No data",
-			        Actual <= Target, "On target",
-			        Actual <= Target + 0.01, "Watch",
+			        ISBLANK(vActual), "No data",
+			        vActual <= vTarget, "On target",
+			        vActual <= vTarget + 0.01, "Watch",
 			        "Off target"
 			    )
 		displayFolder: Verdict
@@ -235,12 +235,12 @@ table _Measures
 		lineageTag: 0bec4673-f3a0-5121-87ed-ac517da4a9ba
 
 	measure 'Denial Rate Reference' =
-			VAR Gap = [Denial Rate vs Target]
-			VAR Above = Gap >= 0
+			VAR vGap = [Denial Rate vs Target]
+			VAR vAbove = vGap >= 0
 			RETURN
 			    "Target " & FORMAT([Denial Rate Target], "0.0%") & "   "
-			        & IF(Above, "▲", "▼") & " "
-			        & FORMAT(ABS(Gap) * 100, "0.0") & " pts" & IF(Above, " over", " under")
+			        & IF(vAbove, "▲", "▼") & " "
+			        & FORMAT(ABS(vGap) * 100, "0.0") & " pts" & IF(vAbove, " over", " under")
 		displayFolder: Verdict
 		lineageTag: e74543f1-faf7-509d-b812-b70498cb9c06
 
@@ -273,31 +273,349 @@ table _Measures
 	/// iterating the table walks rows, which is not the axis unless the
 	/// dimension happens to have one row per value.
 	measure 'Denial Reason Colour' =
-			VAR Here = [Denied $]
-			VAR Extreme =
+			VAR vHere = [Denied $]
+			VAR vExtreme =
 			    CALCULATE(
 			        MAXX(VALUES(fact_claims[denial_reason]), [Denied $]),
 			        ALLSELECTED()
 			    )
 			RETURN
-			    IF(Here = Extreme, "#FF5C7A", "#454A82")
+			    IF(vHere = vExtreme, "#FF5C7A", "#454A82")
 		displayFolder: Verdict
 		lineageTag: a64cca57-fdce-5b2e-978b-1cb6a0c4b61b
 
 	/// Deterministic narrative for the RCM scorecard.
 	measure 'RCM Insight' =
-			VAR Rate = [Denial Rate]
-			VAR Gap = Rate - [Denial Rate Target]
-			VAR WorstReason =
+			VAR vRate = [Denial Rate]
+			VAR vGap = vRate - [Denial Rate Target]
+			VAR vWorstReason =
 			    MAXX(TOPN(1, VALUES(fact_claims[denial_reason]), [Denied $], DESC), fact_claims[denial_reason])
-			VAR WorstDollars = CALCULATE([Denied $], fact_claims[denial_reason] = WorstReason)
+			VAR vWorstDollars = CALCULATE([Denied $], fact_claims[denial_reason] = vWorstReason)
 			RETURN
-			    "Denial rate " & FORMAT(Rate, "0.0%") & " against a " & FORMAT([Denial Rate Target], "0.0%")
-			        & " target — " & IF(Gap <= 0, "on target", FORMAT(Gap * 100, "0.0") & " pts over")
-			        & ". " & WorstReason & " is the costliest reason at " & FORMAT(WorstDollars, "\$#,0")
+			    "Denial rate " & FORMAT(vRate, "0.0%") & " against a " & FORMAT([Denial Rate Target], "0.0%")
+			        & " target — " & IF(vGap <= 0, "on target", FORMAT(vGap * 100, "0.0") & " pts over")
+			        & ". " & vWorstReason & " is the costliest reason at " & FORMAT(vWorstDollars, "\$#,0")
 			        & ", and " & FORMAT([% AR Over 90], "0.0%") & " of open AR is already past 90 days."
 		displayFolder: Verdict
 		lineageTag: 26d58fad-5547-5586-bf10-cfa6b5792b07
+
+	/// What the fee schedule says the payer owes.
+	measure 'Contracted Allowed' = SUM(contract_variance[expected_allowed])
+		formatString: \$#,0
+		lineageTag: cfe61601-9fcb-5e7a-8cdb-a73305045d1c
+		displayFolder: Revenue integrity
+
+	/// What the payer actually allowed.
+	measure 'Actual Allowed' = SUM(contract_variance[actual_allowed])
+		formatString: \$#,0
+		lineageTag: efc68931-56ef-5ce6-9d07-58273e1451f7
+		displayFolder: Revenue integrity
+
+	/// Allowed minus contracted. Negative is money the contract entitles the hospital to and did not get.
+	measure 'Contract Variance' = [Actual Allowed] - [Contracted Allowed]
+		formatString: \$#,0;(\$#,0)
+		lineageTag: 1c87ce78-0f20-58ec-bf0b-8609e5fd6626
+		displayFolder: Revenue integrity
+
+	/// The same gap as a rate, which is the comparable form across payers of very different size.
+	measure 'Contract Variance %' = DIVIDE([Contract Variance], [Contracted Allowed])
+		formatString: +0.0%;-0.0%;0.0%
+		lineageTag: df8247bd-e0cf-584b-8f29-2f61ef3b42c2
+		displayFolder: Revenue integrity
+
+	/// Claim-level shortfall past the materiality band. Adjudication moves every allowed amount a few percent, so a report with no band flags half the book.
+	measure 'Underpaid Amount' = SUM(contract_variance[underpaid_amount])
+		formatString: \$#,0
+		lineageTag: b0ac0f11-9e6a-5c25-b2f3-b2f3f7e62a80
+		displayFolder: Revenue integrity
+
+	/// Claims paid materially under contract.
+	measure 'Underpaid Claims' = SUM(contract_variance[underpaid_claims])
+		formatString: #,0
+		lineageTag: 011209c6-c27f-598c-bddc-b427bf8d3e86
+		displayFolder: Revenue integrity
+
+	/// Payer x service-line combinations paying under their own schedule.
+	measure 'Cells Under Contract' = CALCULATE(COUNTROWS(contract_variance), contract_variance[verdict] = "Under contract")
+		formatString: #,0
+		lineageTag: c2e409bb-addf-59d8-97f9-c9175c3c0ce9
+		displayFolder: Revenue integrity
+
+	/// Denied claims in the selected reasons.
+	measure 'Denials' = SUM(denial_appeals[denials])
+		formatString: #,0
+		lineageTag: 1419d2a4-0667-5c41-a18d-c1926e3edb3f
+		displayFolder: Revenue integrity
+
+	/// Billed value of those denials.
+	measure 'Denied Billed' = SUM(denial_appeals[denied_billed])
+		formatString: \$#,0
+		lineageTag: be1e0062-542f-545d-827c-3190783a1faf
+		displayFolder: Revenue integrity
+
+	/// Denials that were worked.
+	measure 'Appealed' = SUM(denial_appeals[appealed])
+		formatString: #,0
+		lineageTag: 57c8e2a7-8e6d-53cc-8b4e-acf86ede5e6f
+		displayFolder: Revenue integrity
+
+	/// Appeals that came back.
+	measure 'Overturned' = SUM(denial_appeals[overturned])
+		formatString: #,0
+		lineageTag: 1ee2360a-9743-524a-9c1a-ec21405085e3
+		displayFolder: Revenue integrity
+
+	/// Share of appeals that were overturned. This is the number that decides where the next hour of appeal work goes, and it differs enormously by reason.
+	measure 'Overturn Rate' = DIVIDE([Overturned], [Appealed])
+		formatString: 0.0%
+		lineageTag: 67c966ff-333a-524d-885f-2ed0fd446712
+		displayFolder: Revenue integrity
+
+	/// Share of denials that were appealed at all.
+	measure 'Appeal Rate' = DIVIDE([Appealed], [Denials])
+		formatString: 0.0%
+		lineageTag: 5e6b95f1-87b6-5207-949b-d65f9de147b9
+		displayFolder: Revenue integrity
+
+	/// Cash recovered by overturned appeals.
+	measure 'Recovered' = SUM(denial_appeals[recovered])
+		formatString: \$#,0
+		lineageTag: 11f05645-8576-5ee1-9e9b-ea4565f8cad1
+		displayFolder: Revenue integrity
+
+	/// Un-appealed denials valued at their own reason's overturn rate. An expected value, not a promise - and the only honest way to rank the backlog.
+	measure 'Recoverable Left' = SUM(denial_appeals[recoverable_left])
+		formatString: \$#,0
+		lineageTag: a0c053fb-66b9-56d5-ae84-e7bf9599d0f5
+		displayFolder: Revenue integrity
+
+	/// One step of the revenue bridge.
+	measure 'Bridge Amount' = SUM(revenue_bridge[amount])
+		formatString: \$#,0;(\$#,0)
+		lineageTag: 0d94fc5d-28b3-5ea8-bad6-0e590dbd22f1
+		displayFolder: Revenue integrity
+
+	/// Revenue movement from the book shifting between payers and service lines that pay differently.
+	measure 'Mix Effect' = SUM(revenue_bridge_summary[mix_effect])
+		formatString: \$#,0;(\$#,0)
+		lineageTag: fc8725b1-f973-5bdb-8dd0-7456866b0748
+		displayFolder: Revenue integrity
+
+	/// Revenue movement from the same cell paying a different amount per claim.
+	measure 'Rate Effect' = SUM(revenue_bridge_summary[rate_effect])
+		formatString: \$#,0;(\$#,0)
+		lineageTag: c2ef000b-a952-55cc-b259-f66a7434363d
+		displayFolder: Revenue integrity
+
+	/// Mix and rate together, which is everything except doing more or fewer cases.
+	measure 'Net Effect' = [Mix Effect] + [Rate Effect]
+		formatString: \$#,0;(\$#,0)
+		lineageTag: e3f3c6e6-e421-5bba-935a-8e22fc88851b
+		displayFolder: Revenue integrity
+
+	/// Net revenue per claim, prior window.
+	measure 'Rate Prior' = MAX(revenue_bridge_summary[prior_rate])
+		formatString: \$#,0
+		lineageTag: 43c28a4e-1a1d-58c9-9c77-c5b9548691c3
+		displayFolder: Revenue integrity
+
+	/// Net revenue per claim, recent window.
+	measure 'Rate Recent' = MAX(revenue_bridge_summary[recent_rate])
+		formatString: \$#,0
+		lineageTag: 7fbb83dc-7b4e-5242-8125-b77e996c5f54
+		displayFolder: Revenue integrity
+
+	/// Days from service to submission. The part of days in AR that runs before the payer has seen the claim, and the part the hospital owns outright.
+	measure 'Charge Lag' =
+			DIVIDE(
+			    SUMX(rcm_operations, rcm_operations[claims] * rcm_operations[avg_charge_lag_days]),
+			    SUM(rcm_operations[claims])
+			)
+		formatString: 0.0
+		lineageTag: 25e476bf-75bd-5c8f-9c93-d65abf606ca9
+		displayFolder: Revenue integrity
+
+	/// Charge lag plus adjudication.
+	measure 'Total Cycle Days' =
+			DIVIDE(
+			    SUMX(rcm_operations, rcm_operations[claims] * rcm_operations[avg_total_cycle_days]),
+			    SUM(rcm_operations[claims])
+			)
+		formatString: 0.0
+		lineageTag: 3b285e68-2401-56e7-b1bc-81785d44a7f6
+		displayFolder: Revenue integrity
+
+	/// Adjudicated claims paid without rework.
+	measure 'First Pass Rate' =
+			DIVIDE(
+			    SUMX(rcm_operations, rcm_operations[adjudicated] * rcm_operations[first_pass_rate]),
+			    SUM(rcm_operations[adjudicated])
+			)
+		formatString: 0.0%
+		lineageTag: 39438f70-d12f-5e8d-a8c3-b849a31786e5
+		displayFolder: Revenue integrity
+
+	/// Follow-up work items. The revenue cycle's actual capacity constraint.
+	measure 'Touches' = SUM(rcm_operations[total_touches])
+		formatString: #,0
+		lineageTag: cf7c0c01-7344-5479-9287-91a8886809e6
+		displayFolder: Revenue integrity
+
+	/// Work items per claim.
+	measure 'Touches per Claim' = AVERAGE(rcm_operations[touches_per_claim])
+		formatString: 0.00
+		lineageTag: bd5c713b-0eb6-5513-b0fe-8a62aea004d3
+		displayFolder: Revenue integrity
+
+	/// Reddens the cells paying under contract past the materiality band, rather than the biggest bar: a large payer at contract is not a problem and a small one under contract is.
+	measure 'Variance Colour' =
+			VAR vHere = [Contract Variance %]
+			RETURN
+			    SWITCH(
+			        TRUE(),
+			        vHere < -0.05, "#FF5C7A",
+			        vHere > 0.05, "#3DD68C",
+			        "#454A82"
+			    )
+		lineageTag: df297a35-4b14-5d50-9378-607ed3e9ee40
+		displayFolder: Revenue integrity
+
+	/// Greens the reason with the most recoverable money left, which is where the next hour of appeal work belongs.
+	measure 'Recoverable Colour' =
+			VAR vHere = [Recoverable Left]
+			VAR vExtreme =
+			    CALCULATE(
+			        MAXX(VALUES(denial_appeals[denial_reason]), [Recoverable Left]),
+			        ALLSELECTED()
+			    )
+			RETURN
+			    IF(vHere = vExtreme, "#3DD68C", "#454A82")
+		lineageTag: 2d33afc3-3bbb-5b9d-b751-fdc28ff33958
+		displayFolder: Revenue integrity
+
+	/// Totals sit neutral; the movements are green or red by sign, so the bridge reads without a legend.
+	measure 'Bridge Colour' =
+			VAR vStep = SELECTEDVALUE(revenue_bridge[step])
+			VAR vAmount = [Bridge Amount]
+			RETURN
+			    SWITCH(
+			        TRUE(),
+			        SELECTEDVALUE(revenue_bridge[kind]) = "Total", "#454A82",
+			        vAmount >= 0, "#3DD68C",
+			        "#FF5C7A"
+			    )
+		lineageTag: 729d9763-d5d6-544b-9430-97e9bdd5b298
+		displayFolder: Revenue integrity
+
+	/// Reddens the slowest service line to code.
+	measure 'Lag Colour' =
+			VAR vHere = [Charge Lag]
+			VAR vExtreme =
+			    CALCULATE(
+			        MAXX(VALUES(rcm_operations[service_line]), [Charge Lag]),
+			        ALLSELECTED()
+			    )
+			RETURN
+			    IF(vHere = vExtreme, "#FF5C7A", "#454A82")
+		lineageTag: 430ba7f3-b7ed-55f8-9aa0-42dba16e245d
+		displayFolder: Revenue integrity
+
+	/// Verdict on contract compliance.
+	measure 'Contract Status' =
+			VAR vCells = [Cells Under Contract]
+			RETURN
+			    SWITCH(
+			        TRUE(),
+			        vCells = 0, "On target",
+			        vCells <= 3, "Watch",
+			        "Off target"
+			    )
+		lineageTag: d1816d7c-0a86-5104-8236-b9057cd2d45f
+		displayFolder: Revenue integrity
+
+	/// Colour for the contract verdict.
+	measure 'Contract Colour' =
+			SWITCH(
+			    [Contract Status],
+			    "On target", "#3DD68C",
+			    "Watch", "#F5A524",
+			    "#FF5C7A"
+			)
+		lineageTag: b5ac2e2c-1f54-5eb9-a9ed-0bb6bb32cd07
+		displayFolder: Revenue integrity
+
+	/// Card subtitle for the underpayment card.
+	measure 'Underpaid Reference' = FORMAT([Underpaid Claims], "#,0") & " claims across " & FORMAT([Cells Under Contract], "0") & " payer/line cells   " & [Contract Status]
+		lineageTag: 283aa486-5aea-5a78-bfe8-7f91520d7e7d
+		displayFolder: Revenue integrity
+
+	/// Card subtitle for the recovered card.
+	measure 'Recovered Reference' = FORMAT([Overturned], "#,0") & " of " & FORMAT([Appealed], "#,0") & " appeals overturned (" & FORMAT([Overturn Rate], "0.0%") & ")"
+		lineageTag: 9b14dfa8-7764-569d-aba4-5aee680377f9
+		displayFolder: Revenue integrity
+
+	/// Card subtitle for the recoverable card.
+	measure 'Recoverable Reference' = FORMAT([Denials] - [Appealed], "#,0") & " never appealed, at their own overturn rate"
+		lineageTag: 107f3e85-e8ab-5b09-9298-1f4b6d0e9d4f
+		displayFolder: Revenue integrity
+
+	/// Card subtitle for the charge-lag card.
+	measure 'Lag Reference' = FORMAT([Total Cycle Days], "0.0") & " days end to end; this half is ours"
+		lineageTag: f192ee32-6b69-5c39-a1a8-e28f0ce70aef
+		displayFolder: Revenue integrity
+
+	/// Card subtitle for the bridge cards.
+	measure 'Bridge Reference' = "per claim " & FORMAT([Rate Prior], "$#,0") & " to " & FORMAT([Rate Recent], "$#,0")
+		lineageTag: 66451aec-3d4e-5c92-aaec-5472c9bb04e8
+		displayFolder: Revenue integrity
+
+	/// The revenue-integrity headline as a deterministic sentence.
+	measure 'Contract Insight' =
+			VAR vCells = CALCULATE([Cells Under Contract], ALL(contract_variance))
+			VAR vMoney = CALCULATE([Underpaid Amount], ALL(contract_variance))
+			VAR vClaims = CALCULATE([Underpaid Claims], ALL(contract_variance))
+			VAR vWorst =
+			    TOPN(1, FILTER(ALL(contract_variance),
+			        contract_variance[verdict] = "Under contract"),
+			        contract_variance[variance_pct], ASC)
+			VAR vWorstCell = MAXX(vWorst, contract_variance[cell])
+			VAR vWorstPct = MINX(vWorst, contract_variance[variance_pct])
+			VAR vLeft = CALCULATE([Recoverable Left], ALL(denial_appeals))
+			VAR vBack = CALCULATE([Recovered], ALL(denial_appeals))
+			RETURN
+			    FORMAT(vCells, "0") & " payer and service-line combinations pay under their "
+			        & "own contracted rate, worth " & FORMAT(vMoney, "$#,0") & " across "
+			        & FORMAT(vClaims, "#,0") & " claims - worst is " & vWorstCell
+			        & " at " & FORMAT(vWorstPct, "0.0%")
+			        & ". Separately, appeals have brought back " & FORMAT(vBack, "$#,0")
+			        & ", and the denials nobody appealed are worth another "
+			        & FORMAT(vLeft, "$#,0") & " at those same overturn rates. "
+			        & "None of this is visible in a denial rate." 
+		lineageTag: f46b0601-832b-5e2d-b56f-20df38ee9f47
+		displayFolder: Revenue integrity
+
+	/// The bridge headline as a deterministic sentence.
+	measure 'Bridge Insight' =
+			VAR vPrior = CALCULATE(SUM(revenue_bridge[amount]), ALL(revenue_bridge),
+			    revenue_bridge[step] = "1. Prior period")
+			VAR vRecent = CALCULATE(SUM(revenue_bridge[amount]), ALL(revenue_bridge),
+			    revenue_bridge[step] = "5. Recent period")
+			VAR vVol = CALCULATE(SUM(revenue_bridge[amount]), ALL(revenue_bridge),
+			    revenue_bridge[step] = "2. Volume")
+			VAR vMix = CALCULATE(SUM(revenue_bridge[amount]), ALL(revenue_bridge),
+			    revenue_bridge[step] = "3. Mix")
+			VAR vRte = CALCULATE(SUM(revenue_bridge[amount]), ALL(revenue_bridge),
+			    revenue_bridge[step] = "4. Rate")
+			RETURN
+			    "Net revenue moved " & FORMAT(vRecent - vPrior, "$#,0") & " ("
+			        & FORMAT(DIVIDE(vRecent - vPrior, vPrior), "+0.0%;-0.0%;0.0%")
+			        & "), and all of it is volume: " & FORMAT(vVol, "$#,0")
+			        & " from doing more, against " & FORMAT(vMix, "$#,0")
+			        & " of mix and " & FORMAT(vRte, "$#,0")
+			        & " of rate. Revenue per claim FELL while revenue rose, which is the "
+			        & "sentence a growth number on its own would have hidden." 
+		lineageTag: 9c17d4c0-7db2-50b2-8af4-0de8bf4c4e03
+		displayFolder: Revenue integrity
 
 	column Value
 		dataType: int64

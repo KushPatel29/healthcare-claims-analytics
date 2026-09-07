@@ -1,6 +1,10 @@
 name: CI
 
 on:
+  # Weekly, so a green badge means the tests pass now rather
+  # than that they passed the day of the last push.
+  schedule:
+    - cron: "42 6 * * 4"
   push:
     branches: [master, main]
   pull_request:
@@ -34,6 +38,7 @@ jobs:
         run: |
           python data_generator/generate_claims_data.py
           python canadian/generate_activity_data.py
+          python engine/build_revenue_integrity.py
 
       - name: Gate must pass on clean data
         run: python governance/data_quality.py

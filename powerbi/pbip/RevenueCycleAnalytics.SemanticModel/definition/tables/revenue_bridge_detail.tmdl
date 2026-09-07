@@ -1,0 +1,88 @@
+/// The same decomposition rolled up by payer and by service line. The cell is payer x service line, so a payer shift reads as mix rather than as a price cut.
+table revenue_bridge_detail
+	lineageTag: b522cc94-cfaf-5db7-958b-7d6490720a78
+
+	column dimension
+		dataType: string
+		lineageTag: a500d155-14c9-5681-8335-4f220ead2d76
+		summarizeBy: none
+		sourceColumn: dimension
+
+	column category
+		dataType: string
+		lineageTag: 0808e55f-fe27-5423-a6cb-2ad21ba60b55
+		summarizeBy: none
+		sourceColumn: category
+
+	column claims_prior
+		dataType: int64
+		formatString: #,0
+		lineageTag: a14774c1-3854-5bca-8fa5-443f8d947afa
+		summarizeBy: none
+		sourceColumn: claims_prior
+
+	column claims_recent
+		dataType: int64
+		formatString: #,0
+		lineageTag: 7b197fda-70ec-5bc6-b58c-d4d0420a85e2
+		summarizeBy: none
+		sourceColumn: claims_recent
+
+	column revenue_prior
+		dataType: double
+		formatString: \$#,0
+		lineageTag: dc2ebe26-4ab9-5f17-b5ee-054ab87b07fa
+		summarizeBy: none
+		sourceColumn: revenue_prior
+
+	column revenue_recent
+		dataType: double
+		formatString: \$#,0
+		lineageTag: fbc958f5-3ea7-5502-9350-3f70e5e7f1f8
+		summarizeBy: none
+		sourceColumn: revenue_recent
+
+	column rate_prior
+		dataType: double
+		formatString: \$#,0
+		lineageTag: deef73c1-9c24-5abe-bb90-b0b55364f9b5
+		summarizeBy: none
+		sourceColumn: rate_prior
+
+	column rate_recent
+		dataType: double
+		formatString: \$#,0
+		lineageTag: 0116d368-7255-5000-afb7-7da21c488a09
+		summarizeBy: none
+		sourceColumn: rate_recent
+
+	column mix_effect
+		dataType: double
+		formatString: \$#,0;(\$#,0)
+		lineageTag: 2051eabc-94c5-5288-9be1-6f9de5af9406
+		summarizeBy: none
+		sourceColumn: mix_effect
+
+	column rate_effect
+		dataType: double
+		formatString: \$#,0;(\$#,0)
+		lineageTag: 0bb1fe98-9639-5900-a737-cd88722e1fb2
+		summarizeBy: none
+		sourceColumn: rate_effect
+
+	column total_effect
+		dataType: double
+		formatString: \$#,0;(\$#,0)
+		lineageTag: 024fa41c-7f83-54da-8c60-70208d4f98bf
+		summarizeBy: none
+		sourceColumn: total_effect
+
+	partition revenue_bridge_detail = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataPath & "\\output\\revenue_bridge_detail.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"dimension", type text}, {"category", type text}, {"claims_prior", Int64.Type}, {"claims_recent", Int64.Type}, {"revenue_prior", type number}, {"revenue_recent", type number}, {"rate_prior", type number}, {"rate_recent", type number}, {"mix_effect", type number}, {"rate_effect", type number}, {"total_effect", type number}})
+				in
+				    Typed

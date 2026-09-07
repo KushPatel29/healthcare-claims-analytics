@@ -1,0 +1,183 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "visual097",
+  "position": {
+    "x": 660,
+    "y": 374,
+    "z": 1000,
+    "height": 204,
+    "width": 600,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "contract_variance"
+                    }
+                  },
+                  "Property": "payer"
+                }
+              },
+              "queryRef": "contract_variance.payer",
+              "nativeQueryRef": "payer"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "contract_variance"
+                    }
+                  },
+                  "Property": "service_line"
+                }
+              },
+              "queryRef": "contract_variance.service_line",
+              "nativeQueryRef": "service_line"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "contract_variance"
+                    }
+                  },
+                  "Property": "contracted_rate"
+                }
+              },
+              "queryRef": "contract_variance.contracted_rate",
+              "nativeQueryRef": "contracted_rate"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "contract_variance"
+                    }
+                  },
+                  "Property": "realised_rate"
+                }
+              },
+              "queryRef": "contract_variance.realised_rate",
+              "nativeQueryRef": "realised_rate"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "contract_variance"
+                    }
+                  },
+                  "Property": "variance_pct"
+                }
+              },
+              "queryRef": "contract_variance.variance_pct",
+              "nativeQueryRef": "variance_pct"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "contract_variance"
+                    }
+                  },
+                  "Property": "underpaid_amount"
+                }
+              },
+              "queryRef": "contract_variance.underpaid_amount",
+              "nativeQueryRef": "underpaid_amount"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "contract_variance"
+                  }
+                },
+                "Property": "variance_pct"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'The cells paying under contract'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Contracted rate against what the payer actually allowed'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "objects": {
+      "total": [
+        {
+          "properties": {
+            "totals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

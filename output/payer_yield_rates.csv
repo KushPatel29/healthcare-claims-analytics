@@ -1,81 +1,81 @@
 payer_name,payer_type,service_line,adjudicated_claims,denial_propensity,contractual_factor,net_collection_rate,expected_yield_rate
-Medicare,Medicare,Emergency Department,400,0.0624,0.512,0.9126,0.4381
-Medicare,Medicare,Behavioral Health,75,0.0442,0.511,0.9031,0.441
-Medicare,Medicare,Cardiology,256,0.0478,0.5109,0.9089,0.4422
-Medicare,Medicare,Orthopedics,231,0.0725,0.513,0.8962,0.4264
-Medicare,Medicare,Oncology,167,0.0706,0.5099,0.9135,0.4329
-Medicare,Medicare,Imaging,354,0.0487,0.5112,0.9025,0.4389
-Medicare,Medicare,Laboratory,455,0.0573,0.5142,0.9159,0.444
-Medicare,Medicare,Surgery,184,0.05,0.5117,0.9227,0.4485
-Medicare,Medicare,Primary Care,285,0.0662,0.5127,0.9057,0.4336
-Medicare,Medicare,OB/GYN,131,0.0874,0.513,0.9058,0.4241
-Medicaid,Medicaid,Emergency Department,214,0.0998,0.4425,0.8815,0.3511
-Medicaid,Medicaid,Behavioral Health,43,0.085,0.4433,0.879,0.3566
-Medicaid,Medicaid,Cardiology,150,0.1197,0.442,0.8891,0.3459
-Medicaid,Medicaid,Orthopedics,137,0.1105,0.4406,0.8804,0.345
-Medicaid,Medicaid,Oncology,110,0.1412,0.445,0.9012,0.3444
-Medicaid,Medicaid,Imaging,226,0.1071,0.4433,0.8705,0.3445
-Medicaid,Medicaid,Laboratory,248,0.1207,0.443,0.9039,0.3521
-Medicaid,Medicaid,Surgery,99,0.129,0.4436,0.8542,0.33
-Medicaid,Medicaid,Primary Care,174,0.1255,0.441,0.9034,0.3484
-Medicaid,Medicaid,OB/GYN,63,0.1609,0.4439,0.8967,0.334
-Blue Cross Blue Shield,Commercial,Emergency Department,278,0.0967,0.6688,0.9049,0.5467
-Blue Cross Blue Shield,Commercial,Behavioral Health,54,0.0517,0.6691,0.912,0.5787
-Blue Cross Blue Shield,Commercial,Cardiology,172,0.1085,0.666,0.8907,0.5289
-Blue Cross Blue Shield,Commercial,Orthopedics,170,0.0885,0.6717,0.8872,0.5432
-Blue Cross Blue Shield,Commercial,Oncology,107,0.101,0.6666,0.9019,0.5406
-Blue Cross Blue Shield,Commercial,Imaging,239,0.092,0.6678,0.9075,0.5502
-Blue Cross Blue Shield,Commercial,Laboratory,308,0.0879,0.6695,0.8964,0.5474
-Blue Cross Blue Shield,Commercial,Surgery,127,0.094,0.6703,0.9062,0.5503
-Blue Cross Blue Shield,Commercial,Primary Care,180,0.0791,0.6702,0.8956,0.5528
-Blue Cross Blue Shield,Commercial,OB/GYN,97,0.0925,0.6707,0.8839,0.538
-UnitedHealthcare,Commercial,Emergency Department,266,0.0939,0.6424,0.9046,0.5265
-UnitedHealthcare,Commercial,Behavioral Health,63,0.0344,0.6345,0.8791,0.5386
-UnitedHealthcare,Commercial,Cardiology,148,0.1003,0.6423,0.9009,0.5206
-UnitedHealthcare,Commercial,Orthopedics,145,0.1022,0.6396,0.8959,0.5145
-UnitedHealthcare,Commercial,Oncology,98,0.1259,0.6392,0.8925,0.4987
-UnitedHealthcare,Commercial,Imaging,197,0.0869,0.6397,0.9045,0.5284
-UnitedHealthcare,Commercial,Laboratory,271,0.1026,0.6412,0.8893,0.5117
-UnitedHealthcare,Commercial,Surgery,100,0.0572,0.6423,0.9077,0.5497
-UnitedHealthcare,Commercial,Primary Care,159,0.083,0.6384,0.9073,0.5312
-UnitedHealthcare,Commercial,OB/GYN,90,0.1169,0.643,0.9013,0.5118
-Aetna,Commercial,Emergency Department,171,0.0647,0.6519,0.9055,0.5522
-Aetna,Commercial,Behavioral Health,27,0.0926,0.6439,0.901,0.5264
-Aetna,Commercial,Cardiology,98,0.0708,0.6464,0.8938,0.5368
-Aetna,Commercial,Orthopedics,82,0.0427,0.651,0.9096,0.5669
-Aetna,Commercial,Oncology,84,0.0419,0.6468,0.8985,0.5568
-Aetna,Commercial,Imaging,130,0.089,0.6521,0.8889,0.528
-Aetna,Commercial,Laboratory,201,0.0785,0.6508,0.9028,0.5414
-Aetna,Commercial,Surgery,73,0.0468,0.6537,0.9087,0.5662
-Aetna,Commercial,Primary Care,107,0.0894,0.6477,0.9004,0.531
-Aetna,Commercial,OB/GYN,51,0.0331,0.6509,0.9146,0.5756
-Cigna,Commercial,Emergency Department,155,0.068,0.6324,0.909,0.5358
-Cigna,Commercial,Behavioral Health,22,0.069,0.6324,0.9022,0.5311
-Cigna,Commercial,Cardiology,88,0.1287,0.6276,0.8979,0.491
-Cigna,Commercial,Orthopedics,97,0.0761,0.6265,0.9056,0.5243
-Cigna,Commercial,Oncology,62,0.0719,0.6306,0.9002,0.5269
-Cigna,Commercial,Imaging,118,0.1152,0.6281,0.9003,0.5004
-Cigna,Commercial,Laboratory,172,0.1141,0.6325,0.8883,0.4978
-Cigna,Commercial,Surgery,64,0.0583,0.6308,0.8926,0.5303
-Cigna,Commercial,Primary Care,116,0.1169,0.6315,0.9004,0.5021
-Cigna,Commercial,OB/GYN,51,0.0972,0.6314,0.8996,0.5128
-Humana Medicare Advantage,Medicare Advantage,Emergency Department,161,0.0754,0.5432,0.8818,0.4429
-Humana Medicare Advantage,Medicare Advantage,Behavioral Health,24,0.0829,0.5436,0.9031,0.4502
-Humana Medicare Advantage,Medicare Advantage,Cardiology,76,0.0588,0.5423,0.9076,0.4632
-Humana Medicare Advantage,Medicare Advantage,Orthopedics,87,0.0902,0.541,0.9231,0.4544
-Humana Medicare Advantage,Medicare Advantage,Oncology,59,0.0842,0.5409,0.8823,0.437
-Humana Medicare Advantage,Medicare Advantage,Imaging,132,0.0766,0.5431,0.8898,0.4462
-Humana Medicare Advantage,Medicare Advantage,Laboratory,182,0.1022,0.5434,0.9017,0.4399
-Humana Medicare Advantage,Medicare Advantage,Surgery,79,0.0874,0.5412,0.8701,0.4297
-Humana Medicare Advantage,Medicare Advantage,Primary Care,105,0.0692,0.5422,0.9087,0.4586
-Humana Medicare Advantage,Medicare Advantage,OB/GYN,41,0.0926,0.5444,0.9037,0.4464
-Self-Pay,Self-Pay,Emergency Department,71,0.051,0.9731,0.2057,0.19
-Self-Pay,Self-Pay,Behavioral Health,14,0.0189,0.9694,0.2229,0.212
-Self-Pay,Self-Pay,Cardiology,35,0.048,0.9732,0.2173,0.2013
-Self-Pay,Self-Pay,Orthopedics,36,0.0115,0.9675,0.2037,0.1948
-Self-Pay,Self-Pay,Oncology,29,0.0131,0.9698,0.208,0.1991
-Self-Pay,Self-Pay,Imaging,70,0.0294,0.971,0.2106,0.1985
-Self-Pay,Self-Pay,Laboratory,80,0.0164,0.9729,0.2026,0.1939
-Self-Pay,Self-Pay,Surgery,46,0.0249,0.973,0.2051,0.1946
-Self-Pay,Self-Pay,Primary Care,30,0.0329,0.9663,0.2156,0.2015
-Self-Pay,Self-Pay,OB/GYN,25,0.0587,0.9679,0.2087,0.1901
+Medicare,Medicare,Emergency Department,416,0.0321,0.5327,0.9079,0.4681
+Medicare,Medicare,Behavioral Health,84,0.0482,0.5276,0.8953,0.4496
+Medicare,Medicare,Cardiology,207,0.0661,0.5005,0.9076,0.4243
+Medicare,Medicare,Orthopedics,219,0.067,0.4817,0.9115,0.4097
+Medicare,Medicare,Oncology,173,0.0363,0.4728,0.8979,0.4091
+Medicare,Medicare,Imaging,361,0.0499,0.5573,0.9119,0.4829
+Medicare,Medicare,Laboratory,480,0.064,0.5762,0.9109,0.4913
+Medicare,Medicare,Surgery,179,0.0403,0.4632,0.9182,0.4082
+Medicare,Medicare,Primary Care,274,0.0511,0.5481,0.9155,0.4762
+Medicare,Medicare,OB/GYN,107,0.0395,0.5101,0.9209,0.4512
+Medicaid,Medicaid,Emergency Department,254,0.1361,0.4725,0.8851,0.3613
+Medicaid,Medicaid,Behavioral Health,40,0.1049,0.4684,0.874,0.3665
+Medicaid,Medicaid,Cardiology,124,0.0784,0.444,0.8846,0.362
+Medicaid,Medicaid,Orthopedics,139,0.1088,0.4299,0.878,0.3364
+Medicaid,Medicaid,Oncology,91,0.1378,0.4255,0.8848,0.3246
+Medicaid,Medicaid,Imaging,216,0.0902,0.4931,0.8806,0.3951
+Medicaid,Medicaid,Laboratory,264,0.1102,0.5095,0.8866,0.402
+Medicaid,Medicaid,Surgery,114,0.1216,0.4152,0.9015,0.3288
+Medicaid,Medicaid,Primary Care,165,0.1583,0.4842,0.8818,0.3594
+Medicaid,Medicaid,OB/GYN,70,0.081,0.4552,0.871,0.3643
+Blue Cross Blue Shield,Commercial,Emergency Department,268,0.0858,0.7137,0.8874,0.5789
+Blue Cross Blue Shield,Commercial,Behavioral Health,49,0.054,0.7052,0.8779,0.5857
+Blue Cross Blue Shield,Commercial,Cardiology,164,0.0528,0.6705,0.8982,0.5705
+Blue Cross Blue Shield,Commercial,Orthopedics,143,0.1026,0.6491,0.8912,0.5191
+Blue Cross Blue Shield,Commercial,Oncology,98,0.0909,0.6378,0.9025,0.5233
+Blue Cross Blue Shield,Commercial,Imaging,216,0.0878,0.7436,0.896,0.6078
+Blue Cross Blue Shield,Commercial,Laboratory,315,0.0798,0.7706,0.8998,0.6381
+Blue Cross Blue Shield,Commercial,Surgery,107,0.1002,0.5676,0.9011,0.4603
+Blue Cross Blue Shield,Commercial,Primary Care,157,0.1058,0.7313,0.8997,0.5884
+Blue Cross Blue Shield,Commercial,OB/GYN,72,0.1057,0.6831,0.8963,0.5476
+UnitedHealthcare,Commercial,Emergency Department,235,0.0823,0.6824,0.8894,0.5569
+UnitedHealthcare,Commercial,Behavioral Health,38,0.1205,0.6741,0.8862,0.5254
+UnitedHealthcare,Commercial,Cardiology,144,0.0853,0.6406,0.898,0.5262
+UnitedHealthcare,Commercial,Orthopedics,110,0.1153,0.619,0.8883,0.4864
+UnitedHealthcare,Commercial,Oncology,106,0.0872,0.562,0.9038,0.4637
+UnitedHealthcare,Commercial,Imaging,200,0.0954,0.7099,0.9081,0.5832
+UnitedHealthcare,Commercial,Laboratory,269,0.1141,0.7355,0.9076,0.5913
+UnitedHealthcare,Commercial,Surgery,90,0.1181,0.6013,0.8929,0.4735
+UnitedHealthcare,Commercial,Primary Care,153,0.104,0.6978,0.8915,0.5574
+UnitedHealthcare,Commercial,OB/GYN,59,0.0885,0.6563,0.8826,0.528
+Aetna,Commercial,Emergency Department,150,0.0555,0.691,0.898,0.5861
+Aetna,Commercial,Behavioral Health,34,0.1007,0.6848,0.905,0.5573
+Aetna,Commercial,Cardiology,103,0.1092,0.6537,0.8904,0.5185
+Aetna,Commercial,Orthopedics,98,0.1054,0.6305,0.8797,0.4962
+Aetna,Commercial,Oncology,92,0.0664,0.6214,0.902,0.5233
+Aetna,Commercial,Imaging,147,0.0505,0.7198,0.9227,0.6306
+Aetna,Commercial,Laboratory,196,0.0622,0.7453,0.911,0.6367
+Aetna,Commercial,Surgery,84,0.0715,0.6137,0.9124,0.5199
+Aetna,Commercial,Primary Care,120,0.0531,0.7094,0.8828,0.593
+Aetna,Commercial,OB/GYN,50,0.092,0.6673,0.9009,0.5459
+Cigna,Commercial,Emergency Department,147,0.0803,0.6703,0.9057,0.5584
+Cigna,Commercial,Behavioral Health,22,0.105,0.6659,0.8777,0.5231
+Cigna,Commercial,Cardiology,84,0.1001,0.6368,0.9101,0.5215
+Cigna,Commercial,Orthopedics,81,0.0536,0.6142,0.8844,0.5141
+Cigna,Commercial,Oncology,63,0.0411,0.6067,0.8898,0.5176
+Cigna,Commercial,Imaging,118,0.0827,0.6975,0.8816,0.5641
+Cigna,Commercial,Laboratory,153,0.0486,0.7212,0.8955,0.6144
+Cigna,Commercial,Surgery,48,0.0648,0.6025,0.9041,0.5094
+Cigna,Commercial,Primary Care,99,0.0791,0.6844,0.9068,0.5716
+Cigna,Commercial,OB/GYN,39,0.0578,0.6473,0.8962,0.5466
+Humana Medicare Advantage,Medicare Advantage,Emergency Department,207,0.0616,0.5763,0.8979,0.4855
+Humana Medicare Advantage,Medicare Advantage,Behavioral Health,45,0.1076,0.5702,0.8766,0.4461
+Humana Medicare Advantage,Medicare Advantage,Cardiology,126,0.1164,0.4795,0.8992,0.381
+Humana Medicare Advantage,Medicare Advantage,Orthopedics,91,0.1261,0.5262,0.9021,0.4148
+Humana Medicare Advantage,Medicare Advantage,Oncology,68,0.0908,0.523,0.9172,0.4361
+Humana Medicare Advantage,Medicare Advantage,Imaging,176,0.1326,0.6017,0.9028,0.4712
+Humana Medicare Advantage,Medicare Advantage,Laboratory,219,0.0753,0.6227,0.9141,0.5264
+Humana Medicare Advantage,Medicare Advantage,Surgery,72,0.0543,0.5104,0.8972,0.4331
+Humana Medicare Advantage,Medicare Advantage,Primary Care,127,0.1224,0.5894,0.9022,0.4666
+Humana Medicare Advantage,Medicare Advantage,OB/GYN,59,0.1518,0.5544,0.8833,0.4154
+Self-Pay,Self-Pay,Emergency Department,80,0.0565,0.9858,0.2059,0.1916
+Self-Pay,Self-Pay,Behavioral Health,10,0.0216,0.9734,0.2194,0.209
+Self-Pay,Self-Pay,Cardiology,40,0.0108,0.9749,0.2202,0.2124
+Self-Pay,Self-Pay,Orthopedics,35,0.0118,0.9447,0.2145,0.2002
+Self-Pay,Self-Pay,Oncology,31,0.0127,0.937,0.2081,0.1925
+Self-Pay,Self-Pay,Imaging,57,0.0084,0.986,0.2075,0.2029
+Self-Pay,Self-Pay,Laboratory,90,0.0422,0.9866,0.1983,0.1874
+Self-Pay,Self-Pay,Surgery,24,0.0374,0.9304,0.216,0.1934
+Self-Pay,Self-Pay,Primary Care,41,0.0106,0.9826,0.2123,0.2064
+Self-Pay,Self-Pay,OB/GYN,23,0.0848,0.9778,0.2134,0.191

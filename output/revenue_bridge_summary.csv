@@ -1,0 +1,2 @@
+prior_revenue,recent_revenue,movement,volume_effect,mix_effect,rate_effect,prior_claims,recent_claims,prior_rate,recent_rate,bridge_window_days,bridge_prior_from,bridge_recent_to,days_in_ar,first_pass_rate,avg_charge_lag_days,touches_total,touches_per_claim
+4707610.27,5350074.1,642463.83,822024.11,-39975.92,-139584.35,3711,4359,1268.56,1227.36,150,2025-06-20,2026-04-16,104.8,0.92,3.31,19465,1.62

@@ -1,0 +1,81 @@
+cell,payer,service_line,contracted_rate,realised_rate,paid_claims,billed,expected_allowed,actual_allowed,variance_amount,variance_pct,underpaid_claims,underpaid_amount,verdict
+Blue Cross Blue Shield / Surgery,Blue Cross Blue Shield,Surgery,0.612,0.54,96,788949.12,482836.87,426057.11,-56779.76,-0.1176,96,56779.76,Under contract
+UnitedHealthcare / Oncology,UnitedHealthcare,Oncology,0.598,0.5403,97,615397.54,368007.78,332526.77,-35481.01,-0.0964,97,35481.01,Under contract
+Humana Medicare Advantage / Cardiology,Humana Medicare Advantage,Cardiology,0.539,0.4635,111,373543.93,201340.2,173139.87,-28200.33,-0.1401,111,28200.33,Under contract
+Cigna / Laboratory,Cigna,Laboratory,0.7296,0.7283,146,56639.18,41323.95,41249.98,-73.97,-0.0018,0,0.0,At contract
+Medicaid / Emergency Department,Medicaid,Emergency Department,0.4725,0.4723,219,358737.96,169503.68,169437.93,-65.75,-0.0004,0,0.0,At contract
+Medicare / Laboratory,Medicare,Laboratory,0.5928,0.578,449,161193.07,93220.89,93176.41,-44.48,-0.0005,0,0.0,At contract
+Humana Medicare Advantage / Imaging,Humana Medicare Advantage,Imaging,0.605,0.6067,152,160203.3,96922.93,97188.95,266.02,0.0027,0,0.0,At contract
+Humana Medicare Advantage / Emergency Department,Humana Medicare Advantage,Emergency Department,0.5775,0.5773,195,331002.58,191153.98,191080.83,-73.15,-0.0004,0,0.0,At contract
+UnitedHealthcare / Orthopedics,UnitedHealthcare,Orthopedics,0.611,0.6086,97,541609.74,330923.57,329638.29,-1285.28,-0.0039,0,0.0,At contract
+Cigna / Orthopedics,Cigna,Orthopedics,0.6016,0.602,77,451980.36,271911.44,272095.25,183.81,0.0007,0,0.0,At contract
+Blue Cross Blue Shield / Cardiology,Blue Cross Blue Shield,Cardiology,0.6664,0.6667,156,643565.63,428872.07,429086.27,214.2,0.0005,0,0.0,At contract
+Medicare / Emergency Department,Medicare,Emergency Department,0.546,0.5333,403,625222.44,332909.8,333431.58,521.78,0.0016,0,0.0,At contract
+Medicare / Cardiology,Medicare,Cardiology,0.5096,0.4975,193,764676.15,380381.06,380431.5,50.44,0.0001,0,0.0,At contract
+Self-Pay / OB/GYN,Self-Pay,OB/GYN,1.0,0.9956,20,41992.82,41992.82,41808.73,-184.09,-0.0044,0,0.0,At contract
+Medicaid / Orthopedics,Medicaid,Orthopedics,0.423,0.4236,124,686337.66,290320.84,290744.09,423.25,0.0015,0,0.0,At contract
+Medicare / Primary Care,Medicare,Primary Care,0.5616,0.5487,260,115149.51,63095.07,63183.44,88.37,0.0014,0,0.0,At contract
+Medicaid / Cardiology,Medicaid,Cardiology,0.441,0.4399,115,434907.44,191794.14,191327.73,-466.41,-0.0024,0,0.0,At contract
+Medicaid / Imaging,Medicaid,Imaging,0.495,0.4961,197,217049.93,107439.65,107680.94,241.29,0.0022,0,0.0,At contract
+Blue Cross Blue Shield / Laboratory,Blue Cross Blue Shield,Laboratory,0.7752,0.7752,290,99569.76,77186.44,77187.31,0.87,0.0,0,0.0,At contract
+Aetna / Emergency Department,Aetna,Emergency Department,0.693,0.6928,142,218490.78,151414.06,151378.74,-35.32,-0.0002,0,0.0,At contract
+Humana Medicare Advantage / Surgery,Humana Medicare Advantage,Surgery,0.495,0.4943,69,599437.79,296721.73,296321.06,-400.67,-0.0014,0,0.0,At contract
+Self-Pay / Laboratory,Self-Pay,Laboratory,1.0,0.9922,86,28709.97,28709.97,28485.02,-224.95,-0.0078,0,0.0,At contract
+Cigna / Cardiology,Cigna,Cardiology,0.6272,0.6304,75,268982.62,168705.91,169567.32,861.41,0.0051,0,0.0,At contract
+Blue Cross Blue Shield / Primary Care,Blue Cross Blue Shield,Primary Care,0.7344,0.7348,140,64930.07,47684.59,47712.02,27.43,0.0006,0,0.0,At contract
+Self-Pay / Imaging,Self-Pay,Imaging,1.0,0.9931,57,68068.38,68068.38,67597.65,-470.73,-0.0069,0,0.0,At contract
+Medicaid / Surgery,Medicaid,Surgery,0.405,0.4045,100,807214.98,326922.07,326484.3,-437.77,-0.0013,0,0.0,At contract
+Aetna / Surgery,Aetna,Surgery,0.594,0.595,78,651186.93,386805.05,387481.51,676.46,0.0017,0,0.0,At contract
+Medicaid / Laboratory,Medicaid,Laboratory,0.513,0.5129,235,87081.26,44672.73,44667.61,-5.12,-0.0001,0,0.0,At contract
+Medicaid / Primary Care,Medicaid,Primary Care,0.486,0.4862,138,63242.57,30735.92,30749.49,13.57,0.0004,0,0.0,At contract
+Blue Cross Blue Shield / Imaging,Blue Cross Blue Shield,Imaging,0.748,0.7479,197,218440.1,163393.2,163378.77,-14.43,-0.0001,0,0.0,At contract
+Aetna / Cardiology,Aetna,Cardiology,0.6468,0.647,91,362262.85,234311.62,234398.57,86.95,0.0004,0,0.0,At contract
+UnitedHealthcare / Laboratory,UnitedHealthcare,Laboratory,0.741,0.7407,238,83010.15,61510.55,61486.76,-23.79,-0.0004,0,0.0,At contract
+Medicare / Orthopedics,Medicare,Orthopedics,0.4888,0.4776,204,1041560.63,496885.03,497481.95,596.92,0.0012,0,0.0,At contract
+Cigna / OB/GYN,Cigna,OB/GYN,0.64,0.6383,37,91306.08,58435.9,58277.32,-158.58,-0.0027,0,0.0,At contract
+Aetna / Laboratory,Aetna,Laboratory,0.7524,0.7518,184,65004.92,48909.67,48867.85,-41.82,-0.0009,0,0.0,At contract
+Aetna / Orthopedics,Aetna,Orthopedics,0.6204,0.6186,87,439030.44,272374.53,271594.36,-780.17,-0.0029,0,0.0,At contract
+Medicare / Imaging,Medicare,Imaging,0.572,0.5591,343,404777.05,226360.22,226298.72,-61.5,-0.0003,0,0.0,At contract
+Cigna / Primary Care,Cigna,Primary Care,0.6912,0.6891,91,43808.63,30280.49,30187.2,-93.29,-0.0031,0,0.0,At contract
+Humana Medicare Advantage / Laboratory,Humana Medicare Advantage,Laboratory,0.627,0.6284,203,69910.82,43834.11,43935.08,100.97,0.0023,0,0.0,At contract
+Cigna / Emergency Department,Cigna,Emergency Department,0.672,0.6717,135,222554.27,149556.49,149492.93,-63.56,-0.0004,0,0.0,At contract
+UnitedHealthcare / Primary Care,UnitedHealthcare,Primary Care,0.702,0.7013,137,57804.72,40578.9,40540.85,-38.05,-0.0009,0,0.0,At contract
+Blue Cross Blue Shield / Emergency Department,Blue Cross Blue Shield,Emergency Department,0.714,0.7141,245,404156.56,288567.76,288610.39,42.63,0.0001,0,0.0,At contract
+UnitedHealthcare / OB/GYN,UnitedHealthcare,OB/GYN,0.65,0.6505,54,136262.64,88570.75,88643.22,72.47,0.0008,0,0.0,At contract
+UnitedHealthcare / Emergency Department,UnitedHealthcare,Emergency Department,0.6825,0.684,216,335860.05,229224.51,229725.98,501.47,0.0022,0,0.0,At contract
+Aetna / Imaging,Aetna,Imaging,0.726,0.7264,140,142156.37,103205.51,103256.92,51.41,0.0005,0,0.0,At contract
+Self-Pay / Cardiology,Self-Pay,Cardiology,0.98,0.9791,40,155507.31,152397.16,152253.43,-143.73,-0.0009,0,0.0,At contract
+Self-Pay / Orthopedics,Self-Pay,Orthopedics,0.94,0.9379,35,179229.04,168475.29,168101.22,-374.07,-0.0022,0,0.0,At contract
+Blue Cross Blue Shield / OB/GYN,Blue Cross Blue Shield,OB/GYN,0.68,0.6793,64,156119.32,106161.16,106053.45,-107.71,-0.001,0,0.0,At contract
+Medicare / Oncology,Medicare,Oncology,0.4784,0.4659,167,1076978.02,501775.59,501790.35,14.76,0.0,0,0.0,At contract
+Humana Medicare Advantage / Behavioral Health,Humana Medicare Advantage,Behavioral Health,0.572,0.5711,40,31728.09,18148.46,18119.59,-28.87,-0.0016,0,0.0,At contract
+Humana Medicare Advantage / OB/GYN,Humana Medicare Advantage,OB/GYN,0.55,0.5496,49,109201.95,60061.1,60012.44,-48.66,-0.0008,0,0.0,At contract
+UnitedHealthcare / Imaging,UnitedHealthcare,Imaging,0.715,0.715,181,188938.25,135090.85,135085.88,-4.97,-0.0,0,0.0,At contract
+Aetna / Primary Care,Aetna,Primary Care,0.7128,0.7136,114,51578.15,36764.92,36806.12,41.2,0.0011,0,0.0,At contract
+Medicare / OB/GYN,Medicare,OB/GYN,0.52,0.5063,103,236033.29,119470.53,119500.06,29.53,0.0002,0,0.0,At contract
+Blue Cross Blue Shield / Orthopedics,Blue Cross Blue Shield,Orthopedics,0.6392,0.6405,128,620100.35,396368.1,397191.61,823.51,0.0021,0,0.0,At contract
+Humana Medicare Advantage / Oncology,Humana Medicare Advantage,Oncology,0.506,0.5088,62,426402.23,215759.5,216971.9,1212.4,0.0056,0,0.0,At contract
+Medicare / Behavioral Health,Medicare,Behavioral Health,0.5408,0.5264,80,57072.29,30008.89,30042.21,33.32,0.0011,0,0.0,At contract
+UnitedHealthcare / Surgery,UnitedHealthcare,Surgery,0.585,0.584,79,625371.72,365842.47,365191.08,-651.39,-0.0018,0,0.0,At contract
+UnitedHealthcare / Cardiology,UnitedHealthcare,Cardiology,0.637,0.6363,132,466868.62,297395.31,297086.84,-308.47,-0.001,0,0.0,At contract
+Humana Medicare Advantage / Orthopedics,Humana Medicare Advantage,Orthopedics,0.517,0.5166,79,419832.31,217053.33,216879.71,-173.62,-0.0008,0,0.0,At contract
+Medicare / Surgery,Medicare,Surgery,0.468,0.4558,172,1586474.88,724123.4,723187.09,-936.31,-0.0013,0,0.0,At contract
+Self-Pay / Emergency Department,Self-Pay,Emergency Department,1.0,0.9912,75,110450.74,110450.74,109481.85,-968.89,-0.0088,0,0.0,At contract
+Self-Pay / Primary Care,Self-Pay,Primary Care,1.0,0.9941,41,16505.37,16505.37,16408.73,-96.64,-0.0059,0,0.0,At contract
+Medicaid / Oncology,Medicaid,Oncology,0.414,0.4145,78,483183.74,200038.05,200286.56,248.51,0.0012,0,0.0,At contract
+Blue Cross Blue Shield / Behavioral Health,Blue Cross Blue Shield,Behavioral Health,0.7072,0.7063,47,37934.62,26827.38,26792.18,-35.2,-0.0013,0,0.0,At contract
+Blue Cross Blue Shield / Oncology,Blue Cross Blue Shield,Oncology,0.6256,0.6234,89,614016.84,384128.89,382787.15,-1341.74,-0.0035,0,0.0,At contract
+Cigna / Surgery,Cigna,Surgery,0.576,0.5756,45,384988.94,221753.64,221612.74,-140.9,-0.0006,0,0.0,At contract
+Aetna / Oncology,Aetna,Oncology,0.6072,0.6074,86,570456.0,346380.9,346506.94,126.04,0.0004,0,0.0,At contract
+Humana Medicare Advantage / Primary Care,Humana Medicare Advantage,Primary Care,0.594,0.5931,111,51322.97,30485.86,30440.62,-45.24,-0.0015,0,0.0,At contract
+Cigna / Imaging,Cigna,Imaging,0.704,0.7038,108,122224.07,86045.73,86019.27,-26.46,-0.0003,0,0.0,At contract
+Medicaid / OB/GYN,Medicaid,OB/GYN,0.45,0.4512,65,139105.52,62597.48,62762.54,165.06,0.0026,0,0.0,At contract
+UnitedHealthcare / Behavioral Health,UnitedHealthcare,Behavioral Health,0.676,0.6775,33,26410.42,17853.43,17893.06,39.63,0.0022,0,0.0,At contract
+Aetna / Behavioral Health,Aetna,Behavioral Health,0.6864,0.6856,30,24350.4,16714.09,16694.27,-19.82,-0.0012,0,0.0,At contract
+Aetna / OB/GYN,Aetna,OB/GYN,0.66,0.6603,45,121566.07,80233.66,80274.32,40.66,0.0005,0,0.0,At contract
+Self-Pay / Surgery,Self-Pay,Surgery,0.9,0.9072,23,211960.92,190764.82,192293.43,1528.61,0.008,0,0.0,At contract
+Medicaid / Behavioral Health,Medicaid,Behavioral Health,0.468,0.4681,36,25072.98,11734.16,11736.7,2.54,0.0002,0,0.0,At contract
+Cigna / Oncology,Cigna,Oncology,0.5888,0.5881,61,422876.3,248989.61,248701.99,-287.62,-0.0012,0,0.0,At contract
+Self-Pay / Behavioral Health,Self-Pay,Behavioral Health,1.0,0.9984,10,10018.68,10018.68,10003.14,-15.54,-0.0016,0,0.0,At contract
+Self-Pay / Oncology,Self-Pay,Oncology,0.92,0.9238,31,200866.36,184797.04,185562.28,765.24,0.0041,0,0.0,At contract
+Cigna / Behavioral Health,Cigna,Behavioral Health,0.6656,0.6698,19,14535.45,9674.78,9736.37,61.59,0.0064,0,0.0,At contract

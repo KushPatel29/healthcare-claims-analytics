@@ -1,0 +1,32 @@
+/// Price / volume / mix between two mature periods. Volume + mix + rate reconciles to the movement exactly, and a test asserts it.
+table revenue_bridge
+	lineageTag: aa6ea903-b5ba-55a0-a4b4-b24324eded74
+
+	column step
+		dataType: string
+		lineageTag: 384ee26c-617e-5dd4-b333-91313edac2bc
+		summarizeBy: none
+		sourceColumn: step
+
+	column amount
+		dataType: double
+		formatString: \$#,0;(\$#,0)
+		lineageTag: 520fc5a0-9a6a-5137-bec6-50ddf321155a
+		summarizeBy: none
+		sourceColumn: amount
+
+	column kind
+		dataType: string
+		lineageTag: ca330a9d-f3e8-5d33-914b-2a69a71b86c3
+		summarizeBy: none
+		sourceColumn: kind
+
+	partition revenue_bridge = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataPath & "\\output\\revenue_bridge.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"step", type text}, {"amount", type number}, {"kind", type text}})
+				in
+				    Typed

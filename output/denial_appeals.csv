@@ -1,0 +1,8 @@
+denial_reason,denials,denied_billed,appealed,appeal_rate,overturned,overturn_rate,recovered,avg_appeal_days,not_appealed,recoverable_left
+CO-16 Missing or invalid information,222,509950.79,168,0.7568,138,0.8214,170218.15,35.9,54,58954.05
+CO-11 Diagnosis inconsistent with procedure,108,316129.74,61,0.5648,42,0.6885,82848.42,38.8,47,39625.4
+CO-97 Service bundled/included,127,339707.58,44,0.3465,11,0.25,7212.67,40.0,83,35346.98
+CO-45 Exceeds fee schedule,100,221131.81,48,0.48,23,0.4792,15146.78,38.2,52,34870.33
+CO-50 Not medically necessary,120,275320.34,73,0.6083,30,0.411,33371.54,39.7,47,28731.3
+CO-29 Timely filing limit expired,90,232109.95,18,0.2,2,0.1111,619.52,32.9,72,11584.79
+PR-1 Deductible amount,75,204963.72,6,0.08,0,0.0,0.0,38.5,69,0.0

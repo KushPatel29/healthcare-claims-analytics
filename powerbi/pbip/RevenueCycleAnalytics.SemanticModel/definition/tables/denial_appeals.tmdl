@@ -1,0 +1,89 @@
+/// Denials by reason with what came back: appeal rate, overturn rate, dollars recovered, and what the un-appealed denials are worth at that reason's own overturn rate.
+table denial_appeals
+	lineageTag: a5294180-7d90-5884-b424-2133fcdc015b
+
+	column denial_reason
+		dataType: string
+		lineageTag: d24f578e-0ce3-5e8b-8c7b-a42ab4fef466
+		summarizeBy: none
+		sourceColumn: denial_reason
+
+	column denials
+		dataType: int64
+		formatString: #,0
+		lineageTag: 842e5da9-1c92-5433-aa89-f19ab53c4477
+		summarizeBy: none
+		sourceColumn: denials
+
+	column denied_billed
+		dataType: double
+		formatString: \$#,0
+		lineageTag: 47056c98-f95f-5ca6-879d-dc585dfc6a0e
+		summarizeBy: none
+		sourceColumn: denied_billed
+
+	column appealed
+		dataType: int64
+		formatString: #,0
+		lineageTag: fcf72543-18bc-5cf5-af79-ecaf19ec6881
+		summarizeBy: none
+		sourceColumn: appealed
+
+	column appeal_rate
+		dataType: double
+		formatString: 0.0%
+		lineageTag: c4e9e8c1-2a0b-545f-b01a-f87abe457034
+		summarizeBy: none
+		sourceColumn: appeal_rate
+
+	column overturned
+		dataType: int64
+		formatString: #,0
+		lineageTag: 03cb32db-3f7e-51af-b665-22455fd524e7
+		summarizeBy: none
+		sourceColumn: overturned
+
+	column overturn_rate
+		dataType: double
+		formatString: 0.0%
+		lineageTag: a26f046d-8e00-56a9-9d0e-1b281179b75a
+		summarizeBy: none
+		sourceColumn: overturn_rate
+
+	column recovered
+		dataType: double
+		formatString: \$#,0
+		lineageTag: e87c19b2-c717-5589-bec9-52bac306c880
+		summarizeBy: none
+		sourceColumn: recovered
+
+	column avg_appeal_days
+		dataType: double
+		formatString: 0.0
+		lineageTag: 26e9bfa0-c531-56b6-8ebb-e48b72295ebf
+		summarizeBy: none
+		sourceColumn: avg_appeal_days
+
+	column not_appealed
+		dataType: int64
+		formatString: #,0
+		lineageTag: 9971f880-8909-5acc-aac8-9bf8ab21f1a0
+		summarizeBy: none
+		sourceColumn: not_appealed
+
+	column recoverable_left
+		dataType: double
+		formatString: \$#,0
+		lineageTag: f0079dec-6234-5b26-a24f-42e6b962f189
+		summarizeBy: none
+		sourceColumn: recoverable_left
+
+	partition denial_appeals = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataPath & "\\output\\denial_appeals.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"denial_reason", type text}, {"denials", Int64.Type}, {"denied_billed", type number}, {"appealed", Int64.Type}, {"appeal_rate", type number}, {"overturned", Int64.Type}, {"overturn_rate", type number}, {"recovered", type number}, {"avg_appeal_days", type number}, {"not_appealed", Int64.Type}, {"recoverable_left", type number}})
+				in
+				    Typed
