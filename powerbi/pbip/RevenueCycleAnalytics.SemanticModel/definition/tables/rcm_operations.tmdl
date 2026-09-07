@@ -83,7 +83,7 @@ table rcm_operations
 		mode: import
 		source =
 				let
-				    Source = Csv.Document(File.Contents(DataPath & "\\output\\rcm_operations.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Source = Csv.Document(File.Contents(DataPath & "\output\rcm_operations.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
 				    Typed = Table.TransformColumnTypes(Promoted, {{"service_line", type text}, {"claims", Int64.Type}, {"billed", type number}, {"avg_charge_lag_days", type number}, {"avg_days_to_adjudicate", type number}, {"avg_total_cycle_days", type number}, {"adjudicated", Int64.Type}, {"first_pass_rate", type number}, {"denial_rate", type number}, {"touches_per_claim", type number}, {"total_touches", Int64.Type}})
 				in

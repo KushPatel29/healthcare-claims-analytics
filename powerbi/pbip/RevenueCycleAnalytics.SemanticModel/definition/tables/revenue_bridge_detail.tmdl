@@ -81,7 +81,7 @@ table revenue_bridge_detail
 		mode: import
 		source =
 				let
-				    Source = Csv.Document(File.Contents(DataPath & "\\output\\revenue_bridge_detail.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Source = Csv.Document(File.Contents(DataPath & "\output\revenue_bridge_detail.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
 				    Typed = Table.TransformColumnTypes(Promoted, {{"dimension", type text}, {"category", type text}, {"claims_prior", Int64.Type}, {"claims_recent", Int64.Type}, {"revenue_prior", type number}, {"revenue_recent", type number}, {"rate_prior", type number}, {"rate_recent", type number}, {"mix_effect", type number}, {"rate_effect", type number}, {"total_effect", type number}})
 				in

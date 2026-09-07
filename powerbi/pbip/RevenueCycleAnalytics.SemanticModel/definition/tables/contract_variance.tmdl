@@ -100,7 +100,7 @@ table contract_variance
 		mode: import
 		source =
 				let
-				    Source = Csv.Document(File.Contents(DataPath & "\\output\\contract_variance.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Source = Csv.Document(File.Contents(DataPath & "\output\contract_variance.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
 				    Typed = Table.TransformColumnTypes(Promoted, {{"cell", type text}, {"payer", type text}, {"service_line", type text}, {"contracted_rate", type number}, {"realised_rate", type number}, {"paid_claims", Int64.Type}, {"billed", type number}, {"expected_allowed", type number}, {"actual_allowed", type number}, {"variance_amount", type number}, {"variance_pct", type number}, {"underpaid_claims", Int64.Type}, {"underpaid_amount", type number}, {"verdict", type text}})
 				in

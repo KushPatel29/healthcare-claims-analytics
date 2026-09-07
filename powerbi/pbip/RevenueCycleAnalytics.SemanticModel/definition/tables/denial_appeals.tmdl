@@ -82,7 +82,7 @@ table denial_appeals
 		mode: import
 		source =
 				let
-				    Source = Csv.Document(File.Contents(DataPath & "\\output\\denial_appeals.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Source = Csv.Document(File.Contents(DataPath & "\output\denial_appeals.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
 				    Typed = Table.TransformColumnTypes(Promoted, {{"denial_reason", type text}, {"denials", Int64.Type}, {"denied_billed", type number}, {"appealed", Int64.Type}, {"appeal_rate", type number}, {"overturned", Int64.Type}, {"overturn_rate", type number}, {"recovered", type number}, {"avg_appeal_days", type number}, {"not_appealed", Int64.Type}, {"recoverable_left", type number}})
 				in
