@@ -258,6 +258,15 @@ def test_suppression_percentages_match_their_own_counts(deid):
 # The badge
 # --------------------------------------------------------------------------
 
+# The container image drops powerbi/screenshots from its build context, and
+# test_screenshots.py parametrises over the files in it — so a container
+# checkout legitimately collects 338 where a full one collects 345 (eight
+# per-screenshot cases replaced by pytest's single empty-parameter-set
+# placeholder). The badge describes the whole repository, so comparing it
+# against a partial checkout is meaningless rather than informative.
+@pytest.mark.skipif(
+    not (ROOT / "powerbi" / "screenshots").is_dir(),
+    reason="this checkout ships no screenshots, so the collected count is not comparable")
 def test_the_test_count_on_the_badge_is_the_real_test_count():
     """A badge claiming a number of tests is a claim like any other.
 
