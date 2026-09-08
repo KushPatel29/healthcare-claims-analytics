@@ -30,6 +30,8 @@ together, or the build stops.
 
 import csv
 import re
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -257,17 +259,43 @@ def test_suppression_percentages_match_their_own_counts(deid):
 # --------------------------------------------------------------------------
 
 def test_the_test_count_on_the_badge_is_the_real_test_count():
-    """A badge claiming a number of tests is a claim like any other."""
+    """A badge claiming a number of tests is a claim like any other.
+
+    This test used to count ``^def test_`` — test *functions* — and so pinned
+    the badge at 182 while the suite actually ran 345 cases. Parametrised tests
+    made those two numbers diverge, every other repository in the portfolio
+    publishes the collected-case count, and this guard was quietly defending
+    the wrong definition: correcting the badge by hand would fail CI, so the
+    stale number outlived several rounds of new tests.
+
+    Collection is re-run in a subprocess rather than read off the current
+    session, so the answer does not depend on whether someone invoked the whole
+    suite or a single file.
+    """
     badge = re.search(r"tests-(\d+)%20passing", text(README))
     assert badge, "README no longer carries a test-count badge"
     claimed = int(badge.group(1))
 
-    actual = sum(
-        len(re.findall(r"^def test_", p.read_text(encoding="utf-8"), re.M))
-        for p in sorted((ROOT / "tests").glob("test_*.py"))
+    proc = subprocess.run(
+        [sys.executable, "-m", "pytest", "--collect-only", "-q", "-p", "no:cacheprovider",
+         str(ROOT / "tests")],
+        capture_output=True, text=True, cwd=ROOT,
     )
+    # A module that fails to import is reported as an error and its tests are
+    # simply absent from the count, so an environment problem would otherwise
+    # surface as "the badge is wrong" -- a misleading failure that sends someone
+    # to edit a correct README. Say what actually happened instead.
+    errors = re.search(r"(\d+) errors?\b", proc.stdout)
+    assert not errors, (
+        "collection did not complete -- " + errors.group(0) + " during collection, "
+        "so the count below would be short. Fix the import error, not the badge: "
+        + proc.stdout[-2000:])
+    found = re.search(r"(\d+) tests? collected", proc.stdout)
+    assert found, f"could not read a collected-test count from pytest:\n{proc.stdout[-2000:]}"
+    actual = int(found.group(1))
+
     assert claimed == actual, (
-        f"badge claims {claimed} tests, the suite defines {actual}. "
+        f"badge claims {claimed} tests, the suite collects {actual}. "
         f"Update the badge in README.md."
     )
 
