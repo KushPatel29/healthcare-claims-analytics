@@ -416,3 +416,11 @@ def test_nrv_headline_is_still_the_published_one():
     assert f"${gross / 1e6:.2f}M of gross open AR" in prose
     assert f"${nrv / 1e6:.2f}M of Expected NRV" in prose
     assert f"a {nrv / gross:.0%}" in prose
+
+    # The lead paragraph quotes the same AR to one decimal, and it was the half
+    # nothing checked: it sat at $3.6M against an engine total of $3.77M while
+    # the body figure above stayed correct, and the site and profile README had
+    # both copied the wrong one. A published number rounded differently is
+    # still a published number.
+    assert f"prices ${gross / 1e6:.1f}M" in prose, (
+        f"the lead paragraph no longer quotes ${gross / 1e6:.1f}M of open AR")

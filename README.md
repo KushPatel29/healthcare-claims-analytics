@@ -18,7 +18,7 @@ of a proposed intervention — ICER, tornado, and probabilistic sensitivity — 
 ends in a briefing note and a costed business case.
 
 **Act two — a US hospital revenue cycle.** The claim lifecycle from submission to
-paid, denied, or pending AR, plus a Net Realizable Value model that prices $3.6M
+paid, denied, or pending AR, plus a Net Realizable Value model that prices $3.8M
 of open AR at the ~$1.7M it will actually collect, and an expected-yield worklist
 telling the follow-up team which accounts to work first.
 
