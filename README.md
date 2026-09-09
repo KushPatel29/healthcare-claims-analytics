@@ -5,7 +5,7 @@
 ![Python](https://img.shields.io/badge/Python-stdlib%20only-3776AB?logo=python&logoColor=white)
 ![SPC](https://img.shields.io/badge/SPC-Laney%20p'%20%2F%20u'-0B5FA5)
 ![HTA](https://img.shields.io/badge/Health%20economics-ICER%20%2B%20PSA-6A4C93)
-![Tests](https://img.shields.io/badge/tests-461%20passing-3B8C6E)
+![Tests](https://img.shields.io/badge/tests-604%20passing-3B8C6E)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
 Two health systems, one engineering standard.

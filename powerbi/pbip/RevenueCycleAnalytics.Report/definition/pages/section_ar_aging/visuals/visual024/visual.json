@@ -170,6 +170,19 @@
             }
           }
         }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Table titled Intelligent Worklist (sorted by expected cash yield). Shows priority rank, claim id, payer name, service line, ar age days, denial propensity, expected nrv and priority score.'"
+                }
+              }
+            }
+          }
+        }
       ]
     }
   }

@@ -96,6 +96,19 @@
             }
           }
         }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Table titled Risk-adjusted site comparison (engine-computed). Shows facility name, los index, readmit oe ratio and alc rate.'"
+                }
+              }
+            }
+          }
+        }
       ]
     }
   }

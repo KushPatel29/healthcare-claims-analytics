@@ -162,6 +162,19 @@
             }
           }
         }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Table titled Denial reasons behave nothing alike. Shows denial reason, denials, appeal rate, overturn rate, recovered and avg appeal days.'"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "objects": {

@@ -92,6 +92,19 @@
             }
           }
         }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Column chart titled Revenue rose; revenue per claim fell. Plots Bridge Amount by step.'"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "objects": {

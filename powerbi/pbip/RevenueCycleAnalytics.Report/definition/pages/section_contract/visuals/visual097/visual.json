@@ -162,6 +162,19 @@
             }
           }
         }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Table titled The cells paying under contract. Shows payer, service line, contracted rate, realised rate, variance pct and underpaid amount.'"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "objects": {

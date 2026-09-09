@@ -54,6 +54,19 @@
             }
           }
         }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Card titled What the revenue cycle is telling you. Shows RCM Insight.'"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "objects": {

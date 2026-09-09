@@ -110,6 +110,19 @@
             }
           }
         }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Bar chart titled Which service lines are slow to code. Plots Charge Lag by service line.'"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "objects": {

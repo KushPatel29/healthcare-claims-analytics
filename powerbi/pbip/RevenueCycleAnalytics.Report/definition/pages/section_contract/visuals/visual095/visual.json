@@ -110,6 +110,19 @@
             }
           }
         }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Bar chart titled Where the next hour of appeal work belongs. Plots Recoverable Left by denial reason.'"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "objects": {

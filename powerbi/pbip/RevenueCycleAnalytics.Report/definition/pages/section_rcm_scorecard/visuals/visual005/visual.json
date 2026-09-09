@@ -72,6 +72,19 @@
             }
           }
         }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Gauge titled Denial Rate vs 5% Target. Shows Denial Rate and Denial Rate Target.'"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "objects": {

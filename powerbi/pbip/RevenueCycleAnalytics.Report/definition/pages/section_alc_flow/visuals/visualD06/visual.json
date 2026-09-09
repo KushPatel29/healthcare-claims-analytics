@@ -101,7 +101,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Stays with any ALC day — Laney p′ chart (limits from an 18-month baseline)'"
+                  "Value": "'Stays with any ALC day \u2014 Laney p\u2032 chart (limits from an 18-month baseline)'"
                 }
               }
             },
@@ -109,6 +109,19 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Line chart titled Stays with any ALC day \u2014 Laney p\u2032 chart (limits from an 18-month baseline). Plots ALC Stay Rate, p-prime Centre Line, p-prime Lower Limit and p-prime Upper Limit by month.'"
                 }
               }
             }

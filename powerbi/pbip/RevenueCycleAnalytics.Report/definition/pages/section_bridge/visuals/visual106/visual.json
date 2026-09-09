@@ -190,6 +190,19 @@
             }
           }
         }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Table titled Mix and rate, payer by payer and line by line. Shows dimension, category, claims prior, claims recent, rate prior, rate recent, mix effect and rate effect.'"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "objects": {

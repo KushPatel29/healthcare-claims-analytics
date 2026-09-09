@@ -157,7 +157,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Intelligent Worklist — highest expected cash yield first'"
+                  "Value": "'Intelligent Worklist \u2014 highest expected cash yield first'"
                 }
               }
             },
@@ -165,6 +165,19 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Table titled Intelligent Worklist \u2014 highest expected cash yield first. Shows priority rank, claim id, payer name, service line, ar age days, denial propensity, expected nrv and priority score.'"
                 }
               }
             }

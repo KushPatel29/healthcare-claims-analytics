@@ -110,6 +110,19 @@
             }
           }
         }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Bar chart titled Paid, clean, and still short. Plots Contract Variance by cell.'"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "objects": {
