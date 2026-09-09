@@ -189,6 +189,22 @@ def main():
     by_month = summarise(abstracts, lambda r: r["discharge_month"],
                          expected_readmit, expected_los)
 
+    # The two risk-adjusted indicators used to be read off the facility roll-up,
+    # which has no program column - so the Program slicer beside them could not
+    # move them and both cards read 1.000 whatever the reader selected. The
+    # expectations are per-discharge already; writing them out lets the measures
+    # sum numerator and denominator at the grain the standardisation was done
+    # at, and answer any slicer built on the abstracts. Full precision, not the
+    # 1-2 decimals the roll-ups publish: these are summed, not read.
+    write_csv("abstract_expectations.csv", [
+        {
+            "abstract_id": r["abstract_id"],
+            "expected_readmits": round(expected_readmit[id(r)], 6),
+            "expected_acute_days": round(expected_los[id(r)], 6),
+        }
+        for r in abstracts
+    ])
+
     write_csv("activity_by_facility.csv", rows_from(by_facility, "facility_name"))
     write_csv("activity_by_program.csv", rows_from(by_program, "program"))
     write_csv("activity_by_cmg.csv", rows_from(by_cmg, "cmg_name"))

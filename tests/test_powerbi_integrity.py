@@ -17,11 +17,14 @@ here first.
 import csv
 import json
 import re
+from collections import defaultdict
 from pathlib import Path
 
 import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
+# The table the engine writes its per-discharge expectations to.
+ENGINE_EXPECTATIONS = "abstract_expectations"
 MODEL = ROOT / "powerbi" / "pbip" / "RevenueCycleAnalytics.SemanticModel" / "definition"
 REPORT = ROOT / "powerbi" / "pbip" / "RevenueCycleAnalytics.Report" / "definition"
 
@@ -192,19 +195,78 @@ def test_the_canadian_pages_lead_the_report():
 
 
 def test_risk_adjusted_measures_read_the_engine_rather_than_recomputing():
-    """The repo's standing rule, enforced on the measures that would be easiest
-    to get wrong. LOS index and readmission O/E are indirectly standardised with
+    """The repo's standing rule, enforced on the measures easiest to get wrong.
+
+    LOS index and readmission O/E are indirectly standardised with
     empirical-Bayes shrinkage in Python; a DAX reimplementation would produce a
-    second, subtly different answer with no test behind it."""
+    second, subtly different answer with no test behind it.
+
+    This used to assert the expression mentioned `activity_by_facility`, which
+    was a proxy for the rule rather than the rule itself. It failed the day the
+    measures moved to discharge grain so the Program slicer beside them could
+    reach them — a change that recomputes nothing: the engine still assigns
+    every discharge its own expectation, and DAX only adds them up. The
+    assertion now names what the rule actually forbids, and
+    `test_the_dax_ratio_reproduces_the_program_table` is the half with teeth.
+    """
     tmdl = (MODEL / "tables" / "_Measures.tmdl").read_text(encoding="utf-8")
-    for name in ("LOS Index", "Readmission O/E"):
+    # Anything that would mean the standardisation is being redone here: an
+    # iterator building rates per stratum, a re-derived denominator. A ratio of
+    # two SUMs is not one of those.
+    forbidden = ("AVERAGEX", "SUMMARIZE", "GENERATE", "ADDCOLUMNS", "RANKX",
+                 "GROUPBY", "NATURALINNERJOIN")
+    for name, column in (("LOS Index", "expected_acute_days"),
+                         ("Readmission O/E", "expected_readmits")):
         m = re.search(rf"measure '{re.escape(name)}' = (.+)", tmdl)
         assert m, f"measure '{name}' is missing"
         expr = m.group(1)
-        assert "activity_by_facility" in expr, (
-            f"'{name}' no longer reads the engine output — it must not be "
-            f"recomputed from the fact table in DAX"
+        assert f"SUM({ENGINE_EXPECTATIONS}[{column}])" in expr, (
+            f"'{name}' must divide by an expectation the engine wrote, not by "
+            f"one derived in DAX"
         )
+        bad = [f for f in forbidden if f in expr.upper()]
+        assert not bad, (
+            f"'{name}' uses {bad} — that is the standardisation being "
+            f"recomputed in DAX, which the engine already does under test"
+        )
+
+
+def test_the_dax_ratio_reproduces_the_program_table():
+    """The measures sum per-discharge expectations; the engine sums the same
+    numbers per program. Those two have to agree, or the cards and
+    activity_by_program.csv are two answers to one question.
+
+    This is what makes moving the measures to discharge grain safe. The test
+    above only catches an obviously wrong rewrite; this one catches a subtle
+    one, which is the kind that ships.
+    """
+    with open(ROOT / "data" / "fact_inpatient_abstracts.csv", encoding="utf-8") as f:
+        abstracts = {r["abstract_id"]: r for r in csv.DictReader(f)}
+    with open(ROOT / "output" / "abstract_expectations.csv", encoding="utf-8") as f:
+        expectations = list(csv.DictReader(f))
+    assert len(expectations) == len(abstracts), (
+        "every discharge needs an expectation, or the ratio silently drops rows"
+    )
+
+    rolled = defaultdict(lambda: [0, 0.0, 0, 0.0])
+    for e in expectations:
+        a = abstracts[e["abstract_id"]]
+        g = rolled[a["program"]]
+        g[0] += int(a["readmit_30d"])
+        g[1] += float(e["expected_readmits"])
+        g[2] += int(a["acute_los_days"])
+        g[3] += float(e["expected_acute_days"])
+
+    with open(ROOT / "output" / "activity_by_program.csv", encoding="utf-8") as f:
+        published = {r["program"]: r for r in csv.DictReader(f)}
+    assert set(rolled) == set(published)
+
+    for program, (obs_r, exp_r, obs_a, exp_a) in sorted(rolled.items()):
+        row = published[program]
+        assert round(obs_r / exp_r, 4) == round(float(row["readmit_oe_ratio"]), 4), (
+            f"{program}: readmission O/E disagrees with activity_by_program.csv")
+        assert round(obs_a / exp_a, 4) == round(float(row["los_index"]), 4), (
+            f"{program}: LOS index disagrees with activity_by_program.csv")
 
 
 def test_no_chart_plots_a_column_it_cannot_aggregate():

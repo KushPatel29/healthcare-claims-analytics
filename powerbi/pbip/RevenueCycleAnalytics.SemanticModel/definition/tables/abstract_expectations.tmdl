@@ -1,0 +1,54 @@
+/// The engine's per-discharge expectations, at the grain it computed them at.
+///
+/// LOS index and readmission O/E were read off activity_by_facility, which is
+/// rolled up by site and has no program column. The Program slicer sitting
+/// beside those two cards therefore could not move them: both read 1.000 - the
+/// authority-wide identity the standardisation guarantees - no matter what the
+/// reader selected. Facility was the only cut the page could actually make, and
+/// nothing said so.
+///
+/// This does not recompute the standardisation in DAX. That rule stands, and it
+/// is the right one: indirect standardisation with empirical-Bayes shrinkage
+/// belongs in engine/build_activity_metrics.py where the test suite can
+/// re-derive it, not in a measure that would quietly give a second answer.
+/// engine still assigns every discharge its own expected readmission and
+/// expected acute days; those numbers are simply written out now instead of
+/// being summed away. DAX adds them up, which is all a ratio of sums needs, and
+/// the ratio comes out to the fourth decimal of activity_by_program.csv for
+/// every program - asserted in the suite.
+///
+/// Six decimals because these are summed across 39,567 discharges, not read off
+/// a card. The roll-ups publish one or two; rounding first would move the
+/// ratio.
+table abstract_expectations
+	lineageTag: c8a10031-0000-4000-8000-000000000000
+
+	column abstract_id
+		dataType: string
+		lineageTag: c8a10031-0000-4000-8000-000000000001
+		summarizeBy: none
+		sourceColumn: abstract_id
+
+	column expected_readmits
+		dataType: double
+		formatString: 0.000
+		lineageTag: c8a10031-0000-4000-8000-000000000002
+		summarizeBy: sum
+		sourceColumn: expected_readmits
+
+	column expected_acute_days
+		dataType: double
+		formatString: 0.0
+		lineageTag: c8a10031-0000-4000-8000-000000000003
+		summarizeBy: sum
+		sourceColumn: expected_acute_days
+
+	partition abstract_expectations = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataPath & "\output\abstract_expectations.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"abstract_id", type text}, {"expected_readmits", type number}, {"expected_acute_days", type number}})
+				in
+				    Typed

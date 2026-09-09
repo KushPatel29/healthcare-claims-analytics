@@ -38,3 +38,6 @@ relationship d1000001-0000-4000-8000-000000000010
 	fromColumn: activity_by_facility.facility_name
 	toColumn: dim_facility.facility_name
 
+relationship c8a10031-0000-4000-8000-0000000000a1
+	fromColumn: abstract_expectations.abstract_id
+	toColumn: fact_inpatient_abstracts.abstract_id

@@ -159,12 +159,17 @@ table _Measures
 		displayFolder: Acute activity (Canada)
 		lineageTag: c8a20014-0000-4000-8000-000000000000
 
-	measure 'Readmission O/E' = DIVIDE(SUM(activity_by_facility[observed_readmits]), SUM(activity_by_facility[expected_readmits]))
+	/// Observed over expected, summed at discharge grain so the Program slicer
+	/// on this page reaches it. Read off the facility roll-up it could only ever
+	/// show the authority-wide 1.000.
+	measure 'Readmission O/E' = DIVIDE(SUM(fact_inpatient_abstracts[readmit_30d]), SUM(abstract_expectations[expected_readmits]))
 		formatString: 0.000
 		displayFolder: Acute activity (Canada)
 		lineageTag: c8a20015-0000-4000-8000-000000000000
 
-	measure 'LOS Index' = DIVIDE(SUM(activity_by_facility[acute_days]), SUM(activity_by_facility[expected_acute_days]))
+	/// Acute days over expected acute days, at discharge grain for the same
+	/// reason. The expectations are the engine's own, not recomputed here.
+	measure 'LOS Index' = DIVIDE(SUM(fact_inpatient_abstracts[acute_los_days]), SUM(abstract_expectations[expected_acute_days]))
 		formatString: 0.000
 		displayFolder: Acute activity (Canada)
 		lineageTag: c8a20016-0000-4000-8000-000000000000
