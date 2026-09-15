@@ -1,11 +1,11 @@
 # Health System Decision Support — activity, economics, and revenue cycle
 
 [![CI](https://github.com/KushPatel29/healthcare-claims-analytics/actions/workflows/ci.yml/badge.svg)](https://github.com/KushPatel29/healthcare-claims-analytics/actions/workflows/ci.yml)
-![Power BI](https://img.shields.io/badge/Power%20BI-6%20pages%20%C2%B7%2053%20visuals-F2C811?logo=powerbi&logoColor=black)
+![Power BI](https://img.shields.io/badge/Power%20BI-8%20pages%20%C2%B7%20117%20visuals-F2C811?logo=powerbi&logoColor=black)
 ![Python](https://img.shields.io/badge/Python-stdlib%20only-3776AB?logo=python&logoColor=white)
 ![SPC](https://img.shields.io/badge/SPC-Laney%20p'%20%2F%20u'-0B5FA5)
 ![HTA](https://img.shields.io/badge/Health%20economics-ICER%20%2B%20PSA-6A4C93)
-![Tests](https://img.shields.io/badge/tests-604%20passing-3B8C6E)
+![Tests](https://img.shields.io/badge/tests-755%20passing-3B8C6E)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
 Two health systems, one engineering standard.
@@ -177,6 +177,23 @@ Saying both is what makes the first half believable.
 The first two pages of the Power BI report are the Canadian layer, and they lead
 deliberately: a health-authority reader should not have to page past four screens
 of US revenue cycle to reach the work that speaks to them.
+
+### How the report is built
+
+- **34 KPI tiles are SVG drawn by DAX measures** (`dataCategory: ImageUrl`),
+  each from the measure its card already showed, the card's reference line and,
+  where one exists, its status colour. Rates carry a progress rail.
+- **Every page opens with a header** stating the page, its place in the report
+  and the filters in effect, with Previous and Next page buttons.
+- **Slicers:** the rest sit in a filter panel that two bookmarks open and close without resetting a filter, while the header and the Filters button (`Filters · 2`) keep the filter state on screen.
+- **Dark filter chrome:** the theme now styles the filter pane, filter cards and
+  dropdown lists, which had opened white.
+
+Microsoft's `powerbi-report-author validate` passes with no errors or warnings, and every page was rendered in Power BI Desktop for the screenshots
+below. [`tests/test_report_interactions.py`](tests/test_report_interactions.py)
+pins the ways these patterns fail silently: an unescaped `%` turns every SVG
+fill black, a bookmark that also captures data resets the filters, and a button
+pointing at a deleted bookmark does nothing.
 
 **Acute Activity & Funding** — discharges, weighted cases, CPWC, LOS index and
 risk-adjusted readmission across the six sites, with case mix and the monthly

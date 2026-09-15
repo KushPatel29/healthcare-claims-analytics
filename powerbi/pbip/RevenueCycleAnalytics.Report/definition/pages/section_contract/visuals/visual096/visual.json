@@ -3,9 +3,9 @@
   "name": "visual096",
   "position": {
     "x": 20,
-    "y": 374,
+    "y": 397,
     "z": 1000,
-    "height": 204,
+    "height": 177,
     "width": 620,
     "tabOrder": 1000
   },
@@ -28,7 +28,8 @@
                 }
               },
               "queryRef": "denial_appeals.denial_reason",
-              "nativeQueryRef": "denial_reason"
+              "nativeQueryRef": "denial_reason",
+              "displayName": "Denial Reason"
             },
             {
               "field": {
@@ -42,7 +43,8 @@
                 }
               },
               "queryRef": "denial_appeals.denials",
-              "nativeQueryRef": "denials"
+              "nativeQueryRef": "denials",
+              "displayName": "Denials"
             },
             {
               "field": {
@@ -56,7 +58,8 @@
                 }
               },
               "queryRef": "denial_appeals.appeal_rate",
-              "nativeQueryRef": "appeal_rate"
+              "nativeQueryRef": "appeal_rate",
+              "displayName": "Appeal Rate"
             },
             {
               "field": {
@@ -70,7 +73,8 @@
                 }
               },
               "queryRef": "denial_appeals.overturn_rate",
-              "nativeQueryRef": "overturn_rate"
+              "nativeQueryRef": "overturn_rate",
+              "displayName": "Overturn Rate"
             },
             {
               "field": {
@@ -84,7 +88,8 @@
                 }
               },
               "queryRef": "denial_appeals.recovered",
-              "nativeQueryRef": "recovered"
+              "nativeQueryRef": "recovered",
+              "displayName": "Recovered"
             },
             {
               "field": {
@@ -98,7 +103,8 @@
                 }
               },
               "queryRef": "denial_appeals.avg_appeal_days",
-              "nativeQueryRef": "avg_appeal_days"
+              "nativeQueryRef": "avg_appeal_days",
+              "displayName": "Avg Appeal Days"
             }
           ]
         }

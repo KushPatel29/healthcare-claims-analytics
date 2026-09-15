@@ -3,9 +3,9 @@
   "name": "visual106",
   "position": {
     "x": 20,
-    "y": 374,
+    "y": 397,
     "z": 1000,
-    "height": 204,
+    "height": 177,
     "width": 1240,
     "tabOrder": 1000
   },
@@ -28,7 +28,8 @@
                 }
               },
               "queryRef": "revenue_bridge_detail.dimension",
-              "nativeQueryRef": "dimension"
+              "nativeQueryRef": "dimension",
+              "displayName": "Dimension"
             },
             {
               "field": {
@@ -42,7 +43,8 @@
                 }
               },
               "queryRef": "revenue_bridge_detail.category",
-              "nativeQueryRef": "category"
+              "nativeQueryRef": "category",
+              "displayName": "Category"
             },
             {
               "field": {
@@ -56,7 +58,8 @@
                 }
               },
               "queryRef": "revenue_bridge_detail.claims_prior",
-              "nativeQueryRef": "claims_prior"
+              "nativeQueryRef": "claims_prior",
+              "displayName": "Claims Prior"
             },
             {
               "field": {
@@ -70,7 +73,8 @@
                 }
               },
               "queryRef": "revenue_bridge_detail.claims_recent",
-              "nativeQueryRef": "claims_recent"
+              "nativeQueryRef": "claims_recent",
+              "displayName": "Claims Recent"
             },
             {
               "field": {
@@ -84,7 +88,8 @@
                 }
               },
               "queryRef": "revenue_bridge_detail.rate_prior",
-              "nativeQueryRef": "rate_prior"
+              "nativeQueryRef": "rate_prior",
+              "displayName": "Rate Prior"
             },
             {
               "field": {
@@ -98,7 +103,8 @@
                 }
               },
               "queryRef": "revenue_bridge_detail.rate_recent",
-              "nativeQueryRef": "rate_recent"
+              "nativeQueryRef": "rate_recent",
+              "displayName": "Rate Recent"
             },
             {
               "field": {
@@ -112,7 +118,8 @@
                 }
               },
               "queryRef": "revenue_bridge_detail.mix_effect",
-              "nativeQueryRef": "mix_effect"
+              "nativeQueryRef": "mix_effect",
+              "displayName": "Mix Effect"
             },
             {
               "field": {
@@ -126,7 +133,8 @@
                 }
               },
               "queryRef": "revenue_bridge_detail.rate_effect",
-              "nativeQueryRef": "rate_effect"
+              "nativeQueryRef": "rate_effect",
+              "displayName": "Rate Effect"
             }
           ]
         }
@@ -210,6 +218,133 @@
         {
           "properties": {
             "totals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "137D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "revenue_bridge_detail.dimension"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "251D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "revenue_bridge_detail.category"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "142D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "revenue_bridge_detail.claims_prior"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "152D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "revenue_bridge_detail.claims_recent"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "124D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "revenue_bridge_detail.rate_prior"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "133D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "revenue_bridge_detail.rate_recent"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "124D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "revenue_bridge_detail.mix_effect"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "133D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "revenue_bridge_detail.rate_effect"
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {
+            "autoSizeColumnWidth": {
               "expr": {
                 "Literal": {
                   "Value": "false"

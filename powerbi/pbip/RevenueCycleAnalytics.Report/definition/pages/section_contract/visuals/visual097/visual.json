@@ -3,9 +3,9 @@
   "name": "visual097",
   "position": {
     "x": 660,
-    "y": 374,
+    "y": 397,
     "z": 1000,
-    "height": 204,
+    "height": 177,
     "width": 600,
     "tabOrder": 1000
   },
@@ -28,7 +28,8 @@
                 }
               },
               "queryRef": "contract_variance.payer",
-              "nativeQueryRef": "payer"
+              "nativeQueryRef": "payer",
+              "displayName": "Payer"
             },
             {
               "field": {
@@ -42,7 +43,8 @@
                 }
               },
               "queryRef": "contract_variance.service_line",
-              "nativeQueryRef": "service_line"
+              "nativeQueryRef": "service_line",
+              "displayName": "Service Line"
             },
             {
               "field": {
@@ -56,7 +58,8 @@
                 }
               },
               "queryRef": "contract_variance.contracted_rate",
-              "nativeQueryRef": "contracted_rate"
+              "nativeQueryRef": "contracted_rate",
+              "displayName": "Contracted Rate"
             },
             {
               "field": {
@@ -70,7 +73,8 @@
                 }
               },
               "queryRef": "contract_variance.realised_rate",
-              "nativeQueryRef": "realised_rate"
+              "nativeQueryRef": "realised_rate",
+              "displayName": "Realised Rate"
             },
             {
               "field": {
@@ -84,7 +88,8 @@
                 }
               },
               "queryRef": "contract_variance.variance_pct",
-              "nativeQueryRef": "variance_pct"
+              "nativeQueryRef": "variance_pct",
+              "displayName": "Variance Pct"
             },
             {
               "field": {
@@ -98,7 +103,8 @@
                 }
               },
               "queryRef": "contract_variance.underpaid_amount",
-              "nativeQueryRef": "underpaid_amount"
+              "nativeQueryRef": "underpaid_amount",
+              "displayName": "Underpaid Amount"
             }
           ]
         }

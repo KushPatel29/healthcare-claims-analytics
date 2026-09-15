@@ -3,10 +3,10 @@
   "name": "visual032",
   "position": {
     "x": 20,
-    "y": 450,
+    "y": 478,
     "z": 32000,
-    "height": 250,
-    "width": 940,
+    "height": 226,
+    "width": 1240,
     "tabOrder": 32000
   },
   "visual": {
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "ar_yield_predictions.priority_rank",
-              "nativeQueryRef": "priority_rank"
+              "nativeQueryRef": "priority_rank",
+              "displayName": "Priority Rank"
             },
             {
               "field": {
@@ -41,7 +42,8 @@
                 }
               },
               "queryRef": "ar_yield_predictions.claim_id",
-              "nativeQueryRef": "claim_id"
+              "nativeQueryRef": "claim_id",
+              "displayName": "Claim ID"
             },
             {
               "field": {
@@ -55,7 +57,8 @@
                 }
               },
               "queryRef": "ar_yield_predictions.payer_name",
-              "nativeQueryRef": "payer_name"
+              "nativeQueryRef": "payer_name",
+              "displayName": "Payer"
             },
             {
               "field": {
@@ -69,7 +72,8 @@
                 }
               },
               "queryRef": "ar_yield_predictions.service_line",
-              "nativeQueryRef": "service_line"
+              "nativeQueryRef": "service_line",
+              "displayName": "Service Line"
             },
             {
               "field": {
@@ -83,7 +87,8 @@
                 }
               },
               "queryRef": "ar_yield_predictions.ar_age_days",
-              "nativeQueryRef": "ar_age_days"
+              "nativeQueryRef": "ar_age_days",
+              "displayName": "AR Age Days"
             },
             {
               "field": {
@@ -97,7 +102,8 @@
                 }
               },
               "queryRef": "ar_yield_predictions.denial_propensity",
-              "nativeQueryRef": "denial_propensity"
+              "nativeQueryRef": "denial_propensity",
+              "displayName": "Denial Propensity"
             },
             {
               "field": {
@@ -111,7 +117,8 @@
                 }
               },
               "queryRef": "ar_yield_predictions.expected_nrv",
-              "nativeQueryRef": "expected_nrv"
+              "nativeQueryRef": "expected_nrv",
+              "displayName": "Expected Nrv"
             },
             {
               "field": {
@@ -125,7 +132,8 @@
                 }
               },
               "queryRef": "ar_yield_predictions.priority_score",
-              "nativeQueryRef": "priority_score"
+              "nativeQueryRef": "priority_score",
+              "displayName": "Priority Score"
             }
           ]
         }
@@ -178,6 +186,135 @@
               "expr": {
                 "Literal": {
                   "Value": "'Table titled Intelligent Worklist \u2014 highest expected cash yield first. Shows priority rank, claim id, payer name, service line, ar age days, denial propensity, expected nrv and priority score.'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "objects": {
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "134D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "ar_yield_predictions.priority_rank"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "106D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "ar_yield_predictions.claim_id"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "222D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "ar_yield_predictions.payer_name"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "183D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "ar_yield_predictions.service_line"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "118D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "ar_yield_predictions.ar_age_days"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "166D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "ar_yield_predictions.denial_propensity"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "126D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "ar_yield_predictions.expected_nrv"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "142D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "ar_yield_predictions.priority_score"
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {
+            "autoSizeColumnWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }
