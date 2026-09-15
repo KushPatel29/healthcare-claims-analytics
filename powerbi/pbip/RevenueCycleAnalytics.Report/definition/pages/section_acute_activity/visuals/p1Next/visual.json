@@ -253,6 +253,13 @@
                   "Value": "'section_alc_flow'"
                 }
               }
+            },
+            "tooltip": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Go to ALC, Flow & SPC. Ctrl+click in Power BI Desktop \u00b7 click in the Power BI service'"
+                }
+              }
             }
           }
         }

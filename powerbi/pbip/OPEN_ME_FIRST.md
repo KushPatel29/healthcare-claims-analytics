@@ -56,3 +56,16 @@ an 18-month phase I baseline and extended forward. Neither is something a DAX
 measure evaluating in filter context reproduces correctly, and a second, subtly
 different answer with no test behind it is worse than no answer. Power BI is the
 presentation layer; `pytest` guards the arithmetic.
+
+## Using it in Power BI Desktop
+
+- **Refresh before you read a number.** A `.pbip` stores the model definition,
+  not its data. On first open Desktop shows "Some of the tables have incomplete or
+  no data"; use **Home > Refresh** so every table reloads from the CSVs. If you
+  opened this project in an earlier session, Desktop may also load an old local
+  cache (`.pbi/cache.abf`, not committed) and show last session's figures until
+  the full refresh finishes.
+- **Buttons need Ctrl+click in Desktop.** Desktop is an editor, so a plain click
+  selects a button; **Ctrl+click** follows it. Previous, Next, Filters, Close and
+  Clear all filters say so in their tooltips. In the Power BI service and in
+  reading view a plain click works.
