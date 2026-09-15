@@ -185,12 +185,18 @@ of US revenue cycle to reach the work that speaks to them.
   where one exists, its status colour. Rates carry a progress rail.
 - **Every page opens with a header** stating the page, its place in the report
   and the filters in effect, with Previous and Next page buttons.
-- **Slicers:** the rest sit in a filter panel that two bookmarks open and close without resetting a filter, while the header and the Filters button (`Filters · 2`) keep the filter state on screen.
+- **Slicers:** every slicer sits in a filter panel that two bookmarks open and
+  close without resetting a filter, while the header and the Filters button
+  (`Filters · 2`) keep the filter state on screen.
+- **Tables read as tables:** columns get plain headers (`Facility`, not
+  `facility_name`) and widths that fill the visual, and each narrative card has
+  room for its whole sentence.
 - **Dark filter chrome:** the theme now styles the filter pane, filter cards and
   dropdown lists, which had opened white.
 
-Microsoft's `powerbi-report-author validate` passes with no errors or warnings, and every page was rendered in Power BI Desktop for the screenshots
-below. [`tests/test_report_interactions.py`](tests/test_report_interactions.py)
+Microsoft's `powerbi-report-author validate` passes with no errors or warnings,
+and every page was rendered in Power BI Desktop for the screenshots below.
+[`tests/test_report_interactions.py`](tests/test_report_interactions.py)
 pins the ways these patterns fail silently: an unescaped `%` turns every SVG
 fill black, a bookmark that also captures data resets the filters, and a button
 pointing at a deleted bookmark does nothing.
