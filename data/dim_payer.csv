@@ -7,3 +7,6 @@ payer_id,payer_name,payer_type
 6,Cigna,Commercial
 7,Humana Medicare Advantage,Medicare Advantage
 8,Self-Pay,Self-Pay
+9,Molina Healthcare,Medicaid Managed Care
+10,TRICARE,Military
+11,State Workers' Compensation,Workers' Comp

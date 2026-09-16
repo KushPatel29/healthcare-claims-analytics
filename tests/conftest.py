@@ -19,6 +19,7 @@ def build_outputs():
         ROOT / "data_generator" / "generate_claims_data.py",
         ROOT / "engine" / "build_rcm_metrics.py",
         ROOT / "engine" / "build_revenue_integrity.py",
+        ROOT / "engine" / "build_denial_prevention.py",
         # Canadian acute-care activity, SPC, and the economic evaluation
         # (order matters: the HTA model reads the activity engine's output)
         ROOT / "canadian" / "generate_activity_data.py",
@@ -27,6 +28,7 @@ def build_outputs():
         # governance layer
         ROOT / "governance" / "deidentify.py",
         ROOT / "governance" / "data_quality.py",
+        ROOT / "governance" / "decision_assurance.py",
     ):
         subprocess.run([sys.executable, str(script)], check=True)
 

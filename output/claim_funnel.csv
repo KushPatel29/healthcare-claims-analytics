@@ -1,0 +1,6 @@
+stage,kind,claims,share_of_created,contract_value,note
+1. Claims created,ladder,30000,1.0,56689393.48,Every claim the hospital billed
+2. Accepted by the clearing house first time,ladder,27560,0.9187,51926852.48,"The rest were rejected on a scrubber edit, corrected and resubmitted"
+3. Adjudicated by the payer,ladder,26031,0.8677,49150614.88,The rest are still open AR
+4. Paid on first pass,ladder,22922,0.7641,42892251.0,Adjudicated without a denial
+5. Recovered on appeal,recovery,893,0.0298,1768468.95,"Denied, appealed and overturned - money that came back after the ladder"

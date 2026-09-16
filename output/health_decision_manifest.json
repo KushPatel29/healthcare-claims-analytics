@@ -1,0 +1,102 @@
+{
+  "decision_id": "ALC-TRANSITION-2026-01",
+  "policy_version": "1.0.0",
+  "hash_algorithm": "SHA-256 after CRLF-to-LF normalization",
+  "files": [
+    {
+      "path": "data/fact_inpatient_abstracts.csv",
+      "sha256": "140048da639f969de15bf7e578cb28d0f72ec3bdcb418d4f6a206ada5e6821b9",
+      "bytes": 4327618
+    },
+    {
+      "path": "data/dim_facility.csv",
+      "sha256": "6c97402663fc63acb3fc760b656ece2911b245906258ff5af83f43c97f6b70e1",
+      "bytes": 310
+    },
+    {
+      "path": "output/activity_by_facility.csv",
+      "sha256": "fa10fa560e34eeae1fde13cb4bd272d7564302a88781e24f208d4509d41fbfbf",
+      "bytes": 1251
+    },
+    {
+      "path": "output/activity_by_program.csv",
+      "sha256": "7c74e345ef116df8e66d1438ee4b9b72365fd3162f574ea1ddcef4f211abf315",
+      "bytes": 1158
+    },
+    {
+      "path": "output/spc_alc_stay_pchart.csv",
+      "sha256": "c8ede31b6dbf07beca80d9188321e718483ebfe490850ee674fb2f6d48c44d51",
+      "bytes": 1793
+    },
+    {
+      "path": "output/hta_base_case.csv",
+      "sha256": "270e63c1a7191606dd70e90524cffd30b6c1fc88c956c26897f839b89669a853",
+      "bytes": 253
+    },
+    {
+      "path": "output/hta_psa_ceac.csv",
+      "sha256": "a89f1aad292d683cab8fee12252496cb0ea4a36565e5af32cde3f862ce4c3fd9",
+      "bytes": 271
+    },
+    {
+      "path": "output/dq_results.csv",
+      "sha256": "385783e430753f318a9fbed5ebcac24c2cdf28eb393035b3248b681bc098d5f4",
+      "bytes": 2968
+    },
+    {
+      "path": "output/deid_risk_report.csv",
+      "sha256": "680fbbf9c3a7535ce2060f501067cf5b4ff230fa167ff6d10d062f05ad97afa0",
+      "bytes": 460
+    },
+    {
+      "path": "docs/BRIEFING_NOTE.md",
+      "sha256": "dfd30d547ac765732e461879e06a34535e7ca610c3067da6a26667ded0f088f2",
+      "bytes": 7978
+    },
+    {
+      "path": "docs/BUSINESS_CASE.md",
+      "sha256": "c7a02de20b10e887afa6bcc67a306a75176d68e8b876096bc68604311753d299",
+      "bytes": 11069
+    },
+    {
+      "path": "governance/decision_policy.json",
+      "sha256": "e9d7751b1111e96a0bbef2fa2327be034668c584a8914333849ea37ee158f203",
+      "bytes": 4181
+    },
+    {
+      "path": "output/health_measure_register.csv",
+      "sha256": "d4414ded573747887085338df0fb9f557a3702a59d03298877a1bb9144a194e2",
+      "bytes": 1873
+    },
+    {
+      "path": "output/equity_monitoring.csv",
+      "sha256": "3a814de2a8fbbbd59a0103ed9eae535a13385a4f1e09b491495f979706923cda",
+      "bytes": 4957
+    },
+    {
+      "path": "output/intervention_options_docket.csv",
+      "sha256": "d968cd21c67b2c564348d59d9b71a2b5e755737fa479abb5b8687aa1a9e126d0",
+      "bytes": 772
+    },
+    {
+      "path": "output/evidence_release_gates.csv",
+      "sha256": "65601175bcea4d21e006ab9bd88d801a3a06d06ef036d3d51f3615938ec3d52c",
+      "bytes": 1019
+    },
+    {
+      "path": "output/health_decision_summary.json",
+      "sha256": "9b0c5038730773f740c7189a7ad1abbc1d22dd5b5d2e4e0172977d77c68914d8",
+      "bytes": 439
+    },
+    {
+      "path": "output/health_intervention_decision_packet.md",
+      "sha256": "e8cc1a41e70dcf391ab2a04cf47e0afc6565272e3dcdc9170bb8ca79c0ad1705",
+      "bytes": 3330
+    },
+    {
+      "path": "output/health_reverification_evidence.json",
+      "sha256": "481ab21899ec9144c20937e87fad543de4ee377631b771c2291cf4c5575e8ac6",
+      "bytes": 286
+    }
+  ]
+}

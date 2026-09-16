@@ -1,15 +1,18 @@
 REVENUE CYCLE KPI SUMMARY
 ========================================
-Total claims:                12,000
-Adjudicated:                 10,519
-Denial rate:                   8.0%
-Clean claim rate:             92.0%
-Net collection rate:          85.0%
-Avg days to adjudicate:        22.2
-Open AR (gross):          3,773,849
-AR > 90 days:             1,392,074 (36.9% of AR)
+Total claims:                30,000
+Adjudicated:                 28,381
+Denial rate:                  11.9%
+  of which preventable:       68.6%
+Clean claim rate:             91.9%  (accepted by the clearing house first time)
+First-pass resolution:        88.1%  (paid without an appeal)
+Net collection rate:          85.6%
+Patient responsibility:  10,881,240 (44.8% collected)
+Avg days to adjudicate:        22.9
+Open AR (gross):          5,243,630
+AR > 90 days:               830,858 (15.8% of AR)
 ----------------------------------------
 PREDICTIVE YIELD (open AR)
-Expected NRV:             1,698,509 (45.0% of gross)
-Bad-debt reserve:         2,075,340 (55.0% of gross)
-Worklist claims:             1,481
+Expected NRV:             2,239,136 (42.7% of gross)
+Bad-debt reserve:         3,004,495 (57.3% of gross)
+Worklist claims:             1,619

@@ -5,7 +5,7 @@
 ![Python](https://img.shields.io/badge/Python-stdlib%20only-3776AB?logo=python&logoColor=white)
 ![SPC](https://img.shields.io/badge/SPC-Laney%20p'%20%2F%20u'-0B5FA5)
 ![HTA](https://img.shields.io/badge/Health%20economics-ICER%20%2B%20PSA-6A4C93)
-![Tests](https://img.shields.io/badge/tests-756%20passing-3B8C6E)
+![Tests](https://img.shields.io/badge/tests-807%20passing-3B8C6E)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
 Two health systems, one engineering standard.
@@ -17,10 +17,13 @@ separates a real shift from ordinary variation; and a full economic evaluation
 of a proposed intervention — ICER, tornado, and probabilistic sensitivity — that
 ends in a briefing note and a costed business case.
 
-**Act two — a US hospital revenue cycle.** The claim lifecycle from submission to
-paid, denied, or pending AR, plus a Net Realizable Value model that prices $3.8M
-of open AR at the ~$1.7M it will actually collect, and an expected-yield worklist
-telling the follow-up team which accounts to work first.
+**Act two — a US hospital revenue cycle.** Two years of the claim lifecycle, from
+the scrubber edit before submission through adjudication to paid, denied, appealed
+or pending AR — with the patient's share tracked as the separate business it is. A
+Net Realizable Value model prices $5.2M of open AR at the $2.2M it will actually
+collect, a denial-prevention layer names the 68.6% of denials that should never
+have been submitted, and a control chart finds the month a payer changed its
+authorization rules.
 
 **All data is synthetic — no PHI.** No real patients, facilities, providers, or
 payer contracts. Behaviour is modelled on publicly documented patterns.
@@ -240,14 +243,14 @@ They agree month for month — 2024-07 reads 0.0723 either way.
 Two things in the model are worth stating because they are the kind of decision
 that usually goes unrecorded:
 
-**There are two date tables, and that is deliberate.** `dim_month` covers the
-claims period (2025-07 onward); `dim_activity_month` covers the inpatient
-abstracts (2024-07 to 2026-06). Twelve activity months fall outside `dim_month`
-entirely, so relating discharge month to it would push half the authority's
-activity into a blank row — every month-sliced visual would under-report with
-nothing on the canvas to say so. Widening `dim_month` backwards instead would
-hang twelve empty months off the left of every revenue-cycle chart that already
-works.
+**There are two date tables, and that is deliberate.** `dim_month` keys the claims
+and `dim_activity_month` keys the inpatient abstracts. They now cover the same 24
+months, so the original reason — the claims period was shorter — no longer applies;
+the current reason is that they key two separate stars. One date table filtering
+both would need every activity measure wrapped in `USERELATIONSHIP`, and the first
+one anybody forgot would silently return the wrong answer with nothing on the
+canvas to say so. Two dimensions, each owning its own fact, is the cheaper mistake
+to not make.
 
 **Risk-adjusted figures are read, not recomputed.** `LOS Index` and
 `Readmission O/E` come from the engine's `activity_by_facility` output, and the
@@ -265,9 +268,15 @@ identity surviving all the way into the presentation layer.
 
 # Act two — US hospital revenue cycle
 
-Eight-page Power BI report in total, hand-authored as a Power BI Project
-(TMDL semantic model + PBIR report definition) in [`powerbi/pbip/`](powerbi/pbip/)
-— open `RevenueCycleAnalytics.pbip` in Power BI Desktop and hit Refresh. The six
+**Dataset:** 30,000 claims over 24 months to 1 July 2026, 11 payers from Medicare
+to workers' compensation, 10 service lines, 30 procedure codes, 40 providers across
+5 sites. Every claim carries what the payer allowed *and* what the patient owed,
+whether an authorization was required and obtained, whether the clearing house
+accepted it first time, and the root cause of any denial.
+
+Ten-page Power BI report in total, hand-authored as a Power BI Project (TMDL
+semantic model + PBIR report definition) in [`powerbi/pbip/`](powerbi/pbip/) — open
+`RevenueCycleAnalytics.pbip` in Power BI Desktop and hit Refresh. The eight
 revenue-cycle pages:
 
 **Revenue Cycle Scorecard** — denial rate vs target, cash collected trend, denial
@@ -300,6 +309,87 @@ charge-lag view of what the hospital owns in its own cycle time:
 
 ![Revenue Bridge](powerbi/screenshots/08-revenue-bridge.png)
 
+## The cheapest denial is the one you never submit
+
+A denial rate says how often the payer said no. It does not say who could have
+stopped it. **11.9%** of adjudicated claims are denied here, and **68.6% of those
+denials — 2,321 claims worth $4.84M at contract — were preventable**: an
+authorization nobody obtained, coverage nobody checked, a field nobody filled in.
+The rest are the payer applying its own edits or disagreeing with a clinician,
+which is a different argument with a different owner.
+
+| Root cause | Owner | Denials | Share | Preventable | At contract |
+|---|---|---:|---:|---|---:|
+| Authorization | Front end | 442 | 13% | yes | **$1,549,969** |
+| Registration & data entry | Front end | 685 | 20% | yes | $1,221,045 |
+| Coding & documentation | Mid cycle | 508 | 15% | yes | $941,593 |
+| Eligibility & registration | Front end | 454 | 13% | yes | $755,160 |
+| Timely filing | Back end | 232 | 7% | yes | $376,482 |
+| Bundling & payer edits | Back end | 596 | 18% | no | — |
+| Medical necessity | Mid cycle | 284 | 8% | no | — |
+| Patient responsibility | Patient | 181 | 5% | no | — |
+
+Registration is the biggest pile of denials; **authorization is the biggest pile of
+money**, because the claims it stops are the expensive ones. Ranked by count, the
+front desk gets sent at the wrong queue.
+
+### A payer changed its rules on a date, and the chart says which one
+
+Denial rates drift for a hundred reasons. They also *step*, when a payer changes a
+policy — and a month-over-month table reports a step as three consecutive bad
+months and argues about each one. Charting the authorization denial rate for
+**UnitedHealthcare / Cardiology** on a Laney p′ chart, with limits set from the six
+months before anything changed, puts a date on it:
+
+| | |
+|---|---|
+| Baseline rate | **2.7%** |
+| First month outside the limits | **2025-10** |
+| Months it stayed out | **6 consecutive** |
+| Peak | **55.6%** in 2025-11 |
+
+That is the same control-chart code the Canadian activity layer uses on ALC —
+[`engine/spc.py`](engine/spc.py), Western Electric rules and all — because the
+mathematics does not care whether the proportion is a readmission or a denial. The
+cell is small (6 to 25 claims a month), so the limits are wide; the shift clears
+them anyway.
+
+### The funnel, with every stage a subset of the one above it
+
+| Stage | Claims | Share | Contract value |
+|---|---:|---:|---:|
+| 1. Claims created | 30,000 | 100.0% | $56,689,393 |
+| 2. Accepted by the clearing house first time | 27,560 | 91.9% | $51,926,852 |
+| 3. Adjudicated by the payer | 26,031 | 86.8% | $49,150,615 |
+| 4. Paid on first pass | 22,922 | 76.4% | $42,892,251 |
+| + Recovered on appeal | 893 | 3.0% | $1,768,469 |
+
+The nesting is the point, and it is not automatic. A claim the clearing house
+rejects is corrected and resubmitted, so it still reaches adjudication — count
+"accepted first time" and "adjudicated" from the whole book and the funnel reports
+more claims adjudicated than accepted, which is how a funnel ends up describing
+something that cannot happen. Recovery is shown as a recovery rather than folded
+into the ladder, because it moves the other way.
+
+The **clean claim rate** is 91.9% overall — but 90.6% in the first year against
+93.0% in the second, which is a scrubber rule that was fixed, not noise.
+
+### The patient is the payer nobody scorecards
+
+| | |
+|---|---:|
+| Patient responsibility | **$10,881,240** — 23.3% of allowed dollars |
+| Collected | **$4,874,088** (44.8%) |
+| Written off as bad debt | $4,913,963 |
+| Charity care | $994,244 |
+
+A net collection rate of 85.6% is the average of a payer book that pays 98.5% of
+what it owes and a patient book that pays 45% of what it owes. Reporting the two
+together is how a hospital concludes its payers are slow when its own
+point-of-service collection is the problem. Deductibles reset in January, so the
+patient share of the book is seasonal — which is visible in the monthly series and
+invisible in any annual average.
+
 ## What a denial rate cannot tell you
 
 Denial rate, days in AR and net collection rate describe the claim as the payer
@@ -310,7 +400,7 @@ alone does not carry.
 
 The payer pays what it pays. The **contract** says what it owes, and the two are
 not the same document. Measuring one against the other needs a fee schedule, so
-[`dim_payer_contract`](data/dim_payer_contract.csv) is a dimension — 80 payer x
+[`dim_payer_contract`](data/dim_payer_contract.csv) is a dimension — 110 payer x
 service-line rates — rather than something the report re-derives from the
 payments. That distinction is the whole discipline: **a variance report that
 learns the contract from what was paid will always conclude the payer paid
@@ -319,16 +409,17 @@ amount reconciles to the published schedule and not to the remittance.
 
 | | |
 |---|---|
-| Cells paying under contract | **3 of 80** |
-| Underpaid claims | **304** |
-| Recoverable | **$120,461** |
-| Worst by rate | **Humana Medicare Advantage / Cardiology, −14.0%** |
-| Worst by dollars | **Blue Cross Blue Shield / Surgery, $56,780** |
+| Cells paying under contract | **3 of 110** |
+| Underpaid claims | **509** |
+| Recoverable | **$228,467** |
+| Worst by rate | **Humana Medicare Advantage / Behavioral Health, −20.1%** |
+| Worst by dollars | **Blue Cross Blue Shield / Surgery, $145,199** |
 
-Those are two different cells, and the report names them separately. "Worst"
-is ambiguous the moment a small contract is badly wrong and a large one is
-slightly wrong; a single label quietly means whichever the code happened to
-sort by.
+Those are two different cells, and the report names them separately. "Worst" is
+ambiguous the moment a small contract is badly wrong and a large one is slightly
+wrong; a single label quietly means whichever the code happened to sort by. Here
+the deepest discount is on a behavioural-health book worth $5,872 in total, and
+the biggest loss is a surgery contract that is only 12.9% short.
 
 A materiality band does the other half of the work. Adjudication moves every
 allowed amount a few percent either way, so a report that flags every dollar
@@ -344,42 +435,46 @@ back, and by reason the answer differs enormously:
 
 | Denial reason | Denied | Appealed | Overturned | Recovered |
 |---|---:|---:|---:|---:|
-| CO-16 Missing or invalid information | 222 | 76% | **82%** | $170k |
-| CO-11 Diagnosis inconsistent with procedure | 108 | 56% | 69% | $83k |
-| CO-45 Exceeds fee schedule | 100 | 48% | 48% | $15k |
-| CO-97 Service bundled/included | 127 | 35% | 25% | $7k |
-| CO-29 Timely filing limit expired | 90 | 20% | **11%** | $0.6k |
-| PR-1 Deductible amount | 75 | 8% | 0% | $0 |
+| CO-16 Missing or invalid information | 494 | 78% | **80%** | $510k |
+| CO-197 Precertification/authorization absent | 442 | 62% | 37% | $313k |
+| CO-27 Coverage terminated before service | 454 | 34% | 30% | $74k |
+| CO-11 Diagnosis inconsistent with procedure | 306 | 60% | 66% | $186k |
+| CO-97 Service bundled/included | 335 | 40% | 35% | $79k |
+| CO-29 Timely filing limit expired | 232 | 27% | **10%** | $9k |
 
 A missing-information denial is a clerical fix that mostly comes back. A
 timely-filing denial is money that is gone, and every hour spent appealing one
 is an hour not spent on the first. So the page does not rank denial reasons by
 size — it ranks them by **recoverable dollars left**: the denials nobody
-appealed, valued at that reason's own overturn rate. **$209,113** is sitting in
-that column, and the ranking it produces is not the ranking by volume. An
-expected value, clearly labelled as one; it is the only honest way to sequence a
-backlog.
+appealed, valued at that reason's own overturn rate. **$1,299,077** is sitting in
+that column, and the ranking it produces is not the ranking by volume — the
+biggest pile of recoverable money is behind **CO-197**, the authorization denials,
+not behind the most common code. An expected value, clearly labelled as one; it is
+the only honest way to sequence a backlog.
 
-Appeals have already brought back **$309,417** on 246 overturns.
+Appeals have already brought back **$1,801,941** on 965 overturns.
 
 ### Revenue went up. That is not a finding.
 
-Net revenue rose **$642,464 (+13.6%)** between two 150-day windows. Whether that
+Net revenue rose **$2,944,393 (+17.2%)** between two 333-day windows. Whether that
 happened because the hospital did more cases, because each case pays more, or
-because the case mix moved are three different conversations with three
-different owners, and the growth number alone cannot tell them apart:
+because the case mix moved are three different conversations with three different
+owners, and the growth number alone cannot tell them apart:
 
 | | |
 |---|---:|
-| Prior window | $4,707,610 · 3,711 claims at **$1,269** |
-| Volume | **+$822,024** |
-| Mix | −$39,976 |
-| Rate | −$139,584 |
-| Recent window | $5,350,074 · 4,359 claims at **$1,227** |
+| Prior window | $17,148,088 · 10,655 claims at **$1,609** |
+| Volume | **+$2,980,597** |
+| Mix | +$32,350 |
+| Rate | −$68,554 |
+| Recent window | $20,092,482 · 12,507 claims at **$1,606** |
 
-All of the growth is volume, and **revenue per claim fell while revenue rose** —
-a Medicare fee-schedule update part-way through the year, plus a book drifting
-toward Medicare Advantage. A headline of "+13.6%" hides both.
+All of the growth is volume, and **revenue per claim fell while revenue rose** — a
+Medicare fee-schedule cut that lands on the boundary between the windows, worth
+−$142,429 of rate on Medicare alone, against a book drifting toward Medicare
+Advantage that is worth +$819,949 of mix. The two nearly cancel at the top line,
+which is exactly why a headline of "+17.2%" is not a finding: net mix of +$32,350
+is the residue of two seven-figure movements in opposite directions.
 
 Two decisions make that decomposition mean anything:
 
@@ -405,13 +500,12 @@ worse than no bridge, because it looks like one.
 
 ### Underneath days in AR
 
-Days in AR is **104.8** (open AR over 90 days of net revenue). Roughly a third
-of the cycle happens before the payer has seen the claim at all: charge lag
-averages **3.3 days** overall but **9.0 for Surgery** against **1.0 for
-Laboratory**, and that half of the number is the hospital's to fix without
-anyone's cooperation. First-pass resolution is **92.0%**, and the book carries
-**19,465 follow-up touches** — 1.62 a claim, which is the revenue cycle's real
-capacity constraint.
+Days in AR is **89.9** (open AR over 90 days of net revenue). Part of the cycle
+happens before the payer has seen the claim at all: charge lag averages **3.4 days**
+overall but **9.0 for Surgery** against **1.0 for Laboratory**, and that half of the
+number is the hospital's to fix without anyone's cooperation. First-pass resolution
+is **88.1%**, and the book carries **74,603 follow-up touches** — 2.49 a claim,
+which is the revenue cycle's real capacity constraint.
 
 **What this deliberately does not compute.** Cost to collect in dollars. Touch
 counts are an operational fact; a cost per touch is an assumption, and
@@ -426,17 +520,24 @@ worth a dollar.** $100k of Medicare AR is close to cash — Medicare pays ~91% o
 allowed, reliably. $100k of Self-Pay AR is worth a fraction, because self-pay
 collects ~20 cents on the dollar and the rest ages into bad debt.
 
-The model nets **$3.77M of gross open AR down to $1.70M of Expected NRV** — a 45%
-realization rate, i.e. a ~55% bad-debt reserve. That delta is exactly the number
-a CFO books as a reserve, computed from first principles rather than guessed.
+The model nets **$5.24M of gross open AR down to $2.24M of Expected NRV** — a 43%
+realization rate, i.e. a ~57% bad-debt reserve. That delta is exactly the number a
+CFO books as a reserve, computed from first principles rather than guessed.
 
 | Payer type | Net collection rate | Expected yield (per billed $) |
 |---|---:|---:|
-| Commercial | 90% | 53% |
-| Medicare Advantage | 90% | 45% |
-| Medicare | 91% | 44% |
-| Medicaid | 89% | 35% |
-| **Self-Pay** | **21%** | **20%** |
+| Workers' Comp | 97% | 70% |
+| Military (TRICARE) | 97% | 52% |
+| Commercial | 89% | 52% |
+| Medicare | 91% | 43% |
+| Medicare Advantage | 91% | 43% |
+| Medicaid and Medicaid MC | 96% | 38% |
+| **Self-Pay** | **20%** | **19%** |
+
+Net collection rate here is cash against the whole allowed amount, so it carries
+the patient's share as well as the payer's. That is why commercial sits at 89%
+while the payer itself pays 98.5% of what it owes: the missing 11 points are
+deductibles and coinsurance, and they collect at 45%, not at 98%.
 
 ```
 expected_yield_rate = contractual_factor      # allowed / billed   (paid claims)
@@ -468,20 +569,32 @@ do collect ~20¢, not from a global average Medicare dominates.
 | KPI | Definition in this model |
 |---|---|
 | Denial rate | Denied ÷ adjudicated claims (Paid + Denied) |
-| Clean claim rate | Paid first-pass (never resubmitted) ÷ adjudicated |
-| Net collection rate | Paid $ ÷ allowed $ (post-contractual) |
+| **Preventable denial share** | Denials whose root cause is a front-end or coding failure ÷ denials |
+| **Clean claim rate** | Accepted by the clearing house on first submission ÷ claims created |
+| First-pass resolution | Paid without an appeal ÷ adjudicated |
+| Net collection rate | Cash ÷ allowed $ — payer share and patient share together |
+| **Patient collection rate** | Patient cash ÷ patient responsibility |
 | Avg days to adjudicate | Submission → adjudication lag |
 | AR > 90 | Open (pending) claim dollars older than 90 days |
 | **Expected NRV** | Forecast cash on open AR: Σ billed × expected yield rate |
 | **Bad-debt reserve** | Gross open AR − Expected NRV |
 | **Priority score** | Expected NRV × (days in AR ÷ 30) — the worklist rank |
 
+Clean claim rate and first-pass resolution are routinely reported as one number,
+and they measure different failures: the first is the hospital's own data quality
+before anything is submitted, the second is what the payer did with a claim that
+was accepted. A claim can be rejected by the scrubber, corrected, and then paid on
+first pass, and only one of the two rates notices.
+
 ```mermaid
 flowchart LR
-    SUB[Claim submitted] --> ADJ{Adjudication}
-    ADJ -->|"~92%"| PAID[Paid<br/>allowed × contractual<br/>× collection rate]
-    ADJ -->|"~8%, CARC reason"| DEN[Denied]
-    DEN -->|"~40%"| RESUB[Resubmitted]
+    CREATE[Claim created] --> SCRUB{Clearing house}
+    SCRUB -->|"91.9% accepted"| SUB[Submitted]
+    SCRUB -->|"8.1% rejected"| FIX[Corrected<br/>and resubmitted] --> SUB
+    SUB --> ADJ{Adjudication}
+    ADJ -->|"88.1%"| PAID[Paid<br/>payer share + patient share]
+    ADJ -->|"11.9%, CARC reason"| DEN[Denied]
+    DEN -->|"52% appealed"| RESUB[Appealed] -->|"55% overturned"| PAID
     SUB -.->|not yet adjudicated| AR[(Open AR)]
     AR --> NRV[[Yield engine:<br/>Expected NRV + priority]]
 ```
@@ -555,6 +668,41 @@ column-level mapping, transformation rules, ownership, and a consolidated list o
 known limitations — in the mapping itself rather than in a separate risk log,
 because the place a limitation gets read is next to the column it applies to.
 
+## The board decision is governed too
+
+The business case answers whether the intervention is worth doing. It did not,
+by itself, answer whether the evidence was ready to release for an implementation
+decision. [`governance/decision_assurance.py`](governance/decision_assurance.py)
+now assembles that separate control plane:
+
+| Release decision | Gates passing | Review required | Blocking |
+|---|---:|---:|---:|
+| **REVIEW REQUIRED** | **8** | **2** | **0** |
+
+The two reviews are intentional, not defects hidden behind a green badge. ED
+boarding hours and surgical postponements still need production baselines, and
+the executive sponsor plus Finance/Operations still need to record the decision
+and the backfill commitment. Analytics cannot approve its own recommendation.
+
+The release includes:
+
+- **[board decision packet](output/health_intervention_decision_packet.md)** —
+  recommendation, four options, evidence gates, conditions, and audit boundary;
+- **[versioned measure register](output/health_measure_register.csv)** — grain,
+  numerator, denominator, exclusions, owner, and baseline status for six measures;
+- **[equity monitoring extract](output/equity_monitoring.csv)** — facility ×
+  age-band outcomes with a documented small-cell threshold;
+- **[machine-readable release gates](output/evidence_release_gates.csv)** and a
+  **[SHA-256 evidence manifest](output/health_decision_manifest.json)**; and
+- a **[re-verification drill](output/health_reverification_evidence.json)** that
+  introduces a critical DQ failure in memory and proves the decision changes from
+  REVIEW REQUIRED to BLOCKED without mutating source evidence.
+
+This is a CIHI-inspired portfolio crosswalk, not an official CIHI specification,
+submission, certification, or clinical recommendation. The production hand-off
+and its limits are explicit in
+[`docs/DECISION_ASSURANCE_RUNBOOK.md`](docs/DECISION_ASSURANCE_RUNBOOK.md).
+
 ---
 
 ## Reproduce everything (about five seconds)
@@ -569,12 +717,14 @@ python engine/health_economics.py           # base case, tornado, PSA/CEAC
 python data_generator/generate_claims_data.py
 python engine/build_rcm_metrics.py           # denials, AR aging, NRV worklist
 python engine/build_revenue_integrity.py     # contract variance, appeals, bridge
+python engine/build_denial_prevention.py     # root cause, funnel, SPC, patient collections
 
 # Governance
 python governance/deidentify.py
 python governance/data_quality.py
+python governance/decision_assurance.py       # measure register, release gates, manifest
 
-pytest tests/ -v                            # 461 invariants
+pytest tests/ -v                            # 807 invariants
 ```
 
 Then open `powerbi/pbip/RevenueCycleAnalytics.pbip` (see
@@ -612,13 +762,15 @@ program reports no ICER rather than dividing by zero; more effectiveness never
 lowers NMB; the CEAC is monotonic and bounded; at least one parameter flips the
 decision; Beta fitting survives an impossible standard deviation.
 
-**Governance** — no direct identifier survives (and the source genuinely had
+**Governance and decision assurance** — no direct identifier survives (and the source genuinely had
 some); every equivalence class meets k; a uniquely identifying combination is
 removed; generalisation outweighs suppression; the de-identified data still
 answers the question; pseudonyms are salted, stable, and not a bare hash; the
 gate closes on a duplicated grain key; every rule carries a severity and a
 rationale; an unknown expression rule is refused; every run leaves a
-reconstructable trail, including the failures.
+reconstructable trail, including the failures. The decision release also pins
+measure definitions, source hashes, small-cell handling, open approvals, and
+pending baselines; its in-memory failure drill must change the verdict to BLOCKED.
 
 **Revenue cycle** — paid ≤ allowed ≤ submitted; every denial carries a CARC
 reason and zero payment; AR aging ties to pending claims to the penny; NRV never
@@ -641,7 +793,7 @@ read the engine output rather than recomputing the standardisation in DAX.
 
 ```
 canadian/           generate_activity_data.py — DAD-shaped abstracts (CMG+, RIW, ALC)
-data_generator/     synthetic claims generator (12k claims, 8 payers)
+data_generator/     synthetic claims generator (30k claims, 11 payers)
 data/               generated CSVs for both datasets
 engine/             build_activity_metrics.py — CPWC, LOS index, ALC, risk adjustment
                     spc.py — p/u charts, Western Electric, Laney, baselines
@@ -649,12 +801,16 @@ engine/             build_activity_metrics.py — CPWC, LOS index, ALC, risk adj
                     build_rcm_metrics.py — denial summary, AR aging, NRV worklist
                     build_revenue_integrity.py — contract variance, appeal
                     yield, price/volume/mix bridge, charge lag
+                    build_denial_prevention.py — root cause, claim funnel,
+                    patient collections, payer scorecard, authorization SPC
 governance/         deidentify.py — Safe Harbor + k-anonymity + risk report
                     data_quality.py — 15-rule gate, JSONL observability
-docs/               BRIEFING_NOTE.md · BUSINESS_CASE.md · SOURCE_TO_TARGET.md
+                    decision_assurance.py — versioned board release control
+docs/               BRIEFING_NOTE.md · BUSINESS_CASE.md · SOURCE_TO_TARGET.md ·
+                    DECISION_ASSURANCE_RUNBOOK.md
 output/             every engine result — reproducible outside Power BI
 powerbi/            ready-to-open PBIP (TMDL model + PBIR report, 22 DAX measures)
-tests/              461 invariants across activity, SPC, economics, governance,
+tests/              807 invariants across activity, SPC, economics, governance,
                     revenue cycle, and Power BI model/report integrity
 .github/workflows/  CI — full rebuild, invariants, and the DQ sabotage proof
 ```
@@ -666,8 +822,14 @@ leading, as in practice), adjudication lags, collection rates, case mix, RIW,
 ALC concentration, and readmission drivers are calibrated to publicly documented
 patterns — not to any real organisation's data. Facility names are invented.
 
-Two things are planted on purpose and labelled as such: a **step increase in ALC
-risk from January 2026**, so the control charts have a real shift to find, and
-**site-level differences** in cost, length of stay, ALC, and acuity, so the site
-comparison and the risk adjustment have something genuine to recover. A detector
+Seven things are planted on purpose and labelled as such. On the Canadian side, a
+**step increase in ALC risk from January 2026**, so the control charts have a real
+shift to find, and **site-level differences** in cost, length of stay, ALC and
+acuity, so the site comparison and the risk adjustment have something genuine to
+recover. On the revenue-cycle side: **three payer x service-line contracts that pay
+under their own schedule** (one large and slightly short, one small and badly
+short), a **Medicare fee-schedule cut** that lands on the boundary of the two
+bridge windows, a **payer mix drifting toward Medicare Advantage**, a **payer that
+starts requiring authorization for cardiology** in October 2025, and a **claim
+scrubber rule** that lifts the clean claim rate between the two years. A detector
 that cannot find a planted signal will not find a real one.

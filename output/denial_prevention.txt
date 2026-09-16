@@ -1,0 +1,29 @@
+DENIAL PREVENTION
+================================================================
+Claims                            30,000   24 months, 2024-07 to 2026-06
+Denial rate                        11.9%   3,382 denials
+Preventable                        68.6%   2,321 denials worth $4,844,248 at contract
+Biggest preventable cause     Authorization  $1,549,969
+Worst payer for prevention    Molina Healthcare  11.3% of its adjudicated claims
+----------------------------------------------------------------
+THE FUNNEL
+  1. Claims created                               30,000  100.0%
+  2. Accepted by the clearing house first time    27,560   91.9%
+  3. Adjudicated by the payer                     26,031   86.8%
+  4. Paid on first pass                           22,922   76.4%
+  5. Recovered on appeal                             893    3.0%
+----------------------------------------------------------------
+CLEAN CLAIM RATE (accepted by the clearing house first time)
+  overall 91.9%   first half 90.6%   second half 93.0%
+----------------------------------------------------------------
+AUTHORIZATION DENIALS (UnitedHealthcare / Cardiology)
+  442 across the book. On the watched cell the rate runs at 2.7%, then holds above its limits for 6 months from 2025-10, peaking at 56% in 2025-11
+  flagged months: 2025-10, 2025-11, 2025-12, 2026-01, 2026-02, 2026-03
+----------------------------------------------------------------
+THE PATIENT AS A PAYER
+  Responsibility              $  10,881,240   23.3% of allowed dollars
+  Collected                   $   4,874,088   44.8%
+  Written off as bad debt     $   4,913,963
+  Charity care                $     994,244
+  Denial write-offs           $   4,977,598
+================================================================

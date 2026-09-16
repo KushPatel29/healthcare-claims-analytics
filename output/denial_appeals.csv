@@ -1,8 +1,12 @@
 denial_reason,denials,denied_billed,appealed,appeal_rate,overturned,overturn_rate,recovered,avg_appeal_days,not_appealed,recoverable_left
-CO-16 Missing or invalid information,222,509950.79,168,0.7568,138,0.8214,170218.15,35.9,54,58954.05
-CO-11 Diagnosis inconsistent with procedure,108,316129.74,61,0.5648,42,0.6885,82848.42,38.8,47,39625.4
-CO-97 Service bundled/included,127,339707.58,44,0.3465,11,0.25,7212.67,40.0,83,35346.98
-CO-45 Exceeds fee schedule,100,221131.81,48,0.48,23,0.4792,15146.78,38.2,52,34870.33
-CO-50 Not medically necessary,120,275320.34,73,0.6083,30,0.411,33371.54,39.7,47,28731.3
-CO-29 Timely filing limit expired,90,232109.95,18,0.2,2,0.1111,619.52,32.9,72,11584.79
-PR-1 Deductible amount,75,204963.72,6,0.08,0,0.0,0.0,38.5,69,0.0
+CO-197 Precertification/authorization absent,442,2557030.13,276,0.6244,102,0.3696,312791.75,37.6,166,217593.99
+CO-16 Missing or invalid information,494,1631294.7,384,0.7773,306,0.7969,509879.53,37.4,110,188884.82
+CO-45 Exceeds fee schedule,261,904793.29,117,0.4483,69,0.5897,138751.47,35.8,144,157777.63
+CO-27 Coverage terminated before service,454,1344618.84,155,0.3414,47,0.3032,73696.56,37.0,299,141900.41
+CO-97 Service bundled/included,335,1096596.67,133,0.397,46,0.3459,79286.77,36.4,202,133765.36
+CO-11 Diagnosis inconsistent with procedure,306,928953.89,184,0.6013,121,0.6576,185850.35,38.5,122,130911.29
+CO-18 Duplicate claim or service,191,581606.85,105,0.5497,72,0.6857,97698.96,38.3,86,100454.44
+CO-50 Not medically necessary,284,966440.89,174,0.6127,78,0.4483,154339.24,37.3,110,90799.93
+CO-4 Modifier missing or inconsistent,202,737591.16,139,0.6881,116,0.8345,239867.64,36.8,63,85509.31
+CO-29 Timely filing limit expired,232,692835.09,63,0.2716,6,0.0952,8782.99,40.3,169,29242.17
+PR-1 Deductible amount,181,479562.96,21,0.116,2,0.0952,995.58,43.9,160,22237.24

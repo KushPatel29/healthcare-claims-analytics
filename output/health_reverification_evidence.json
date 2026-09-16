@@ -1,0 +1,9 @@
+{
+  "scenario": "A duplicate grain key triggers one critical DQ failure in memory",
+  "source_mutated": false,
+  "baseline_status": "REVIEW REQUIRED",
+  "reverified_status": "BLOCKED",
+  "changed_gate": "DQ-01",
+  "expected_result": "BLOCKED",
+  "observed_result": "BLOCKED"
+}

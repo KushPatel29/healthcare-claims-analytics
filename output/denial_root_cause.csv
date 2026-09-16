@@ -1,0 +1,193 @@
+month,denial_category,denial_stage,denials,denied_billed,preventable_denials,preventable_contract_value,recovered
+2024-07,Authorization,Front end,21,115742.86,21,70865.42,12408.72
+2024-07,Bundling & payer edits,Back end,26,87120.35,0,0.0,2849.91
+2024-07,Coding & documentation,Mid cycle,21,97008.62,21,56610.3,11491.36
+2024-07,Eligibility & registration,Front end,16,54271.75,16,29500.26,789.47
+2024-07,Medical necessity,Mid cycle,8,28180.42,0,0.0,1323.39
+2024-07,Patient responsibility,Patient,4,3256.49,0,0.0,0.0
+2024-07,Registration & data entry,Front end,17,49516.69,17,25326.22,17937.78
+2024-07,Timely filing,Back end,8,36203.66,8,19832.14,0.0
+2024-08,Authorization,Front end,14,74608.05,14,45212.82,4692.05
+2024-08,Bundling & payer edits,Back end,22,95719.66,0,0.0,15125.17
+2024-08,Coding & documentation,Mid cycle,14,38850.26,14,22411.99,2597.93
+2024-08,Eligibility & registration,Front end,18,28278.9,18,16168.47,1822.57
+2024-08,Medical necessity,Mid cycle,8,60454.42,0,0.0,0.0
+2024-08,Patient responsibility,Patient,3,992.58,0,0.0,0.0
+2024-08,Registration & data entry,Front end,27,82955.44,27,45492.1,26262.33
+2024-08,Timely filing,Back end,6,23106.9,6,14657.87,0.0
+2024-09,Authorization,Front end,14,84889.84,14,52489.81,12596.21
+2024-09,Bundling & payer edits,Back end,24,57400.21,0,0.0,6400.75
+2024-09,Coding & documentation,Mid cycle,25,92118.72,25,53614.11,39017.14
+2024-09,Eligibility & registration,Front end,24,56154.63,24,32405.12,10130.59
+2024-09,Medical necessity,Mid cycle,11,63712.83,0,0.0,22255.24
+2024-09,Patient responsibility,Patient,6,9559.56,0,0.0,0.0
+2024-09,Registration & data entry,Front end,19,47832.75,19,26997.59,22669.1
+2024-09,Timely filing,Back end,7,6392.88,7,4031.46,0.0
+2024-10,Authorization,Front end,27,203261.69,27,123322.17,35469.53
+2024-10,Bundling & payer edits,Back end,17,93250.44,0,0.0,7820.32
+2024-10,Coding & documentation,Mid cycle,16,58196.68,16,32414.37,24346.33
+2024-10,Eligibility & registration,Front end,10,53297.14,10,28452.31,2668.85
+2024-10,Medical necessity,Mid cycle,9,41430.16,0,0.0,3987.88
+2024-10,Patient responsibility,Patient,7,22789.76,0,0.0,0.0
+2024-10,Registration & data entry,Front end,26,81800.31,26,56530.71,44219.31
+2024-10,Timely filing,Back end,4,7566.41,4,4416.89,0.0
+2024-11,Authorization,Front end,19,94235.38,19,58107.21,17063.44
+2024-11,Bundling & payer edits,Back end,27,83170.73,0,0.0,11822.75
+2024-11,Coding & documentation,Mid cycle,16,56296.51,16,33094.69,20896.69
+2024-11,Eligibility & registration,Front end,20,33573.14,20,19961.77,1235.14
+2024-11,Medical necessity,Mid cycle,15,30238.82,0,0.0,5106.67
+2024-11,Patient responsibility,Patient,7,13119.53,0,0.0,0.0
+2024-11,Registration & data entry,Front end,32,105761.93,32,57895.3,24977.73
+2024-11,Timely filing,Back end,5,17966.61,5,8581.92,0.0
+2024-12,Authorization,Front end,17,80852.01,17,49732.25,4480.17
+2024-12,Bundling & payer edits,Back end,28,108237.97,0,0.0,7881.35
+2024-12,Coding & documentation,Mid cycle,19,48922.25,19,29760.99,2411.51
+2024-12,Eligibility & registration,Front end,21,67955.15,21,39374.74,0.0
+2024-12,Medical necessity,Mid cycle,13,71606.21,0,0.0,17659.38
+2024-12,Patient responsibility,Patient,4,14971.21,0,0.0,613.26
+2024-12,Registration & data entry,Front end,35,117069.36,35,63053.69,26729.75
+2024-12,Timely filing,Back end,11,33838.89,11,17493.13,848.1
+2025-01,Authorization,Front end,18,83745.27,18,51202.59,13002.03
+2025-01,Bundling & payer edits,Back end,27,68658.17,0,0.0,2782.17
+2025-01,Coding & documentation,Mid cycle,26,96049.27,26,52500.16,6804.33
+2025-01,Eligibility & registration,Front end,16,56648.43,16,31617.97,0.0
+2025-01,Medical necessity,Mid cycle,16,26583.1,0,0.0,5644.58
+2025-01,Patient responsibility,Patient,5,3596.22,0,0.0,0.0
+2025-01,Registration & data entry,Front end,41,117855.99,41,63989.02,29838.94
+2025-01,Timely filing,Back end,17,36416.21,17,18635.16,0.0
+2025-02,Authorization,Front end,13,89014.28,13,53839.64,1468.72
+2025-02,Bundling & payer edits,Back end,20,83881.64,0,0.0,17621.75
+2025-02,Coding & documentation,Mid cycle,18,83921.9,18,48824.06,26195.24
+2025-02,Eligibility & registration,Front end,23,45584.75,23,25400.94,6699.64
+2025-02,Medical necessity,Mid cycle,9,54143.57,0,0.0,1456.16
+2025-02,Patient responsibility,Patient,10,11180.52,0,0.0,0.0
+2025-02,Registration & data entry,Front end,25,75694.98,25,41318.05,20304.65
+2025-02,Timely filing,Back end,7,25692.76,7,12772.16,5059.5
+2025-03,Authorization,Front end,17,84666.07,17,52427.16,25068.03
+2025-03,Bundling & payer edits,Back end,20,73521.58,0,0.0,12813.14
+2025-03,Coding & documentation,Mid cycle,22,95818.46,22,53999.3,25850.86
+2025-03,Eligibility & registration,Front end,26,85194.49,26,50911.25,7704.72
+2025-03,Medical necessity,Mid cycle,15,56241.49,0,0.0,10563.75
+2025-03,Patient responsibility,Patient,9,11211.77,0,0.0,0.0
+2025-03,Registration & data entry,Front end,36,96257.02,36,55980.29,21134.64
+2025-03,Timely filing,Back end,8,36868.31,8,19575.28,0.0
+2025-04,Authorization,Front end,19,126176.11,19,78242.55,5940.79
+2025-04,Bundling & payer edits,Back end,32,95505.13,0,0.0,11094.51
+2025-04,Coding & documentation,Mid cycle,11,27153.69,11,14174.67,4010.19
+2025-04,Eligibility & registration,Front end,17,103446.94,17,53761.06,26222.01
+2025-04,Medical necessity,Mid cycle,10,31618.57,0,0.0,6494.14
+2025-04,Patient responsibility,Patient,5,9320.13,0,0.0,0.0
+2025-04,Registration & data entry,Front end,22,70826.25,22,43221.76,29438.31
+2025-04,Timely filing,Back end,13,29220.85,13,17679.96,0.0
+2025-05,Authorization,Front end,17,98682.92,17,62905.55,11333.49
+2025-05,Bundling & payer edits,Back end,24,71229.89,0,0.0,10266.83
+2025-05,Coding & documentation,Mid cycle,25,63826.81,25,38701.51,21950.53
+2025-05,Eligibility & registration,Front end,16,60690.83,16,31597.21,979.63
+2025-05,Medical necessity,Mid cycle,12,29217.05,0,0.0,7015.5
+2025-05,Patient responsibility,Patient,8,22731.63,0,0.0,0.0
+2025-05,Registration & data entry,Front end,33,166692.22,33,89322.73,39631.39
+2025-05,Timely filing,Back end,7,25695.21,7,16062.41,0.0
+2025-06,Authorization,Front end,16,88202.34,16,49744.86,17434.69
+2025-06,Bundling & payer edits,Back end,27,109712.56,0,0.0,5321.32
+2025-06,Coding & documentation,Mid cycle,21,44082.52,21,25274.66,6769.96
+2025-06,Eligibility & registration,Front end,22,65431.79,22,35873.05,700.14
+2025-06,Medical necessity,Mid cycle,10,36096.38,0,0.0,3106.54
+2025-06,Patient responsibility,Patient,8,13270.88,0,0.0,0.0
+2025-06,Registration & data entry,Front end,26,68637.5,26,41716.68,14977.18
+2025-06,Timely filing,Back end,15,52908.45,15,27855.94,0.0
+2025-07,Authorization,Front end,23,131692.99,23,80965.29,2682.96
+2025-07,Bundling & payer edits,Back end,30,113491.31,0,0.0,110.6
+2025-07,Coding & documentation,Mid cycle,14,51723.51,14,29232.52,16123.31
+2025-07,Eligibility & registration,Front end,15,40886.08,15,22990.41,240.13
+2025-07,Medical necessity,Mid cycle,10,22848.79,0,0.0,7225.4
+2025-07,Patient responsibility,Patient,12,32966.76,0,0.0,0.0
+2025-07,Registration & data entry,Front end,35,105428.75,35,59433.95,30007.41
+2025-07,Timely filing,Back end,17,44815.83,17,25586.5,0.0
+2025-08,Authorization,Front end,14,80576.26,14,48455.5,1676.28
+2025-08,Bundling & payer edits,Back end,22,82142.5,0,0.0,15363.28
+2025-08,Coding & documentation,Mid cycle,31,145523.44,31,74222.84,40856.24
+2025-08,Eligibility & registration,Front end,20,63983.77,20,34655.61,1172.23
+2025-08,Medical necessity,Mid cycle,10,43789.83,0,0.0,2990.75
+2025-08,Patient responsibility,Patient,13,48854.62,0,0.0,0.0
+2025-08,Registration & data entry,Front end,25,78111.66,25,43245.09,29182.99
+2025-08,Timely filing,Back end,13,12395.1,13,7457.63,0.0
+2025-09,Authorization,Front end,20,118913.25,20,71644.51,10059.98
+2025-09,Bundling & payer edits,Back end,30,68136.78,0,0.0,867.26
+2025-09,Coding & documentation,Mid cycle,21,31590.23,21,18652.76,12092.93
+2025-09,Eligibility & registration,Front end,23,99293.82,23,61672.77,2484.68
+2025-09,Medical necessity,Mid cycle,12,39679.6,0,0.0,3020.08
+2025-09,Patient responsibility,Patient,8,9881.52,0,0.0,0.0
+2025-09,Registration & data entry,Front end,36,90441.68,36,48395.46,30363.29
+2025-09,Timely filing,Back end,8,25432.22,8,13370.55,2041.3
+2025-10,Authorization,Front end,20,109226.33,20,66342.0,9155.85
+2025-10,Bundling & payer edits,Back end,28,90494.68,0,0.0,28045.57
+2025-10,Coding & documentation,Mid cycle,34,112194.95,34,61266.05,32612.63
+2025-10,Eligibility & registration,Front end,16,24504.1,16,15118.62,601.78
+2025-10,Medical necessity,Mid cycle,12,30851.4,0,0.0,8973.99
+2025-10,Patient responsibility,Patient,9,50768.34,0,0.0,0.0
+2025-10,Registration & data entry,Front end,27,82209.67,27,41789.32,12629.97
+2025-10,Timely filing,Back end,7,5497.27,7,3878.74,146.64
+2025-11,Authorization,Front end,31,173319.0,31,105151.17,4641.2
+2025-11,Bundling & payer edits,Back end,22,44366.18,0,0.0,2212.47
+2025-11,Coding & documentation,Mid cycle,32,88588.7,32,48433.98,22379.14
+2025-11,Eligibility & registration,Front end,22,58391.86,22,31506.32,1191.11
+2025-11,Medical necessity,Mid cycle,13,40846.37,0,0.0,5255.4
+2025-11,Patient responsibility,Patient,3,6180.63,0,0.0,0.0
+2025-11,Registration & data entry,Front end,28,50333.87,28,28031.31,20970.3
+2025-11,Timely filing,Back end,13,16672.14,13,10382.5,0.0
+2025-12,Authorization,Front end,17,129505.03,17,78340.9,35863.58
+2025-12,Bundling & payer edits,Back end,30,86795.08,0,0.0,10128.19
+2025-12,Coding & documentation,Mid cycle,21,32212.14,21,19407.49,7271.39
+2025-12,Eligibility & registration,Front end,24,86738.11,24,47772.19,784.04
+2025-12,Medical necessity,Mid cycle,15,50205.4,0,0.0,9275.99
+2025-12,Patient responsibility,Patient,9,9766.83,0,0.0,0.0
+2025-12,Registration & data entry,Front end,37,139698.59,37,76529.6,28339.52
+2025-12,Timely filing,Back end,15,38334.83,15,20851.12,0.0
+2026-01,Authorization,Front end,24,154600.22,24,95679.39,35511.99
+2026-01,Bundling & payer edits,Back end,25,104555.22,0,0.0,5554.83
+2026-01,Coding & documentation,Mid cycle,21,92300.05,21,50285.28,35327.48
+2026-01,Eligibility & registration,Front end,25,72769.82,25,42316.78,1265.44
+2026-01,Medical necessity,Mid cycle,12,33176.51,0,0.0,13018.78
+2026-01,Patient responsibility,Patient,9,23161.04,0,0.0,0.0
+2026-01,Registration & data entry,Front end,26,77909.89,26,40871.24,6680.49
+2026-01,Timely filing,Back end,11,69142.28,11,34230.74,0.0
+2026-02,Authorization,Front end,21,109276.67,21,61897.72,12761.77
+2026-02,Bundling & payer edits,Back end,30,129253.41,0,0.0,7208.11
+2026-02,Coding & documentation,Mid cycle,32,94693.52,32,54160.19,23340.85
+2026-02,Eligibility & registration,Front end,19,75002.64,19,42318.21,1893.02
+2026-02,Medical necessity,Mid cycle,8,14886.99,0,0.0,2181.18
+2026-02,Patient responsibility,Patient,14,45303.61,0,0.0,0.0
+2026-02,Registration & data entry,Front end,21,93464.17,21,56530.36,20473.89
+2026-02,Timely filing,Back end,11,46861.83,11,25766.39,0.0
+2026-03,Authorization,Front end,25,132285.42,25,82476.83,20261.2
+2026-03,Bundling & payer edits,Back end,25,68253.01,0,0.0,12427.86
+2026-03,Coding & documentation,Mid cycle,29,134899.14,29,76952.03,24628.28
+2026-03,Eligibility & registration,Front end,19,36879.56,19,21438.22,0.0
+2026-03,Medical necessity,Mid cycle,20,50914.58,0,0.0,3729.72
+2026-03,Patient responsibility,Patient,12,53332.82,0,0.0,0.0
+2026-03,Registration & data entry,Front end,35,133670.4,35,74231.66,46124.9
+2026-03,Timely filing,Back end,13,36698.07,13,21066.25,687.45
+2026-04,Authorization,Front end,19,128101.46,19,72754.93,8653.3
+2026-04,Bundling & payer edits,Back end,23,80167.42,0,0.0,16722.74
+2026-04,Coding & documentation,Mid cycle,17,45608.01,17,27531.27,9931.48
+2026-04,Eligibility & registration,Front end,11,17378.19,11,10243.35,3644.47
+2026-04,Medical necessity,Mid cycle,12,51432.9,0,0.0,7335.08
+2026-04,Patient responsibility,Patient,6,16497.8,0,0.0,0.0
+2026-04,Registration & data entry,Front end,32,144253.78,32,71526.79,33903.74
+2026-04,Timely filing,Back end,7,30597.67,7,15658.3,0.0
+2026-05,Authorization,Front end,8,34396.71,8,20481.1,8801.57
+2026-05,Bundling & payer edits,Back end,26,82695.95,0,0.0,5700.35
+2026-05,Coding & documentation,Mid cycle,15,19713.87,15,12007.33,2547.88
+2026-05,Eligibility & registration,Front end,25,44925.45,25,22600.09,1466.9
+2026-05,Medical necessity,Mid cycle,18,39555.85,0,0.0,1951.29
+2026-05,Patient responsibility,Patient,5,35476.93,0,0.0,382.32
+2026-05,Registration & data entry,Front end,28,100667.65,28,49110.11,23108.27
+2026-05,Timely filing,Back end,8,33976.98,8,16377.58,0.0
+2026-06,Authorization,Front end,8,31059.97,8,17687.36,1764.2
+2026-06,Bundling & payer edits,Back end,11,23630.09,0,0.0,1897.01
+2026-06,Coding & documentation,Mid cycle,7,15251.8,7,8060.55,6264.31
+2026-06,Eligibility & registration,Front end,6,13337.5,6,7503.42,0.0
+2026-06,Medical necessity,Mid cycle,6,18729.65,0,0.0,4768.35
+2026-06,Patient responsibility,Patient,5,11371.78,0,0.0,0.0
+2026-06,Registration & data entry,Front end,16,35811.0,16,20505.7,7672.61
+2026-06,Timely filing,Back end,1,533.73,1,260.89,0.0

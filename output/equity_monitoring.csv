@@ -1,0 +1,37 @@
+facility,age_band,discharges,alc_stay_rate,readmission_rate,small_cell_threshold,publication_status,interpretation
+Cedar Valley General Hospital,0-17,209,0.0,0.0239,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Cedar Valley General Hospital,18-44,2077,0.0207,0.0361,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Cedar Valley General Hospital,45-64,1748,0.0423,0.0784,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Cedar Valley General Hospital,65-74,1612,0.1073,0.1141,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Cedar Valley General Hospital,75-84,1567,0.1678,0.1308,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Cedar Valley General Hospital,85+,767,0.2751,0.176,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Fernwood Memorial Hospital,0-17,162,0.0123,0.0494,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Fernwood Memorial Hospital,18-44,1764,0.0198,0.0351,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Fernwood Memorial Hospital,45-64,1343,0.0462,0.0715,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Fernwood Memorial Hospital,65-74,1288,0.0924,0.1064,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Fernwood Memorial Hospital,75-84,1182,0.1827,0.1303,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Fernwood Memorial Hospital,85+,585,0.3162,0.188,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Harbourview Hospital,0-17,182,0.0165,0.033,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Harbourview Hospital,18-44,1766,0.0249,0.0476,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Harbourview Hospital,45-64,1370,0.0766,0.0752,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Harbourview Hospital,65-74,1219,0.1436,0.1099,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Harbourview Hospital,75-84,1181,0.2379,0.1346,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Harbourview Hospital,85+,627,0.3477,0.1898,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Mount Ashton General Hospital,0-17,154,0.0065,0.0195,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Mount Ashton General Hospital,18-44,1422,0.0169,0.0401,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Mount Ashton General Hospital,45-64,1120,0.0366,0.075,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Mount Ashton General Hospital,65-74,1033,0.0852,0.1171,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Mount Ashton General Hospital,75-84,952,0.1576,0.1134,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Mount Ashton General Hospital,85+,520,0.2827,0.1462,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Riverbend Regional Hospital,0-17,297,0.0135,0.064,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Riverbend Regional Hospital,18-44,2664,0.0214,0.0604,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Riverbend Regional Hospital,45-64,2730,0.0619,0.0861,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Riverbend Regional Hospital,65-74,2563,0.1377,0.1198,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Riverbend Regional Hospital,75-84,2304,0.2253,0.1532,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Riverbend Regional Hospital,85+,1198,0.3598,0.2354,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Two Rivers Health Centre,0-17,49,0.0,0.0408,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Two Rivers Health Centre,18-44,588,0.0136,0.034,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Two Rivers Health Centre,45-64,396,0.0707,0.0833,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Two Rivers Health Centre,65-74,376,0.125,0.1037,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Two Rivers Health Centre,75-84,353,0.1416,0.1473,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.
+Two Rivers Health Centre,85+,199,0.3568,0.201,20,PUBLISH,Descriptive synthetic monitoring only; no causal or clinical inference.

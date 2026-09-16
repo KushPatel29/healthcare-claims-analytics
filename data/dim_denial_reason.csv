@@ -1,0 +1,12 @@
+denial_reason,denial_category,denial_stage,preventable
+CO-16 Missing or invalid information,Registration & data entry,Front end,1
+CO-97 Service bundled/included,Bundling & payer edits,Back end,0
+CO-11 Diagnosis inconsistent with procedure,Coding & documentation,Mid cycle,1
+CO-50 Not medically necessary,Medical necessity,Mid cycle,0
+CO-45 Exceeds fee schedule,Bundling & payer edits,Back end,0
+CO-29 Timely filing limit expired,Timely filing,Back end,1
+CO-18 Duplicate claim or service,Registration & data entry,Front end,1
+CO-4 Modifier missing or inconsistent,Coding & documentation,Mid cycle,1
+PR-1 Deductible amount,Patient responsibility,Patient,0
+CO-197 Precertification/authorization absent,Authorization,Front end,1
+CO-27 Coverage terminated before service,Eligibility & registration,Front end,1

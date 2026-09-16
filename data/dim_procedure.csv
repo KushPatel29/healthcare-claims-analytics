@@ -1,0 +1,31 @@
+cpt_code,procedure,service_line_id,service_line,charge_weight
+99283,"ED visit, moderate severity",1,Emergency Department,0.7
+99284,"ED visit, high severity",1,Emergency Department,1.0
+99285,"ED visit, high severity with threat",1,Emergency Department,1.5
+93000,"Electrocardiogram, routine",2,Cardiology,0.3
+93306,"Echocardiogram, complete",2,Cardiology,1.0
+92928,Coronary stent placement,2,Cardiology,2.6
+20610,Major joint injection,3,Orthopedics,0.3
+29881,Knee arthroscopy with meniscectomy,3,Orthopedics,1.0
+27447,Total knee arthroplasty,3,Orthopedics,2.4
+96372,Therapeutic injection,4,Oncology,0.2
+96413,"Chemotherapy infusion, first hour",4,Oncology,1.0
+77427,Radiation treatment management,4,Oncology,1.3
+71046,"Chest x-ray, two views",5,Imaging,0.3
+70450,CT head without contrast,5,Imaging,1.0
+72148,MRI lumbar spine without contrast,5,Imaging,1.9
+85025,Complete blood count with differential,6,Laboratory,0.6
+80053,Comprehensive metabolic panel,6,Laboratory,1.0
+83036,Hemoglobin A1c,6,Laboratory,0.8
+49505,Inguinal hernia repair,7,Surgery,0.7
+47562,Laparoscopic cholecystectomy,7,Surgery,1.0
+44970,Laparoscopic appendectomy,7,Surgery,1.2
+99213,"Office visit, established patient, low",8,Primary Care,0.7
+99214,"Office visit, established, moderate",8,Primary Care,1.0
+99396,"Preventive visit, 40-64 years",8,Primary Care,1.1
+76805,Obstetric ultrasound,9,OB/GYN,0.4
+59400,"Obstetric care, vaginal delivery",9,OB/GYN,1.0
+59510,"Obstetric care, caesarean delivery",9,OB/GYN,1.6
+90791,Psychiatric diagnostic evaluation,10,Behavioral Health,1.0
+90834,"Psychotherapy, 45 minutes",10,Behavioral Health,0.5
+90837,"Psychotherapy, 60 minutes",10,Behavioral Health,0.7

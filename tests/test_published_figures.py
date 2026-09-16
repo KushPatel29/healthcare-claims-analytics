@@ -326,20 +326,20 @@ def integrity():
 def test_contract_variance_headlines_are_quoted(integrity):
     s = integrity
     assert s["cells_under_contract"] == 3
-    assert s["underpaid_claims"] == 304
-    assert s["underpaid_amount"] == pytest.approx(120_461, rel=1e-4)
+    assert s["underpaid_claims"] == 509
+    assert s["underpaid_amount"] == pytest.approx(228_467, rel=1e-4)
     # Two different "worst" questions. The dollars answer and the rate
     # answer are different cells here, which is exactly why they are named
     # separately rather than one label meaning whichever the code sorted by.
     assert s["worst_contract_by_dollars"] == "Blue Cross Blue Shield / Surgery"
-    assert s["worst_contract_by_rate"] == "Humana Medicare Advantage / Cardiology"
+    assert s["worst_contract_by_rate"] == "Humana Medicare Advantage / Behavioral Health"
     assert s["worst_contract_by_dollars"] != s["worst_contract_by_rate"]
-    assert s["worst_contract_variance"] == pytest.approx(-0.140, abs=0.002)
-    assert s["worst_contract_dollars"] == pytest.approx(56_780, rel=1e-3)
+    assert s["worst_contract_variance"] == pytest.approx(-0.2005, abs=0.002)
+    assert s["worst_contract_dollars"] == pytest.approx(145_199, rel=1e-3)
 
     prose = text(README)
-    assert "**3 of 80**" in prose
-    assert "**304**" in prose
+    assert "**3 of 110**" in prose
+    assert "**509**" in prose
     assert f"${s['underpaid_amount']:,.0f}" in prose
     assert s["worst_contract_by_rate"] in prose
     assert s["worst_contract_by_dollars"] in prose
@@ -347,9 +347,9 @@ def test_contract_variance_headlines_are_quoted(integrity):
 
 def test_appeal_recovery_headlines_are_quoted(integrity):
     s = integrity
-    assert s["recovered"] == pytest.approx(309_417, rel=1e-4)
-    assert s["overturned"] == 246
-    assert s["recoverable_left"] == pytest.approx(209_113, rel=1e-4)
+    assert s["recovered"] == pytest.approx(1_801_941, rel=1e-4)
+    assert s["overturned"] == 965
+    assert s["recoverable_left"] == pytest.approx(1_299_077, rel=1e-4)
 
     prose = text(README)
     assert f"${s['recovered']:,.0f}" in prose
@@ -395,8 +395,8 @@ def test_the_appeal_table_rows_match_the_engine():
             _csv.DictReader(open(OUT / "denial_appeals.csv", encoding="utf-8"))}
     prose = text(README)
     for prefix, denials, appeal, overturn in [
-            ("CO-16", 222, 0.76, 0.82), ("CO-11", 108, 0.56, 0.69),
-            ("CO-45", 100, 0.48, 0.48), ("CO-29", 90, 0.20, 0.11)]:
+            ("CO-197", 442, 0.62, 0.37), ("CO-16", 494, 0.78, 0.80),
+            ("CO-11", 306, 0.60, 0.66), ("CO-29", 232, 0.27, 0.10)]:
         row = next(r for k, r in rows.items() if k.startswith(prefix))
         assert int(row["denials"]) == denials
         assert float(row["appeal_rate"]) == pytest.approx(appeal, abs=0.005)
@@ -424,3 +424,70 @@ def test_nrv_headline_is_still_the_published_one():
     # still a published number.
     assert f"prices ${gross / 1e6:.1f}M" in prose, (
         f"the lead paragraph no longer quotes ${gross / 1e6:.1f}M of open AR")
+
+# --- denial prevention ----------------------------------------------------
+
+@pytest.fixture(scope="module")
+def prevention():
+    import json
+    return json.loads((OUT / "denial_prevention.json").read_text(encoding="utf-8"))
+
+
+def test_denial_prevention_headlines_are_quoted(prevention):
+    """The section is new, so it gets pinned on the way in rather than after it
+    has been wrong once."""
+    s = prevention
+    assert s["preventable_share"] > 0.5, "a preventable share this low makes the section pointless"
+    assert s["biggest_preventable_category"] == "Authorization"
+    prose = text(README)
+    assert f"**{s['denial_rate']:.1%}** of adjudicated claims are denied" in prose
+    assert f"**{s['preventable_share']:.1%} of those" in prose
+    assert f"{s['preventable_denials']:,} claims worth ${s['preventable_contract_value'] / 1e6:.2f}M" in prose
+    assert f"{s['clean_claim_rate']:.1%} overall" in prose
+    assert f"{s['clean_claim_rate_first_half']:.1%} in the first year" in prose
+    assert f"{s['clean_claim_rate_second_half']:.1%} in the second" in prose
+    assert f"**${s['patient_responsibility']:,.0f}**" in prose
+    assert f"{s['patient_share_of_allowed']:.1%} of allowed dollars" in prose
+    assert f"**${s['patient_collected']:,.0f}** ({s['patient_collection_rate']:.1%})" in prose
+    assert f"${s['bad_debt']:,.0f}" in prose and f"${s['charity_care']:,.0f}" in prose
+
+
+def test_the_authorization_shift_the_readme_describes_is_the_one_the_chart_found(prevention):
+    """A date, a run length and a peak - all three read off the control chart."""
+    s = prevention
+    prose = text(README)
+    assert f"**{s['authorization_baseline_rate']:.1%}**" in prose
+    assert f"**{s['authorization_first_signal']}**" in prose
+    assert f"**{s['authorization_longest_run']} consecutive**" in prose
+    assert f"**{s['authorization_peak_rate']:.1%}** in {s['authorization_peak_month']}" in prose
+    assert s["watched_cell"].replace(" / ", " / ") in prose
+
+
+def test_the_funnel_is_nested_and_the_readme_quotes_it():
+    """Each ladder stage must be a subset of the one above it, or the funnel
+    describes something that cannot happen."""
+    import csv as _csv
+    rows = list(_csv.DictReader(open(OUT / "claim_funnel.csv", encoding="utf-8")))
+    ladder = [r for r in rows if r["kind"] == "ladder"]
+    counts = [int(r["claims"]) for r in ladder]
+    assert counts == sorted(counts, reverse=True), "the funnel goes back up"
+    values = [float(r["contract_value"]) for r in ladder]
+    assert values == sorted(values, reverse=True)
+    prose = text(README)
+    for row in rows:
+        assert f"| {int(row['claims']):,} | {float(row['share_of_created']):.1%} |" in prose, row["stage"]
+
+
+def test_the_root_cause_table_matches_the_engine():
+    import csv as _csv
+    from collections import defaultdict
+    cells = defaultdict(lambda: {"denials": 0, "value": 0.0})
+    for row in _csv.DictReader(open(OUT / "denial_root_cause.csv", encoding="utf-8")):
+        cell = cells[row["denial_category"]]
+        cell["denials"] += int(row["denials"])
+        cell["value"] += float(row["preventable_contract_value"])
+    prose = text(README)
+    for category, cell in cells.items():
+        assert f"| {category} |" in prose, category
+        if cell["value"]:
+            assert f"${cell['value']:,.0f}" in prose, category

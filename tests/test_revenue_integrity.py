@@ -69,7 +69,8 @@ def test_the_fee_schedule_is_a_dimension_not_a_derivation(claims):
     """
     schedule = {(int(r["payer_id"]), int(r["service_line_id"])):
                 float(r["contracted_rate"]) for r in read(DATA / "dim_payer_contract.csv")}
-    assert len(schedule) == 80, "the schedule should cover every payer x line"
+    cells = len(read(DATA / "dim_payer.csv")) * len(read(DATA / "dim_service_line.csv"))
+    assert len(schedule) == cells, "the schedule should cover every payer x line"
     checked = 0
     for c in claims:
         key = (int(c["payer_id"]), int(c["service_line_id"]))
@@ -104,7 +105,7 @@ def test_underpayment_needs_to_clear_the_noise_band(claims):
 def test_contract_variance_finds_the_payers_that_underpay():
     v = read(OUT / "contract_variance.csv")
     under = [r for r in v if r["verdict"] == "Under contract"]
-    assert len(v) == 80
+    assert len(v) == len(read(DATA / "dim_payer.csv")) * len(read(DATA / "dim_service_line.csv"))
     assert 1 <= len(under) <= 8, "either nothing or everything is under contract"
     for r in under:
         assert float(r["variance_pct"]) < -0.05
@@ -112,7 +113,7 @@ def test_contract_variance_finds_the_payers_that_underpay():
     # And the cells that are fine must genuinely be fine, not just unflagged.
     ok = [r for r in v if r["verdict"] == "At contract"]
     assert all(abs(float(r["variance_pct"])) <= 0.05 for r in ok)
-    assert len(ok) > 60
+    assert len(ok) > 0.8 * len(v)
 
 
 def test_variance_amount_is_actual_minus_expected():
@@ -240,8 +241,14 @@ def test_a_coarser_cell_would_misread_the_mix_as_rate(claims, summary):
     concludes prices fell when what moved was the payer mix.
 
     Both decompositions are computed here from the raw claims, so the claim is
-    demonstrated rather than asserted: the coarse grain must push materially
-    more of the movement into rate.
+    demonstrated rather than asserted: the coarse grain must push materially more
+    of the movement into rate, and must lose most of the mix information.
+
+    Mix is compared GROSS - the sum of the absolute per-cell effects - not net.
+    Net mix is a poor instrument: a book where one payer gains exactly what
+    another loses has a large mix movement and a net near zero, and this dataset
+    is such a book. Comparing net totals made this test fail while the modelling
+    claim it exists to defend was in fact true.
     """
     from datetime import timedelta
 
@@ -263,27 +270,31 @@ def test_a_coarser_cell_would_misread_the_mix_as_rate(claims, summary):
             q[p][keyfunc(c)] += 1
             rev[p][keyfunc(c)] += num(c["paid_amount"])
         Q0, Q1 = sum(q[0].values()), sum(q[1].values())
-        R0 = sum(rev[0].values())
-        mix = rate = 0.0
+        mix = rate = gross_mix = 0.0
         for k in set(q[0]) | set(q[1]):
             r0 = rev[0][k] / q[0][k] if q[0][k] else 0.0
             r1 = rev[1][k] / q[1][k] if q[1][k] else 0.0
-            mix += (q[1][k] - Q1 * (q[0][k] / Q0 if Q0 else 0)) * r0
+            cell_mix = (q[1][k] - Q1 * (q[0][k] / Q0 if Q0 else 0)) * r0
+            mix += cell_mix
+            gross_mix += abs(cell_mix)
             rate += q[1][k] * (r1 - r0)
-        return mix, rate
+        return mix, rate, gross_mix
 
-    fine_mix, fine_rate = decompose(
+    fine_mix, fine_rate, fine_gross_mix = decompose(
         lambda c: (c["payer_id"], c["service_line_id"]))
-    coarse_mix, coarse_rate = decompose(lambda c: c["service_line_id"])
+    coarse_mix, coarse_rate, coarse_gross_mix = decompose(lambda c: c["service_line_id"])
 
     assert fine_mix == pytest.approx(summary["mix_effect"], abs=1.0)
     assert fine_rate == pytest.approx(summary["rate_effect"], abs=1.0)
-    # The coarse grain hides the payer shift, so more of the movement lands in
-    # rate and the mix term shrinks toward nothing.
+    # The coarse grain hides the payer shift, so more of the movement lands in rate.
     assert abs(coarse_rate) > abs(fine_rate) * 1.15, (
         f"coarse rate {coarse_rate:,.0f} is not materially larger than "
         f"fine rate {fine_rate:,.0f} - the grain is not doing any work")
-    assert abs(coarse_mix) < abs(fine_mix)
+    # ...and the mix movement the book actually contains stops being visible.
+    assert fine_gross_mix > coarse_gross_mix * 1.5, (
+        f"gross mix {fine_gross_mix:,.0f} at payer x line against "
+        f"{coarse_gross_mix:,.0f} at line alone - the coarse grain is not losing "
+        "the payer shift, so the finer cell is buying nothing")
 
 
 def test_the_fee_schedule_cut_lands_as_rate_not_mix():

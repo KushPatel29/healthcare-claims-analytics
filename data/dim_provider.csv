@@ -1,21 +1,41 @@
-provider_id,provider_name,specialty,facility
-1,Dr. Sarah Chen,Emergency Department,Main Campus
-2,Dr. James Patel,Cardiology,Main Campus
-3,Dr. Maria Nguyen,Orthopedics,South Clinic
-4,Dr. David Garcia,Oncology,North Clinic
-5,Dr. Jennifer Smith,Imaging,North Clinic
-6,Dr. Michael Johnson,Laboratory,North Clinic
-7,Dr. Priya Kim,Surgery,Main Campus
-8,Dr. Robert Brown,Primary Care,Main Campus
-9,Dr. Aisha Singh,OB/GYN,Telehealth
-10,Dr. Daniel Martinez,Behavioral Health,Main Campus
-11,Dr. Emily Lee,Emergency Department,Main Campus
-12,Dr. Ahmed Wilson,Cardiology,Main Campus
-13,Dr. Laura Ali,Orthopedics,North Clinic
-14,Dr. Kevin Taylor,Oncology,North Clinic
-15,Dr. Sofia Lopez,Imaging,Main Campus
-16,Dr. Brian Davis,Laboratory,North Clinic
-17,Dr. Grace Okafor,Surgery,Telehealth
-18,Dr. Omar Clark,Primary Care,North Clinic
-19,Dr. Rachel Ivanov,OB/GYN,Telehealth
-20,Dr. Thomas Murphy,Behavioral Health,South Clinic
+provider_id,provider_name,npi,specialty,facility
+1,Dr. Sarah Chen,1700000037,Emergency Department,Main Campus
+2,Dr. James Patel,1700000074,Cardiology,Main Campus
+3,Dr. Maria Nguyen,1700000111,Orthopedics,South Clinic
+4,Dr. David Garcia,1700000148,Oncology,North Clinic
+5,Dr. Jennifer Smith,1700000185,Imaging,North Clinic
+6,Dr. Michael Johnson,1700000222,Laboratory,North Clinic
+7,Dr. Priya Kim,1700000259,Surgery,Main Campus
+8,Dr. Robert Brown,1700000296,Primary Care,Telehealth
+9,Dr. Aisha Singh,1700000333,OB/GYN,Main Campus
+10,Dr. Daniel Martinez,1700000370,Behavioral Health,Telehealth
+11,Dr. Emily Lee,1700000407,Emergency Department,Ambulatory Surgery Center
+12,Dr. Ahmed Wilson,1700000444,Cardiology,Main Campus
+13,Dr. Laura Ali,1700000481,Orthopedics,Main Campus
+14,Dr. Kevin Taylor,1700000518,Oncology,Main Campus
+15,Dr. Sofia Lopez,1700000555,Imaging,North Clinic
+16,Dr. Brian Davis,1700000592,Laboratory,North Clinic
+17,Dr. Grace Okafor,1700000629,Surgery,Telehealth
+18,Dr. Omar Clark,1700000666,Primary Care,Telehealth
+19,Dr. Rachel Ivanov,1700000703,OB/GYN,Main Campus
+20,Dr. Thomas Murphy,1700000740,Behavioral Health,Telehealth
+21,Dr. Nadia Haddad,1700000777,Emergency Department,North Clinic
+22,Dr. Victor Rossi,1700000814,Cardiology,Telehealth
+23,Dr. Hannah Silva,1700000851,Orthopedics,Ambulatory Surgery Center
+24,Dr. Marcus Novak,1700000888,Oncology,North Clinic
+25,Dr. Elena Dubois,1700000925,Imaging,Ambulatory Surgery Center
+26,Dr. Jonah Meyer,1700000962,Laboratory,Telehealth
+27,Dr. Clara Fischer,1700000999,Surgery,South Clinic
+28,Dr. Andre Larsen,1700001036,Primary Care,Main Campus
+29,Dr. Leah Keller,1700001073,OB/GYN,North Clinic
+30,Dr. Felix Moreau,1700001110,Behavioral Health,Ambulatory Surgery Center
+31,Dr. Rosa Adeyemi,1700001147,Emergency Department,South Clinic
+32,Dr. Dmitri Sato,1700001184,Cardiology,South Clinic
+33,Dr. Naomi Petrov,1700001221,Orthopedics,North Clinic
+34,Dr. Carlos Cruz,1700001258,Oncology,North Clinic
+35,Dr. Ingrid Weber,1700001295,Imaging,South Clinic
+36,Dr. Tobias Bianchi,1700001332,Laboratory,Main Campus
+37,Dr. Yara Hansen,1700001369,Surgery,Main Campus
+38,Dr. Simon Osei,1700001406,Primary Care,Ambulatory Surgery Center
+39,Dr. Maya Reyes,1700001443,OB/GYN,Main Campus
+40,Dr. Patrick Bauer,1700001480,Behavioral Health,South Clinic

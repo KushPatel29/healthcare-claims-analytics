@@ -15,9 +15,11 @@ CMD ["sh", "-c", "\
 python data_generator/generate_claims_data.py && \
 python engine/build_rcm_metrics.py && \
 python engine/build_revenue_integrity.py && \
+python engine/build_denial_prevention.py && \
 python canadian/generate_activity_data.py && \
 python engine/build_activity_metrics.py && \
 python engine/health_economics.py && \
 python governance/deidentify.py && \
 python governance/data_quality.py && \
+python governance/decision_assurance.py && \
 pytest tests/ -v"]

@@ -39,6 +39,7 @@ jobs:
           python data_generator/generate_claims_data.py
           python canadian/generate_activity_data.py
           python engine/build_revenue_integrity.py
+          python engine/build_denial_prevention.py
 
       - name: Gate must pass on clean data
         run: python governance/data_quality.py
@@ -80,3 +81,26 @@ jobs:
         run: |
           docker build -t rcm-analytics .
           docker run --rm rcm-analytics
+
+  decision-assurance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build governed decision evidence
+        run: |
+          python canadian/generate_activity_data.py
+          python engine/build_activity_metrics.py
+          python engine/health_economics.py
+          python governance/deidentify.py
+          python governance/data_quality.py
+          python governance/decision_assurance.py
+
+      - name: Verify release gates and the failure drill
+        run: |
+          pip install pytest
+          pytest tests/test_decision_assurance.py -v

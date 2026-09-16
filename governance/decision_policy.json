@@ -1,0 +1,104 @@
+{
+  "policy_id": "HSD-REL-01",
+  "policy_version": "1.0.0",
+  "decision_id": "ALC-TRANSITION-2026-01",
+  "decision_title": "Transitional care and community bridging program",
+  "as_of_date": "2026-07-30",
+  "evidence_boundary": "Synthetic portfolio evidence only. This is a CIHI-inspired decision-support model, not an official CIHI specification, submission, certification, or clinical recommendation.",
+  "small_cell_threshold": 20,
+  "required_sources": [
+    "data/fact_inpatient_abstracts.csv",
+    "data/dim_facility.csv",
+    "output/activity_by_facility.csv",
+    "output/activity_by_program.csv",
+    "output/spc_alc_stay_pchart.csv",
+    "output/hta_base_case.csv",
+    "output/hta_psa_ceac.csv",
+    "output/dq_results.csv",
+    "output/deid_risk_report.csv",
+    "docs/BRIEFING_NOTE.md",
+    "docs/BUSINESS_CASE.md"
+  ],
+  "approvals": [
+    {
+      "approval": "Executive sponsor decision",
+      "owner": "VP Clinical Operations",
+      "status": "OPEN",
+      "evidence": "No human approval is represented in this repository."
+    },
+    {
+      "approval": "Released-capacity backfill commitment",
+      "owner": "Clinical Operations and Finance",
+      "status": "OPEN",
+      "evidence": "Required before go-live; deliberately not inferred from synthetic analytics."
+    }
+  ],
+  "measures": [
+    {
+      "measure_id": "HSD-M01",
+      "name": "Cost per weighted case excluding ALC",
+      "semantic_anchor": "DAD/CMG+-shaped portfolio construct",
+      "grain": "Health authority and facility",
+      "numerator": "Total cost less ALC days multiplied by the modelled ALC per-diem",
+      "denominator": "Sum of resource intensity weights",
+      "exclusions": "Suppressed or invalid abstracts blocked by the quality gate",
+      "owner": "Decision Support",
+      "baseline_status": "ESTABLISHED"
+    },
+    {
+      "measure_id": "HSD-M02",
+      "name": "Stays with any ALC day",
+      "semantic_anchor": "DAD-shaped ALC indicator; portfolio definition",
+      "grain": "Discharge month",
+      "numerator": "Discharges with one or more ALC days",
+      "denominator": "All discharges",
+      "exclusions": "Invalid length-of-stay records blocked by the quality gate",
+      "owner": "Patient Flow",
+      "baseline_status": "ESTABLISHED"
+    },
+    {
+      "measure_id": "HSD-M03",
+      "name": "Risk-adjusted 30-day readmission O/E",
+      "semantic_anchor": "Indirectly standardised portfolio measure",
+      "grain": "Health authority and facility",
+      "numerator": "Observed 30-day readmissions",
+      "denominator": "Expected readmissions after modelled case-mix adjustment",
+      "exclusions": "No external deaths or out-of-authority readmissions are modelled",
+      "owner": "Quality and Patient Safety",
+      "baseline_status": "ESTABLISHED"
+    },
+    {
+      "measure_id": "HSD-M04",
+      "name": "ALC bed equivalents",
+      "semantic_anchor": "Capacity-planning portfolio measure",
+      "grain": "Health authority and facility",
+      "numerator": "ALC days",
+      "denominator": "730 calendar days in the two-year evidence window",
+      "exclusions": "None beyond the quality gate",
+      "owner": "Capacity Planning",
+      "baseline_status": "ESTABLISHED"
+    },
+    {
+      "measure_id": "HSD-M05",
+      "name": "Emergency department boarding hours",
+      "semantic_anchor": "Local operational measure; production definition required",
+      "grain": "Facility and month",
+      "numerator": "Boarding hours after admission decision",
+      "denominator": "Admitted emergency visits",
+      "exclusions": "Not present in the synthetic evidence model",
+      "owner": "Emergency Operations",
+      "baseline_status": "PENDING"
+    },
+    {
+      "measure_id": "HSD-M06",
+      "name": "Surgical postponements for bed unavailability",
+      "semantic_anchor": "Local operational measure; production definition required",
+      "grain": "Facility and month",
+      "numerator": "Postponed procedures attributed to bed unavailability",
+      "denominator": "Scheduled procedures",
+      "exclusions": "Not present in the synthetic evidence model",
+      "owner": "Surgical Operations",
+      "baseline_status": "PENDING"
+    }
+  ]
+}

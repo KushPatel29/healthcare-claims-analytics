@@ -1,0 +1,11 @@
+gate_id,gate,status,evidence
+SRC-01,Evidence inventory complete,PASS,11/11 required sources present
+DQ-01,Critical data-quality rules pass,PASS,0 critical failure(s); injected drill=False
+PRIV-01,Privacy risk remains within policy,PASS,k=5; suppression=3.55%
+REC-01,Activity control total reconciles,PASS,"facility rollup=39,567; abstracts=39,567"
+SPC-01,Planted ALC shift is detected prospectively,PASS,first month above the fixed upper limit: 2026-01
+ECON-01,Both economic perspectives are published,PASS,"perspectives=A_opportunity_cost, B_cash_releasing"
+UNC-01,Decision uncertainty is quantified,PASS,"10,000-iteration PSA includes the $50,000/QALY decision point"
+EQ-01,Equity cells apply the small-cell rule,PASS,36 facility x age-band cells; threshold=20; 0 suppressed
+BASE-01,Implementation baselines are established,REVIEW,"pending production baselines: HSD-M05, HSD-M06"
+APP-01,Required human approvals are recorded,REVIEW,"open: Executive sponsor decision, Released-capacity backfill commitment"

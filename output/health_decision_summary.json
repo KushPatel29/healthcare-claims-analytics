@@ -1,0 +1,17 @@
+{
+  "decision_id": "ALC-TRANSITION-2026-01",
+  "policy_id": "HSD-REL-01",
+  "policy_version": "1.0.0",
+  "as_of_date": "2026-07-30",
+  "overall_status": "REVIEW REQUIRED",
+  "gates_pass": 8,
+  "gates_review": 2,
+  "gates_block": 0,
+  "measures": 6,
+  "pending_measure_baselines": 2,
+  "options": 4,
+  "equity_cells": 36,
+  "small_cell_threshold": 20,
+  "open_approvals": 2,
+  "recommendation": "APPROVE WITH CONDITIONS"
+}

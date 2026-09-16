@@ -1,0 +1,5 @@
+option_id,option,annual_cost,capacity_released_beds,cash_case,equity_consideration,readiness,recommendation
+OPT-01,Status quo,0,0,No investment; upward ALC shift remains,Existing access pressure persists,READY,NOT RECOMMENDED
+OPT-02,Authority-wide transitional care,1450000,12.5,Not a booked saving without a bed-closure decision,Authority-wide access with facility and age-band monitoring,CONDITIONAL,RECOMMENDED WITH CONDITIONS
+OPT-03,Harbourview phase only,400000,2.3,Lower exposure; captures only part of the opportunity,May shift pressure to neighbouring sites,READY,PHASE-1 ALTERNATIVE
+OPT-04,Purchase residential capacity,NOT COSTED,NOT MODELLED,Requires a separate commissioning case,Placement access and geography require assessment,NOT READY,LONG-TERM PATH

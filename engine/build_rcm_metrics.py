@@ -252,8 +252,18 @@ def main():
 
     # ---- KPI summary
     denial_rate = len(denied) / len(adjudicated)
-    clean = [c for c in paid if c["resubmitted"] == "0"]
-    clean_rate = len(clean) / len(adjudicated)
+    # Two different rates that get called the same thing. The clean claim rate is
+    # what left the building without an edit - the clearing house accepted it first
+    # time. First-pass resolution is what came back paid without an appeal. A claim
+    # can be rejected by the scrubber, corrected, and then paid first pass; only one
+    # of the two numbers notices, and a hospital that reports the wrong one measures
+    # its payers when it meant to measure itself.
+    clean_rate = 1 - sum(1 for c in claims if c["clearinghouse_rejected"] == "1") / len(claims)
+    first_pass = [c for c in paid if c["resubmitted"] == "0"]
+    first_pass_rate = len(first_pass) / len(adjudicated)
+    preventable = [c for c in denied if c["denial_preventable"] == "1"]
+    patient_owed = sum(float(c["patient_responsibility"] or 0) for c in paid)
+    patient_paid = sum(float(c["patient_paid_amount"] or 0) for c in paid)
     allowed = sum(float(c["allowed_amount"]) for c in paid)
     collected = sum(float(c["paid_amount"]) for c in paid)
     open_ar = sum(float(c["submitted_amount"]) for c in pending)
@@ -273,8 +283,11 @@ def main():
         f"Total claims:            {len(claims):>10,}",
         f"Adjudicated:             {len(adjudicated):>10,}",
         f"Denial rate:             {denial_rate:>10.1%}",
-        f"Clean claim rate:        {clean_rate:>10.1%}",
+        f"  of which preventable:  {len(preventable) / max(len(denied), 1):>10.1%}",
+        f"Clean claim rate:        {clean_rate:>10.1%}  (accepted by the clearing house first time)",
+        f"First-pass resolution:   {first_pass_rate:>10.1%}  (paid without an appeal)",
         f"Net collection rate:     {collected / allowed:>10.1%}",
+        f"Patient responsibility:  {patient_owed:>10,.0f} ({patient_paid / patient_owed:.1%} collected)",
         f"Avg days to adjudicate:  {avg_days:>10.1f}",
         f"Open AR (gross):         {open_ar:>10,.0f}",
         f"AR > 90 days:            {ar_over_90:>10,.0f} ({ar_over_90 / open_ar:.1%} of AR)",

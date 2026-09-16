@@ -11,6 +11,6 @@ DQ-014,fact_inpatient_abstracts.csv,domain,readmit_30d,critical,pass,0,39567,all
 DQ-015,fact_inpatient_abstracts.csv,expression,,critical,pass,0,39567,0 row(s) violate: total_los_days == acute_los_days + alc_days,The decomposition every bed-day figure depends on.
 DQ-016,fact_inpatient_abstracts.csv,expression,,critical,pass,0,39567,0 row(s) violate: admit_date < discharge_date,"Discharged before admitted. Rare, and always a real defect."
 DQ-020,fact_inpatient_abstracts.csv,freshness,discharge_date,warning,pass,0,39567,"newest discharge_date is 2026-06-30, 1d old (SLA 45d)","Coding lag is normal in acute care; a stale extract is a service-level conversation with Health Information Management, not a pipeline defect."
-DQ-030,fact_claims.csv,unique,claim_id,critical,pass,0,12000,0 duplicate key(s),Duplicate claims double-count both revenue and AR.
-DQ-031,fact_claims.csv,referential,payer_id,critical,pass,0,12000,0 orphan(s) vs dim_payer.csv,An orphan payer key hides a claim from every payer cut.
-DQ-032,fact_claims.csv,domain,status,critical,pass,0,12000,all values in domain,Status drives the entire adjudication and AR split.
+DQ-030,fact_claims.csv,unique,claim_id,critical,pass,0,30000,0 duplicate key(s),Duplicate claims double-count both revenue and AR.
+DQ-031,fact_claims.csv,referential,payer_id,critical,pass,0,30000,0 orphan(s) vs dim_payer.csv,An orphan payer key hides a claim from every payer cut.
+DQ-032,fact_claims.csv,domain,status,critical,pass,0,30000,all values in domain,Status drives the entire adjudication and AR split.
