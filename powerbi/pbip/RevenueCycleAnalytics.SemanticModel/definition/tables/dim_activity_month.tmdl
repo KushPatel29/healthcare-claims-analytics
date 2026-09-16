@@ -41,7 +41,16 @@ table dim_activity_month
 		mode: import
 		source =
 				let
-				    Months = List.Transform({0..23}, each Date.AddMonths(#date(2024, 7, 1), _)),
+				    // Same rule as dim_month: the months come from the abstracts that are discharged,
+				    // so a seed that moves cannot leave discharges outside the calendar they are
+				    // counted on.
+				    Source = Csv.Document(File.Contents(DataPath & "\data\fact_inpatient_abstracts.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Discharged = List.RemoveNulls(List.Transform(Table.Column(Promoted, "discharge_date"), each try Date.From(_) otherwise null)),
+				    First = Date.StartOfMonth(List.Min(Discharged)),
+				    Last = Date.StartOfMonth(List.Max(Discharged)),
+				    Span = (Date.Year(Last) - Date.Year(First)) * 12 + Date.Month(Last) - Date.Month(First),
+				    Months = List.Transform({0..Span}, each Date.AddMonths(First, _)),
 				    ToTable = Table.FromList(Months, Splitter.SplitByNothing(), {"month_start"}),
 				    Typed = Table.TransformColumnTypes(ToTable, {{"month_start", type date}}),
 				    AddedLabel = Table.AddColumn(Typed, "month", each Date.ToText([month_start], "yyyy-MM"), type text),
@@ -52,4 +61,3 @@ table dim_activity_month
 				    Reordered = Table.ReorderColumns(AddedFiscal, {"month", "month_start", "fiscal_year"})
 				in
 				    Reordered
-

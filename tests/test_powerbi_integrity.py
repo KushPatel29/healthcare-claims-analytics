@@ -139,50 +139,80 @@ def test_yield_columns_backed_by_engine_output():
 # The Canadian decision-support layer
 # --------------------------------------------------------------------------
 
+#: Each month dimension, the fact whose join column it has to cover, the fact's
+#: CSV, the date column that month label is built from, and the join column itself.
+CALENDARS = [
+    ("dim_activity_month", "fact_inpatient_abstracts.csv", "discharge_date", "discharge_month"),
+    ("dim_month", "fact_claims.csv", "submitted_date", None),
+]
+
+
+def month_labels(csv_name, date_column, label_column):
+    """The months the fact actually carries, as the model labels them."""
+    with open(ROOT / "data" / csv_name, encoding="utf-8") as f:
+        rows = list(csv.DictReader(f))
+    if label_column and label_column in rows[0]:
+        return {r[label_column] for r in rows}
+    return {r[date_column][:7] for r in rows}
+
+
+@pytest.mark.parametrize("dim,csv_name,date_column,label_column", CALENDARS,
+                         ids=[c[0] for c in CALENDARS])
+def test_the_calendar_is_derived_from_the_fact_it_has_to_cover(dim, csv_name, date_column, label_column):
+    """A hard-coded calendar survives exactly until the seed moves.
+
+    Both month tables used to be typed out - `{0..12}` from `#date(2025, 7, 1)`
+    for the claims, `{0..23}` from 2024-07 for the abstracts. When the generator
+    was rebuilt across two years, the claims calendar covered the last thirteen
+    months of it, and a full year of cash collected landed in a **(Blank)** month
+    that still totalled correctly. Power BI says nothing: unmatched keys go to the
+    blank member, the card above the chart stays right, and only the axis shows it.
+
+    So the range is read from the fact now, and this holds it there: the calendar
+    must build itself from the file it is joined to, and every month in that file
+    must fall inside what it builds.
+    """
+    tmdl = (MODEL / "tables" / f"{dim}.tmdl").read_text(encoding="utf-8")
+    assert csv_name in tmdl, (
+        f"{dim} does not read {csv_name}, so nothing ties its range to the data "
+        "it has to cover")
+    assert "List.Min" in tmdl and "List.Max" in tmdl, (
+        f"{dim} does not take its span from the data")
+    assert not re.search(r"#date\(\d{4}", tmdl), (
+        f"{dim} is pinned to a literal date again - the next seed that moves will "
+        "put half the facts in a blank row")
+
+    column = re.search(r'Table\.Column\(\w+,\s*"([^"]+)"\)', tmdl)
+    assert column and column.group(1) == date_column, (
+        f"{dim} builds its months from {column.group(1) if column else 'nothing'}, "
+        f"but the fact is joined on the month of {date_column}")
+
+    labels = month_labels(csv_name, date_column, label_column)
+    first, last = min(labels), max(labels)
+    span = (int(last[:4]) - int(first[:4])) * 12 + int(last[5:7]) - int(first[5:7]) + 1
+    assert span == len(labels) or span >= len(labels), "months are not contiguous"
+    assert len(labels) > 12, (
+        f"{dim}: the fact carries {len(labels)} months - too few for this to prove "
+        "anything about a calendar that used to be pinned to thirteen")
+
+
 def test_every_activity_month_exists_in_its_date_dimension():
-    """The failure this model's second date table exists to prevent.
+    """The relationship the second calendar exists for.
 
-    `dim_month` is generated for the claims period and starts at 2025-07. The
-    inpatient abstracts start twelve months earlier. Point discharge_month at
-    dim_month and Power BI does not complain — it puts every unmatched row in a
-    blank member, and every month-sliced visual quietly reports half the
-    authority's activity with nothing on the canvas to say so.
-
-    So this asserts the join actually covers the data: every discharge month in
-    the fact table must exist in the calendar it is related to. If someone
-    re-points the relationship, or the generator's date range moves, this fails
-    loudly instead of the dashboard failing silently.
+    `dim_month` is the claims calendar; the abstracts start earlier and are counted
+    on their own. Point discharge_month at the wrong one and Power BI does not
+    complain - it puts every unmatched row in a blank member, and every month-sliced
+    visual quietly reports part of the authority's activity with nothing on the
+    canvas to say so.
     """
     rel = (MODEL / "relationships.tmdl").read_text(encoding="utf-8")
     m = re.search(
         r"fromColumn:\s*fact_inpatient_abstracts\.discharge_month\s*\n\s*toColumn:\s*(\S+)\.(\S+)",
         rel)
     assert m, "discharge_month is not related to any date table"
-    dim_table, dim_col = m.group(1), m.group(2)
-    assert dim_table == "dim_activity_month", (
-        f"discharge_month is joined to {dim_table}, which does not span the "
-        f"abstracts' 24 months — half the activity would land in a blank row"
-    )
-
-    tmdl = (MODEL / "tables" / f"{dim_table}.tmdl").read_text(encoding="utf-8")
-    start = re.search(r"#date\((\d{4}),\s*(\d+),\s*\d+\)", tmdl)
-    span = re.search(r"\{0\.\.(\d+)\}", tmdl)
-    assert start and span, f"{dim_table}: cannot read its generated range"
-
-    y, mo, n = int(start.group(1)), int(start.group(2)), int(span.group(1))
-    covered = set()
-    for i in range(n + 1):
-        yy, mm = divmod((y * 12 + mo - 1) + i, 12)
-        covered.add(f"{yy}-{mm + 1:02d}")
-
-    with open(ROOT / "data" / "fact_inpatient_abstracts.csv", encoding="utf-8") as f:
-        actual = {r["discharge_month"] for r in csv.DictReader(f)}
-
-    missing = sorted(actual - covered)
-    assert not missing, (
-        f"{len(missing)} discharge month(s) fall outside {dim_table} and would "
-        f"land in a blank row: {missing[:6]}"
-    )
+    assert m.group(1) == "dim_activity_month", (
+        f"discharge_month is joined to {m.group(1)}, which is built from the claims "
+        "rather than the abstracts")
 
 
 def test_the_canadian_pages_lead_the_report():

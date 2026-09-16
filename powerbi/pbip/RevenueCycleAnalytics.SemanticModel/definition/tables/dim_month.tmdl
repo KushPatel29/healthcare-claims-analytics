@@ -21,11 +21,20 @@ table dim_month
 		mode: import
 		source =
 				let
-				    Months = List.Transform({0..12}, each Date.AddMonths(#date(2025, 7, 1), _)),
+				    // The calendar is derived from the claims, never typed in. This table was pinned to
+				    // thirteen months from 2025-07 while the rebuilt seed submits claims across two
+				    // years from 2024-07, so a full year of cash collected landed in a (Blank) month
+				    // that still totalled correctly - a chart wrong in the one way a total cannot show.
+				    Source = Csv.Document(File.Contents(DataPath & "\data\fact_claims.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Submitted = List.RemoveNulls(List.Transform(Table.Column(Promoted, "submitted_date"), each try Date.From(_) otherwise null)),
+				    First = Date.StartOfMonth(List.Min(Submitted)),
+				    Last = Date.StartOfMonth(List.Max(Submitted)),
+				    Span = (Date.Year(Last) - Date.Year(First)) * 12 + Date.Month(Last) - Date.Month(First),
+				    Months = List.Transform({0..Span}, each Date.AddMonths(First, _)),
 				    ToTable = Table.FromList(Months, Splitter.SplitByNothing(), {"month_start"}),
 				    Typed = Table.TransformColumnTypes(ToTable, {{"month_start", type date}}),
 				    AddedLabel = Table.AddColumn(Typed, "month", each Date.ToText([month_start], "yyyy-MM"), type text),
 				    Reordered = Table.ReorderColumns(AddedLabel, {"month", "month_start"})
 				in
 				    Reordered
-
