@@ -281,7 +281,7 @@ def test_the_test_count_on_the_badge_is_the_real_test_count():
     session, so the answer does not depend on whether someone invoked the whole
     suite or a single file.
     """
-    badge = re.search(r"tests-(\d+)%20passing", text(README))
+    badge = re.search(r"tests-(\d+)%20collected", text(README))
     assert badge, "README no longer carries a test-count badge"
     claimed = int(badge.group(1))
 
